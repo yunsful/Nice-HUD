@@ -19,7 +19,7 @@ Please list your team name and members in the table below. In addition, submit y
 | 3    |                                                              |                                                              |                                               |
 | 4    |                                                              |                                                              |                                               |
 | 5   | [Nice HUD](https://github.com/DongWonLee2/Nice-HUD) | [이동원](https://github.com/DongWonLee2), [김승윤](https://github.com/yunsful), [이수민](https://github.com/dltnals1210), [이현우](https://github.com/LeeHyunWoo02), [조민서](https://github.com/min5421), [고제성](https://github.com/kojesung), [정새움](https://github.com/aeioiie) | [Nice_HUD.md](requirements/Nice_HUD.md) |
-| 6    | Sound Operator                                               | [강민석](https://github.com/Kang-Minseokk), [이재욱](https://github.com/limulu-k), [박성빈](https://github.com/SeongbinPark82), [하성우](https://github.com/sw02020), [조예나](https://github.com/YenaCho), [오가연](https://github.com/HY-OGY), [강성민](https://github.com/seongmin0244)       | [Instruct students](requirements/Sound_Operator.md)  |
+| 6    | [Sound Operator] (https://github.com/Kang-Minseokk/Invaders-SDP.git)                                              | [강민석](https://github.com/Kang-Minseokk), [이재욱](https://github.com/limulu-k), [박성빈](https://github.com/SeongbinPark82), [하성우](https://github.com/sw02020), [조예나](https://github.com/YenaCho), [오가연](https://github.com/HY-OGY), [강성민](https://github.com/seongmin0244)       | [Instruct students](requirements/Sound_Operator.md)  |
 
 
 ## Screenshots

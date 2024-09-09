@@ -1,20 +1,31 @@
 # Instructors
 
 ## Team Introduction
-Hello
 
-- Lecturer
-    - `Scott Uk-Jin Lee`
-- Teaching Assistants
-    - `Joonwoo Lee`
-    - `Jeongbin Park`
+- Team leader
+    - `Eunkyu Lee`
+- Team member
+    - `Sungjin Lee`
+    - `Yeonghun Ju`
+    - `Minhwan Kim`
+    - `Chaehyun Lee`
+    - `Yelim Lee`
+    - `Jeongmin Lee`
 
 ## Team Requirements
 
-### - Instruct
-
+### - Item System
 
 ## Detailed Requirements
 
-- Lecture
-- Lab
+- `Eunkyu Lee` : 
+- `Sungjin Lee` : 
+- `Yeonghun Ju` : 
+- `Minhwan Kim` : 
+- `Chaehyun Lee` : 
+- `Yelim Lee` : 
+- `Jeongmin Lee` : 
+
+## Dependencies on Other Teams
+
+- 

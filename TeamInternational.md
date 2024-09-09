@@ -32,16 +32,4 @@ some dependencies on other aspects of the game for example:
 Items, Player and Enemy ship variety, Sound Effects BGM, Two
 Player mode.
 
-Create a new README file in the requirements/ and name it as
-&lt;team_name&gt;.md -The Team README should include the followings:
-•Team Introduction: Briefly introduce the team’s goal and vision
-and list the roles of each team member. •Team Requirements:
-Describe the overall project requirements that the team is
-responsible for. •Detailed Requirements: At least 5 specific
-requirements per team to implement •Dependencies on Other Teams:
-List up to 3 requirements that your team cannot fulfill and will
-depend on other teams
-</code></pre>
-</li>
-</ul>
 

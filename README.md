@@ -11,10 +11,17 @@ Please list your team name and members in the table below. In addition, submit y
 - In the 'Members' column, each team member should link to their GitHub profile.
 - In the 'Requirements' column, link to your team's requirements document. (e.g. `requirements/instruct.md`)
 
-| No. | Name                                | Members                                                                                                                                                                              | Requirements      |
-|-----|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| 0   | [Instructors](https://github.com/dev-jjjjjeong-bin/Invaders-SDP) | [Scott Uk-Jin Lee](https://github.com/scottukjinlee/scottukjinlee), [Jeongbin Park](https://github.com/dev-jjjjjeong-bin/dev-jjjjjeong-bin), [Joonwoo Lee](https://github.com/PurpleBananass/PurpleBananass) | [Instruct students](requirements/instruct.md) |
-|     |                                     |                                                                                                                                                                                      |                   |
+https://github.com/dev-jjjjjeong-bin/Invaders-SDP/blob/master/requirements/starter.md
+
+| No.  | Name                                                         | Members                                                      | Requirements                                  |
+| ---- | ------------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------- |
+| 0    | [Instructors](https://github.com/dev-jjjjjeong-bin/Invaders-SDP) | [Scott Uk-Jin Lee](https://github.com/scottukjinlee/scottukjinlee), [Jeongbin Park](https://github.com/dev-jjjjjeong-bin/dev-jjjjjeong-bin), [Joonwoo Lee](https://github.com/PurpleBananass/PurpleBananass) | [Instruct students](requirements/instruct.md) |
+| 1    |                                                              |                                                              |                                               |
+| 2    |                                                              |                                                              |                                               |
+| 3    |                                                              |                                                              |                                               |
+| 4    |                                                              |                                                              |                                               |
+| 5    |                                                              |                                                              |                                               |
+| 6    | Sound Operator                                               | [강민석](https://github.com/Kang-Minseokk), [이재욱](https://github.com/limulu-k), [박성빈](https://github.com/SeongbinPark82), [하성우](https://github.com/sw02020), [조예나](https://github.com/YenaCho), [오가연](https://github.com/HY-OGY), [강성민](https://github.com/seongmin0244)       | [Instruct students](requirements/Sound_Operator.md)  |
 
 
 ## Screenshots

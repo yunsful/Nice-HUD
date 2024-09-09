@@ -14,7 +14,7 @@ Please list your team name and members in the table below. In addition, submit y
 | No. | Name                                | Members                                                                                                                                                                              | Requirements      |
 |-----|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
 | 0   | [Instructors](https://github.com/dev-jjjjjeong-bin/Invaders-SDP) | [Scott Uk-Jin Lee](https://github.com/scottukjinlee/scottukjinlee), [Jeongbin Park](https://github.com/dev-jjjjjeong-bin/dev-jjjjjeong-bin), [Joonwoo Lee](https://github.com/PurpleBananass/PurpleBananass),  | [Instruct students](requirements/instruct.md) |
-| 1    | [Team]                                  | [Arnond](https://github.com/PurpleBananass/AaykeN),                                                                                                                                                                                       |                   |
+|     |                                   |                                                                                                                                                                                        |                   |
 
 
 ## Screenshots

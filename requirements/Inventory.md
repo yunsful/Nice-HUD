@@ -3,14 +3,14 @@
 ## Team1 : Inventory
 
 - Team leader
-    - `Eunkyu Lee`
-- Team member
     - `Sungjin Lee`
+- Team member
+    - `Eunkyu Lee`
     - `Yeonghun Ju`
     - `Minhwan Kim`
     - `Chaehyun Lee`
     - `Yelim Lee`
-    - `Jeongmin Lee`
+    - `Jeongmin Kim`
 
 ## Team Requirements
 The attributes of the item are divided into two categories.

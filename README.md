@@ -17,6 +17,8 @@ Please list your team name and members in the table below. In addition, submit y
 |     |                                     |                                                                                                                                                                                      |                   |
 | 1   | [starter](https://github.com/hello-osy/Invaders-SDP_TEAMstarter) | [오상영](https://github.com/hello-osy), [이재혁](https://github.com/ahgka), [이현배](https://github.com/hyeonbae438), [홍준화](https://github.com/Junehwa9798), [길유빈](https://github.com/studio-yb), [정태영](https://github.com/taeyoung24), [조세빈](https://github.com/Wimogg) | [starter.md](requirements/starter.md) |
 |     |                                     |                                                                                                                                                                                      |                   |
+| 5   | [Nice HUD](https://github.com/DongWonLee2/Nice-HUD) | [이동원](https://github.com/DongWonLee2), [김승윤](https://github.com/yunsful), [이수민](https://github.com/dltnals1210), [이현우](https://github.com/LeeHyunWoo02), [조민서](https://github.com/min5421), [고제성](https://github.com/kojesung), [정새움](https://github.com/aeioiie) | [Nice_HUD.md](requirements/Nice_HUD.md) |
+|     |                                     |                                                                                                                                                                                      |                   |
 
 ## Screenshots
 

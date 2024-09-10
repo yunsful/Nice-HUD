@@ -13,7 +13,8 @@ import engine.DrawManager.SpriteType;
  * 
  */
 public class EnemyShip extends Entity {
-	
+
+	// 어느 타입의 적 함선이냐에 따라 점수를 다르게 함
 	/** Point value of a type A enemy. */
 	private static final int A_TYPE_POINTS = 10;
 	/** Point value of a type B enemy. */
@@ -25,9 +26,11 @@ public class EnemyShip extends Entity {
 
 	/** Cooldown between sprite changes. */
 	private Cooldown animationCooldown;
-	/** Checks if the ship has been hit by a bullet. */
+	/** Checks if the ship has been hit by a bullet.
+	 * 파괴 되었는지 여부를 저장하는 변수. 생성자에 의해 false로 초기화. */
 	private boolean isDestroyed;
-	/** Values of the ship, in points, when destroyed. */
+	/** Values of the ship, in points, when destroyed.
+	 * 함선이 파괴되었을 때 얻는 점수. 생성자에서 타입에 따라 초기화. */
 	private int pointValue;
 
 	/**
@@ -40,6 +43,8 @@ public class EnemyShip extends Entity {
 	 * @param spriteType
 	 *            Sprite type, image corresponding to the ship.
 	 */
+	// 적함선 Entity의 위치(x, y)와 어느 타입의 함선인지(spriteType)을 받아 생성
+	// animationCooldown, isDestroyed, pointValue 값 초기화
 	public EnemyShip(final int positionX, final int positionY,
 			final SpriteType spriteType) {
 		super(positionX, positionY, 12 * 2, 8 * 2, Color.WHITE);
@@ -49,18 +54,22 @@ public class EnemyShip extends Entity {
 		this.isDestroyed = false;
 
 		switch (this.spriteType) {
+			// A 타입인 경우
 		case EnemyShipA1:
 		case EnemyShipA2:
 			this.pointValue = A_TYPE_POINTS;
 			break;
+			// B 타입인 경우
 		case EnemyShipB1:
 		case EnemyShipB2:
 			this.pointValue = B_TYPE_POINTS;
 			break;
+			// C 타입인 경우
 		case EnemyShipC1:
 		case EnemyShipC2:
 			this.pointValue = C_TYPE_POINTS;
 			break;
+			// 기본 점수 = 0
 		default:
 			this.pointValue = 0;
 			break;
@@ -71,6 +80,7 @@ public class EnemyShip extends Entity {
 	 * Constructor, establishes the ship's properties for a special ship, with
 	 * known starting properties.
 	 */
+	// 아무런 인수를 넘기지 않고 생성한 EnemyShip 은 EnemyShipSpecial
 	public EnemyShip() {
 		super(-32, 60, 16 * 2, 7 * 2, Color.RED);
 
@@ -96,6 +106,7 @@ public class EnemyShip extends Entity {
 	 * @param distanceY
 	 *            Distance to move in the Y axis.
 	 */
+	// EnemyShip Entity 를 (x, y) 칸 만큼 이동
 	public final void move(final int distanceX, final int distanceY) {
 		this.positionX += distanceX;
 		this.positionY += distanceY;
@@ -104,6 +115,7 @@ public class EnemyShip extends Entity {
 	/**
 	 * Updates attributes, mainly used for animation purposes.
 	 */
+	// 업데이트 될 때마다 움직임 추가
 	public final void update() {
 		if (this.animationCooldown.checkFinished()) {
 			this.animationCooldown.reset();
@@ -136,6 +148,7 @@ public class EnemyShip extends Entity {
 	/**
 	 * Destroys the ship, causing an explosion.
 	 */
+	// 파괴되는 경우 isDestroyed 변수 업데이트 및 SpriteType 변경
 	public final void destroy() {
 		this.isDestroyed = true;
 		this.spriteType = SpriteType.Explosion;

@@ -8,15 +8,15 @@ package engine;
  */
 public class GameState {
 
-	/** Current game level. */
+	/** 현재 게임 레벨 */
 	private int level;
-	/** Current score. */
+	/** 현재 스코어 */
 	private int score;
-	/** Lives currently remaining. */
+	/** 현재 남은 목숨 */
 	private int livesRemaining;
-	/** Bullets shot until now. */
+	/** 지금 까지의 bulletshot */
 	private int bulletsShot;
-	/** Ships destroyed until now. */
+	/** 지금까지 부신 함선 개수 */
 	private int shipsDestroyed;
 
 	/**
@@ -33,6 +33,7 @@ public class GameState {
 	 * @param shipsDestroyed
 	 *            Ships destroyed until now.
 	 */
+	// 레벨, 스코어, 남은목숨, bulletshot, 부신 적 함선 개수 를 인자로 받아서 각각 초기화.
 	public GameState(final int level, final int score,
 			final int livesRemaining, final int bulletsShot,
 			final int shipsDestroyed) {
@@ -44,35 +45,35 @@ public class GameState {
 	}
 
 	/**
-	 * @return the level
+	 * @return level getter
 	 */
 	public final int getLevel() {
 		return level;
 	}
 
 	/**
-	 * @return the score
+	 * @return the score getter
 	 */
 	public final int getScore() {
 		return score;
 	}
 
 	/**
-	 * @return the livesRemaining
+	 * @return the livesRemaining getter
 	 */
 	public final int getLivesRemaining() {
 		return livesRemaining;
 	}
 
 	/**
-	 * @return the bulletsShot
+	 * @return the bulletsShot getter
 	 */
 	public final int getBulletsShot() {
 		return bulletsShot;
 	}
 
 	/**
-	 * @return the shipsDestroyed
+	 * @return the shipsDestroyed getter
 	 */
 	public final int getShipsDestroyed() {
 		return shipsDestroyed;

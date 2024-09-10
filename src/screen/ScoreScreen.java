@@ -11,39 +11,40 @@ import engine.GameState;
 import engine.Score;
 
 /**
- * Implements the score screen.
+ * 점수 화면 구현
  * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
+//Screen 상속
 public class ScoreScreen extends Screen {
 
-	/** Milliseconds between changes in user selection. */
+	/** 유저 선택에 부여할 쿨타임 시간 */
 	private static final int SELECTION_TIME = 200;
-	/** Maximum number of high scores. */
+	/** 최대 점수의 최대 개수 */
 	private static final int MAX_HIGH_SCORE_NUM = 7;
 	/** Code of first mayus character. */
 	private static final int FIRST_CHAR = 65;
 	/** Code of last mayus character. */
 	private static final int LAST_CHAR = 90;
 
-	/** Current score. */
+	/** 현재 점수 */
 	private int score;
-	/** Player lives left. */
+	/** 플레이어의 남은 목숨 */
 	private int livesRemaining;
-	/** Total bullets shot by the player. */
+	/** 플레이어가 쏜 총알의 총 개수 */
 	private int bulletsShot;
-	/** Total ships destroyed by the player. */
+	/** 플레이어가 부신 함선의 총 개수 */
 	private int shipsDestroyed;
-	/** List of past high scores. */
+	/** 과거 최대스코어들의 리스트. */
 	private List<Score> highScores;
-	/** Checks if current score is a new high score. */
+	/** 현재 점수가 신기록인지에 대한 확인 변수 */
 	private boolean isNewRecord;
-	/** Player name for record input. */
+	/** 기록에 입력할 플레이어의 이름 */
 	private char[] name;
-	/** Character of players name selected for change. */
+	/** 변화를 위해 선택된 플레이어 이름의 문자. */
 	private int nameCharSelected;
-	/** Time between changes in user selection. */
+	/** 유저 선택의 쿨타임 */
 	private Cooldown selectionCooldown;
 
 	/**
@@ -60,20 +61,20 @@ public class ScoreScreen extends Screen {
 	 */
 	public ScoreScreen(final int width, final int height, final int fps,
 			final GameState gameState) {
-		super(width, height, fps);
+		super(width, height, fps); //점수 화면의 너비, 높이, fps 인자로 받아서 초기화
 
-		this.score = gameState.getScore();
-		this.livesRemaining = gameState.getLivesRemaining();
-		this.bulletsShot = gameState.getBulletsShot();
-		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.isNewRecord = false;
-		this.name = "AAA".toCharArray();
+		this.score = gameState.getScore(); //현재 게임상태의 스코어
+		this.livesRemaining = gameState.getLivesRemaining(); //현재 게임의 남은 목숨
+		this.bulletsShot = gameState.getBulletsShot(); //현재 게임에서 쏜 총알 수
+		this.shipsDestroyed = gameState.getShipsDestroyed(); //현재 부신 적 함선 개수
+		this.isNewRecord = false; // 초기 신기록인지 체크는 false로 설정
+		this.name = "AAA".toCharArray(); //AAA를 ['A', 'A', 'A']로 변환하여 저장
 		this.nameCharSelected = 0;
-		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
-		this.selectionCooldown.reset();
+		this.selectionCooldown = Core.getCooldown(SELECTION_TIME); //유저 선택 쿨타임 객체 생성
+		this.selectionCooldown.reset();// 선택 쿨타임 적용 시작
 
 		try {
-			this.highScores = Core.getFileManager().loadHighScores();
+			this.highScores = Core.getFileManager().loadHighScores(); //fileManger
 			if (highScores.size() < MAX_HIGH_SCORE_NUM
 					|| highScores.get(highScores.size() - 1).getScore()
 					< this.score)

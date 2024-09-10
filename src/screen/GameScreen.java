@@ -147,66 +147,66 @@ public class GameScreen extends Screen {
 	protected final void update() {
 		super.update();
 
-		if (this.inputDelay.checkFinished() && !this.levelFinished) {
+		if (this.inputDelay.checkFinished() && !this.levelFinished) { //inputDelay 쿨타임이 끝났고 레벨이 클리어 안 됐으면
 
-			if (!this.ship.isDestroyed()) {
+			if (!this.ship.isDestroyed()) { //함선이 아직 안부숴졌으면
 				boolean moveRight = inputManager.isKeyDown(KeyEvent.VK_RIGHT)
-						|| inputManager.isKeyDown(KeyEvent.VK_D);
+						|| inputManager.isKeyDown(KeyEvent.VK_D);//오른쪽 방향키나 D 입력시 moveRight에 true
 				boolean moveLeft = inputManager.isKeyDown(KeyEvent.VK_LEFT)
-						|| inputManager.isKeyDown(KeyEvent.VK_A);
+						|| inputManager.isKeyDown(KeyEvent.VK_A);//왼쪽 방향키나 A 입력시 moveRight에 true
 
 				boolean isRightBorder = this.ship.getPositionX()
-						+ this.ship.getWidth() + this.ship.getSpeed() > this.width - 1;
+						+ this.ship.getWidth() + this.ship.getSpeed() > this.width - 1; //함선이 화면 오른쪽 끝에 있는지 확인
 				boolean isLeftBorder = this.ship.getPositionX()
-						- this.ship.getSpeed() < 1;
+						- this.ship.getSpeed() < 1; //함선이 왼쪽 끝에 있는지 확인
 
 				if (moveRight && !isRightBorder) {
-					this.ship.moveRight();
+					this.ship.moveRight(); //moveRight이 true고 화면의 오른쪽 경계선이 아니면 오른쪽으로 이동
 				}
 				if (moveLeft && !isLeftBorder) {
-					this.ship.moveLeft();
+					this.ship.moveLeft(); //moveLeft가 true고 화면의 왼쪽 경계선이 아니면 왼쪽으로 이동
 				}
-				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-					if (this.ship.shoot(this.bullets))
-						this.bulletsShot++;
+				if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) //스페이스바 입력시
+					if (this.ship.shoot(this.bullets)) //총알을 발사
+						this.bulletsShot++; //bulletsShot 1 증가.
 			}
 
-			if (this.enemyShipSpecial != null) {
-				if (!this.enemyShipSpecial.isDestroyed())
-					this.enemyShipSpecial.move(2, 0);
-				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
-					this.enemyShipSpecial = null;
+			if (this.enemyShipSpecial != null) { // 적의 스페셜 함선이 null이 아니면(이미 있으면)
+				if (!this.enemyShipSpecial.isDestroyed()) // 스페셜 함선이 부숴지지 않았다면
+					this.enemyShipSpecial.move(2, 0); //x축으로 2만큼 이동
+				else if (this.enemyShipSpecialExplosionCooldown.checkFinished()) //적 스페셜 함선이 있을 시간이 다 지났다면
+					this.enemyShipSpecial = null; //null로 변경
 
 			}
 			if (this.enemyShipSpecial == null
-					&& this.enemyShipSpecialCooldown.checkFinished()) {
-				this.enemyShipSpecial = new EnemyShip();
-				this.enemyShipSpecialCooldown.reset();
-				this.logger.info("A special ship appears");
+					&& this.enemyShipSpecialCooldown.checkFinished()) { // 스페셜 함선 등장 쿨타임이 다 돌고 null상태면
+				this.enemyShipSpecial = new EnemyShip(); //새로운 스페셜 함선 생성
+				this.enemyShipSpecialCooldown.reset(); //등장 쿨타임 재시작
+				this.logger.info("A special ship appears"); //log에 메세지 출력
 			}
 			if (this.enemyShipSpecial != null
-					&& this.enemyShipSpecial.getPositionX() > this.width) {
-				this.enemyShipSpecial = null;
-				this.logger.info("The special ship has escaped");
+					&& this.enemyShipSpecial.getPositionX() > this.width) { //스페셜 함선이 있지만, 화면 밖으로 나갔다면
+				this.enemyShipSpecial = null; //null 로 변경
+				this.logger.info("The special ship has escaped"); // log메세지 출력
 			}
 
-			this.ship.update();
-			this.enemyShipFormation.update();
-			this.enemyShipFormation.shoot(this.bullets);
+			this.ship.update(); // 함선을 업데이트
+			this.enemyShipFormation.update(); // 적 함선 대형을 업데이트
+			this.enemyShipFormation.shoot(this.bullets); //적 함선 대형이 쏘는 총알을 업데이트
 		}
 
 		manageCollisions();
 		cleanBullets();
 		draw();
 
-		if ((this.enemyShipFormation.isEmpty() || this.lives == 0)
+		if ((this.enemyShipFormation.isEmpty() || this.lives == 0) //(적 함선 대형이 비었거나 목숨이 0이고) 레벨이 클리어 안됐을때,
 				&& !this.levelFinished) {
-			this.levelFinished = true;
-			this.screenFinishedCooldown.reset();
+			this.levelFinished = true; // 레벨 완료됨(클리어 or 죽음)
+			this.screenFinishedCooldown.reset(); //스크린 완료 쿨타임 재시작
 		}
 
-		if (this.levelFinished && this.screenFinishedCooldown.checkFinished())
-			this.isRunning = false;
+		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) //스크린 완료 쿨타임 다 돌았고 레벨이 완료되었다면
+			this.isRunning = false; //화면 실행 종료
 
 	}
 
@@ -258,11 +258,11 @@ public class GameScreen extends Screen {
 		for (Bullet bullet : this.bullets) {
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
-					|| bullet.getPositionY() > this.height)
-				recyclable.add(bullet);
+					|| bullet.getPositionY() > this.height) // 화면 밖의 총알이면
+				recyclable.add(bullet); // 재활용 가능한 총알에 추가
 		}
-		this.bullets.removeAll(recyclable);
-		BulletPool.recycle(recyclable);
+		this.bullets.removeAll(recyclable); // 재활용 가능한 애들을 모두 bullet에서 제거후
+		BulletPool.recycle(recyclable); // 재활용
 	}
 
 	/**
@@ -271,37 +271,37 @@ public class GameScreen extends Screen {
 	private void manageCollisions() {
 		Set<Bullet> recyclable = new HashSet<Bullet>();
 		for (Bullet bullet : this.bullets)
-			if (bullet.getSpeed() > 0) {
-				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
-					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()) {
-						this.ship.destroy();
-						this.lives--;
+			if (bullet.getSpeed() > 0) { // 총알이 움직이면
+				if (checkCollision(bullet, this.ship) && !this.levelFinished) { //레벨이 완료가 안됐고 총알과 함선이 충돌했다면
+					recyclable.add(bullet); //해당 총알 재활용 가능 총알에 추가
+					if (!this.ship.isDestroyed()) { //함선이 안 부숴졌다면
+						this.ship.destroy(); //함선 파괴
+						this.lives--; // 목숨 1 감소
 						this.logger.info("Hit on player ship, " + this.lives
-								+ " lives remaining.");
+								+ " lives remaining."); //log에 맞음을 알리고, 남은 목숨 기록
 					}
 				}
-			} else {
-				for (EnemyShip enemyShip : this.enemyShipFormation)
+			} else { // 총알이 안움직이면
+				for (EnemyShip enemyShip : this.enemyShipFormation) //적 함선 대형을 순회
 					if (!enemyShip.isDestroyed()
-							&& checkCollision(bullet, enemyShip)) {
-						this.score += enemyShip.getPointValue();
-						this.shipsDestroyed++;
-						this.enemyShipFormation.destroy(enemyShip);
-						recyclable.add(bullet);
+							&& checkCollision(bullet, enemyShip)) { //적 함선이 파괴되지 않았고 적함선과 총알이 부딪히면
+						this.score += enemyShip.getPointValue(); //적 함선에 따른 점수 증가
+						this.shipsDestroyed++; //파괴된 적 함선 +1
+						this.enemyShipFormation.destroy(enemyShip); //적 함선 대형에서 맞은 적 함선 파괴
+						recyclable.add(bullet); // 총알 재활용 가능에 추가
 					}
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
-					this.shipsDestroyed++;
-					this.enemyShipSpecial.destroy();
-					this.enemyShipSpecialExplosionCooldown.reset();
-					recyclable.add(bullet);
+						&& checkCollision(bullet, this.enemyShipSpecial)) { //스페셜 함선이 존재하고 부숴지지않았고 스페셜함선과 총알이 부딪혔다면
+					this.score += this.enemyShipSpecial.getPointValue(); //스페셜 함선에 따른 점수 증가
+					this.shipsDestroyed++; // 파괴한 적 함수 개수 증가
+					this.enemyShipSpecial.destroy(); //스페셜 적 함선 파괴
+					this.enemyShipSpecialExplosionCooldown.reset(); // 스페셜 적 함선 파괴 쿨타임 재시작
+					recyclable.add(bullet); //재활용 총알에 추가
 				}
 			}
-		this.bullets.removeAll(recyclable);
-		BulletPool.recycle(recyclable);
+		this.bullets.removeAll(recyclable); //재활용 가능 총알에 추가된 것들은 모두 현재 bullet에서 삭제
+		BulletPool.recycle(recyclable); //bulletPool에 재활용하려고 삭제한 총알들 추가
 	}
 
 	/**
@@ -313,7 +313,7 @@ public class GameScreen extends Screen {
 	 *            Second entity, the ship.
 	 * @return Result of the collision test.
 	 */
-	private boolean checkCollision(final Entity a, final Entity b) {
+	private boolean checkCollision(final Entity a, final Entity b) { //a(총알)과 b(함선)의 충돌을 체크
 		// Calculate center point of the entities in both axis.
 		int centerAX = a.getPositionX() + a.getWidth() / 2;
 		int centerAY = a.getPositionY() + a.getHeight() / 2;
@@ -326,7 +326,7 @@ public class GameScreen extends Screen {
 		int distanceX = Math.abs(centerAX - centerBX);
 		int distanceY = Math.abs(centerAY - centerBY);
 
-		return distanceX < maxDistanceX && distanceY < maxDistanceY;
+		return distanceX < maxDistanceX && distanceY < maxDistanceY; // 두 엔티티 사이의 거리가 충돌이 없는 마지막 거리보다 작으면 true로 충돌임을 반환, 아니면 false를 반환
 	}
 
 	/**

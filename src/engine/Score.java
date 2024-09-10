@@ -6,12 +6,12 @@ package engine;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class Score implements Comparable<Score> {
+public class Score implements Comparable<Score> { //Score를 Comparable 인터페이스로 구현
 
 	/** Player's name. */
-	private String name;
+	private String name; // 점수와 연관된 이름
 	/** Score points. */
-	private int score;
+	private int score; // 점수
 
 	/**
 	 * Constructor.
@@ -23,7 +23,7 @@ public class Score implements Comparable<Score> {
 	 */
 	public Score(final String name, final int score) {
 		this.name = name;
-		this.score = score;
+		this.score = score; // 이름 - 점수로 초기화
 	}
 
 	/**

@@ -115,15 +115,14 @@ public final class FileManager {
 		Font font;
 
 		try {
-			// Font loading.
 			inputStream = FileManager.class.getClassLoader()
 					.getResourceAsStream("font.ttf");
-			if (inputStream != null) {
+			if (inputStream != null) { 
 				font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(size);
 			} else {
-				// 기본 폰트 설정
+				// Set as default font, if inputStream is null
 				System.out.println("Custom font not found, applying default font.");
-				font = new Font("Serif", Font.PLAIN, (int) size); // 기본 폰트 Serif 적용
+				font = new Font("Serif", Font.PLAIN, (int) size); // Set as "Serif"
 			}
 		} finally {
 			if (inputStream != null)

@@ -86,6 +86,9 @@ public final class DrawManager {
 		logger = Core.getLogger();
 		logger.info("Started loading resources.");
 
+		// 불리언의 2차원 배열인 SpriteMap을 작성한다.
+		// 각각의 맵은 SpriteType에 대한 빈 도안 역할을 한다.
+		// 예를 들어, Ship의 스프라이트는 가로 13픽셀, 세로 8픽셀의 틀 안에 그려진다.
 		try {
 			spriteMap = new LinkedHashMap<SpriteType, boolean[][]>();
 
@@ -146,19 +149,25 @@ public final class DrawManager {
 	 *            Screen to draw in.
 	 */
 	public void initDrawing(final Screen screen) {
+		// 버퍼는 프레임에 표시될 그림이 그려지는 캔버스 역할을 한다.
 		backBuffer = new BufferedImage(screen.getWidth(), screen.getHeight(),
 				BufferedImage.TYPE_INT_RGB);
 
+		// 그래픽스는 해당 객체에 그리기 위한 도구 역할을 한다.
 		graphics = frame.getGraphics();
 		backBufferGraphics = backBuffer.getGraphics();
 
+		// 그래픽스에 그릴 색을 지정한다.
 		backBufferGraphics.setColor(Color.BLACK);
+		// backBufferGraphics에 게임 창과 같은 크기의 채워진 사각형을 그린다.
 		backBufferGraphics
 				.fillRect(0, 0, screen.getWidth(), screen.getHeight());
-
+		
+		// 해당 폰트의 정보를 가진 객체인 폰트 메트릭스를 불러온다.
 		fontRegularMetrics = backBufferGraphics.getFontMetrics(fontRegular);
 		fontBigMetrics = backBufferGraphics.getFontMetrics(fontBig);
-
+		
+		// 디버그용 메서드.
 		// drawBorders(screen);
 		// drawGrid(screen);
 	}
@@ -170,6 +179,7 @@ public final class DrawManager {
 	 *            Screen to draw on.
 	 */
 	public void completeDrawing(final Screen screen) {
+		// 필요한 그림이 전부 그려진 백버퍼를 프레임의 그래픽스에 그린다.
 		graphics.drawImage(backBuffer, frame.getInsets().left,
 				frame.getInsets().top, frame);
 	}
@@ -186,12 +196,17 @@ public final class DrawManager {
 	 */
 	public void drawEntity(final Entity entity, final int positionX,
 			final int positionY) {
+		// 그릴 엔티티의 도안을 spriteMap에서 가져온다.
 		boolean[][] image = spriteMap.get(entity.getSpriteType());
 
 		backBufferGraphics.setColor(entity.getColor());
+		// 1열부터 한 열씩 오른쪽으로, 위에서 아래로 한 픽셀씩 그린다.
 		for (int i = 0; i < image.length; i++)
 			for (int j = 0; j < image[i].length; j++)
 				if (image[i][j])
+				// 왜 i, j가 아니라 i*2, j*2만큼 이동하는지에 대해:
+				// Graphics 라이브러리의 문제로, m*n 크기의 사각형 객체가 실제로 그려질 때에는
+				// (m+1)*(n+1) 크기로 표시된다. 그러므로, 아래 사각형의 보이는 크기는 2*2가 된다.
 					backBufferGraphics.drawRect(positionX + i * 2, positionY
 							+ j * 2, 1, 1);
 	}
@@ -237,9 +252,14 @@ public final class DrawManager {
 	 *            Current score.
 	 */
 	public void drawScore(final Screen screen, final int score) {
+		// 보통 크기 폰트
 		backBufferGraphics.setFont(fontRegular);
+		// 하얀색 글씨
 		backBufferGraphics.setColor(Color.WHITE);
+		// 점수를 다섯 자리로 포매팅
 		String scoreString = String.format("%04d", score);
+		// 점수의 수평 위치를 (화면 너비 - 60)픽셀 지점, 수직 위치를 25픽셀 지점으로
+		// 설정해 그린다.
 		backBufferGraphics.drawString(scoreString, screen.getWidth() - 60, 25);
 	}
 
@@ -256,6 +276,7 @@ public final class DrawManager {
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(lives), 20, 25);
 		Ship dummyShip = new Ship(0, 0);
+		// 남은 목숨의 개수만큼 우주선 아이콘을 그린다.
 		for (int i = 0; i < lives; i++)
 			drawEntity(dummyShip, 40 + 35 * i, 10);
 	}
@@ -270,6 +291,7 @@ public final class DrawManager {
 	 */
 	public void drawHorizontalLine(final Screen screen, final int positionY) {
 		backBufferGraphics.setColor(Color.GREEN);
+		// 2픽셀 두께의 수평선을 그리기 위해 두 번 호출한다.
 		backBufferGraphics.drawLine(0, positionY, screen.getWidth(), positionY);
 		backBufferGraphics.drawLine(0, positionY + 1, screen.getWidth(),
 				positionY + 1);
@@ -287,10 +309,12 @@ public final class DrawManager {
 				"select with w+s / arrows, confirm with space";
 
 		backBufferGraphics.setColor(Color.GRAY);
+		// 화면 높이의 상단 1/2 지점에, 수평 중앙 정렬된 보통 크기의 문자를 그린다.
 		drawCenteredRegularString(screen, instructionsString,
 				screen.getHeight() / 2);
 
 		backBufferGraphics.setColor(Color.GREEN);
+		// 화면 높이의 상단 1/3 지점에, 수평 중앙 정렬된 큰 크기의 문자를 그린다.
 		drawCenteredBigString(screen, titleString, screen.getHeight() / 3);
 	}
 
@@ -307,6 +331,7 @@ public final class DrawManager {
 		String highScoresString = "High scores";
 		String exitString = "exit";
 
+		// 선택 중인 옵션의 문자를 초록색으로 그린다.
 		if (option == 2)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
@@ -351,7 +376,9 @@ public final class DrawManager {
 		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
 		String accuracyString = String
 				.format("accuracy %.2f%%", accuracy * 100);
-
+		
+		// 신기록인 경우, 결과 텍스트의 최상단 줄(점수)은 화면 수직 길이의 1/4의 높이에 온다.
+		// 신기록이 아닌 경우, 결과 텍스트의 최상단 줄은 화면 수직 길이의 1/2의 높이에 온다.
 		int height = isNewRecord ? 4 : 2;
 
 		backBufferGraphics.setColor(Color.WHITE);
@@ -390,20 +417,26 @@ public final class DrawManager {
 				screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 12);
 
 		// 3 letters name.
+		// 수평 위치 = 화면의 수평 길이 / 2 - (이름 세 문자와 공백 문자의 너비) / 2
 		int positionX = screen.getWidth()
 				/ 2
 				- (fontRegularMetrics.getWidths()[name[0]]
 						+ fontRegularMetrics.getWidths()[name[1]]
 						+ fontRegularMetrics.getWidths()[name[2]]
 								+ fontRegularMetrics.getWidths()[' ']) / 2;
-
+		
+		// 세 문자를 하나씩 그린다.
 		for (int i = 0; i < 3; i++) {
+			// 선택 중인 문자를 초록색으로 그린다.
 			if (i == nameCharSelected)
 				backBufferGraphics.setColor(Color.GREEN);
 			else
 				backBufferGraphics.setColor(Color.WHITE);
-
+			
+			// 수평 위치를 현재 문자의 너비의 절반만큼 오른쪽으로 이동
 			positionX += fontRegularMetrics.getWidths()[name[i]] / 2;
+			// 현재 문자가 첫 번째 문자가 아니라면,
+			// 수평 위치를 (이전 문자의 너비 + 공백 문자의 너비) / 2만큼 오른쪽으로 더 이동
 			positionX = i == 0 ? positionX
 					: positionX
 							+ (fontRegularMetrics.getWidths()[name[i - 1]]
@@ -432,6 +465,7 @@ public final class DrawManager {
 		String continueOrExitString =
 				"Press Space to play again, Escape to exit";
 
+		// DrawResults 메서드 주석 참조
 		int height = isNewRecord ? 4 : 2;
 
 		backBufferGraphics.setColor(Color.GREEN);
@@ -500,6 +534,7 @@ public final class DrawManager {
 	public void drawCenteredRegularString(final Screen screen,
 			final String string, final int height) {
 		backBufferGraphics.setFont(fontRegular);
+		// 보통 크기 문자열의 수평 위치를 화면 중앙에 정렬해 그린다.
 		backBufferGraphics.drawString(string, screen.getWidth() / 2
 				- fontRegularMetrics.stringWidth(string) / 2, height);
 	}
@@ -517,6 +552,7 @@ public final class DrawManager {
 	public void drawCenteredBigString(final Screen screen, final String string,
 			final int height) {
 		backBufferGraphics.setFont(fontBig);
+		// 보통 크기 문자열의 수평 위치를 화면 중앙에 정렬해 그린다.
 		backBufferGraphics.drawString(string, screen.getWidth() / 2
 				- fontBigMetrics.stringWidth(string) / 2, height);
 	}
@@ -541,6 +577,7 @@ public final class DrawManager {
 		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
 				rectWidth, rectHeight);
 		backBufferGraphics.setColor(Color.GREEN);
+		// 카운트다운 숫자가 4 이상이라면, 레벨 정보를 표시한다.
 		if (number >= 4)
 			if (!bonusLife) {
 				drawCenteredBigString(screen, "Level " + level,
@@ -552,9 +589,11 @@ public final class DrawManager {
 						screen.getHeight() / 2
 						+ fontBigMetrics.getHeight() / 3);
 			}
+		// 카운트다운 숫자가 1, 2, 3 중 하나라면, 숫자를 표시한다.
 		else if (number != 0)
 			drawCenteredBigString(screen, Integer.toString(number),
 					screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+		// 카운트다운 숫자가 0이라면, GO! 텍스트르 표시한다.
 		else
 			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
 					+ fontBigMetrics.getHeight() / 3);

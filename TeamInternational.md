@@ -1,12 +1,5 @@
----
-
-
----
-
-<ul>
-<li class="task-list-item">
-<p><input type="checkbox" class="task-list-item-checkbox" disabled=""> # International Team 9</p>
-<pre><code>Hello!  We are **International Team 9** comprised of exchange
+# International Team 9
+Hello!  We are **International Team 9** comprised of exchange
 students.  Our Team Members:
 - Guy-Charbel Kairouz --- *President*
  - Benas Varanauskas --- *Vice-President*

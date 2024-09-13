@@ -9,16 +9,15 @@ students.  Our Team Members:
  - Arnond Suvannarat --- PR
 
 Our area of development is Level Design. Our plan is to implement
-procedural level generation that incorporates these features to
+procedural level generation that incorporates these features in descending level of priority to
 make the game immersive:
 
- - Adding random item spawns
- - Adding random obstacles
- - Adding a wider variety and increased spawnrate of enemy ships
- - Adding boss levels
- - Gradual level increase on enemy death
- - Adding different music to levels
- - Adding environment changes depending on level
+<ol>
+<li>Adding environment changes depending on level [for example background and/or music change on higher difficulty setting]</li>
+<li>Adding a wider variety and/or increased spawnrate of enemy ships</li> 
+<li>Adding random obstacles and/or item spawns</li>
+<li>Adding boss levels</li>
+</ol>
 
 To implement all of these features we also see that there will be
 some dependencies on other aspects of the game for example:

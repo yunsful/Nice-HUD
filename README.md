@@ -24,6 +24,7 @@ Please list your team name and members in the table below. In addition, submit y
 | 8   | [CtrlS](https://github.com/HY-CtrlS/Invaders-SDP) | [Suhyun Noh](https://github.com/suhynnoh), [Ikju Kwon](https://github.com/Amarok121), [Seoyoung Lee](https://github.com/ahgka), [Minjae Koo](https://github.com/Koominjae), [Chaeyoon Shin](https://github.com/SCY42), [Uichan Jung](https://github.com/wjddml) | [Currency System](requirements/CtrlS.md) |
 | 9    |  [TeamInternational](https://github.com/AaykeN/Invaders-SDP-Team-International-)   | [Guy-Charbel](https://github.com/Guicha), [Marcel](https://github.com/MarcelBoldt259), [Gustav](https://github.com/gustavwiese), [Arnond](https://github.com/AaykeN), [Leo](https://github.com/Mrreyleo), [Benas](https://github.com/Bienasss) | [Level Design](requirements/TeamInternational.md) |
 
+
 ## Screenshots
 
 Title Screen               |  Game Screen              | Score Screen

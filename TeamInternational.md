@@ -14,8 +14,8 @@ make the game immersive:
 
 <ol>
 <li>Adding environment changes depending on level [for example background and/or music change on higher difficulty setting]</li>
-<li>Adding a wider variety and/or increased spawnrate of enemy ships</li> 
-<li>Adding random obstacles and/or item spawns</li>
+<li>Implementing a wider variety and/or increased spawnrate of enemy ships</li> 
+<li>Implementing random obstacles and/or item spawns</li>
 <li>Adding boss levels</li>
 </ol>
 

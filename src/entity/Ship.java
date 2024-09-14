@@ -8,7 +8,7 @@ import engine.Core;
 import engine.DrawManager.SpriteType;
 
 /**
- * Implements a ship, to be controlled by the player. 플레이어가 실제로 조종하는 람선 클래스
+ * Implements a ship, to be controlled by the player. 플레이어가 실제로 조종하는 함선 클래스
  *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  *
@@ -81,7 +81,7 @@ public class Ship extends Entity {
             this.shootingCooldown.reset(); // 쿨타임 재설정
             bullets.add(BulletPool.getBullet(positionX + this.width / 2,
                     positionY, BULLET_SPEED)); // 화면상 총알 리스트에 현재 발사된 총알 추가
-            return true;
+            return true; // 쿨타임 돌았으면 true 리턴
         }
         return false; // 쿨타임 안돌았으면 false 리턴
     }

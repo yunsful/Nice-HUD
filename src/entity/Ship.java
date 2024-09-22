@@ -70,7 +70,10 @@ public class Ship extends Entity {
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
-					positionY, BULLET_SPEED));
+					positionY, BULLET_SPEED,
+					true, // Indicates whether the bullet is piercing.
+					2 // Number of enemies the bullet can pierce.
+					));
 			return true;
 		}
 		return false;

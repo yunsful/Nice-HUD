@@ -1,48 +1,75 @@
 package engine;
 
 import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.util.Objects;
 
 public class SoundManager {
     private static SoundManager instance;
-    private Clip bgmClip;
-    private Map<String, Clip> soundEffects = new HashMap<>();
+    static Map<String, String[]> EffectSounds;
+    static Map<String, Clip> BGMs;
     static String[][] ESFiles;
+    static String[][] BGMFiles;
 /**
  * 코드 설명
  * Base : bgm 파일은 res/sound/BGM 에 저장
- *        ES 파일은 res/sound/ES 에 저장, res/ES 파일에 [효과명];[파일이름] 으로 명시 필요
+ *        ES 파일은 res/sound/ES 에 저장, res/ES 파일에 [종류];[별칭];[파일 이름];[볼륨크기] 으로 명시 필요
+ *          -> 종류 : bgm, es
+ *          -> 볼륨 크기 : -80.0 ~ 6.0 사잇값
  * 사용법
  * 매니저 호출 : getInstance()
  * BGM 호출 : playBGM(String 파일이름) 호출하여 사용, 무한 루프 이며 끝내려면 stopBGM() 호출
- * ES 호출 : playPreloadedEffectSound(String 효과명) 호출 하여 사용, 시간차로 동일 ES 사용 가능(확인필요)
- * 볼륨 조절기능 UI 아직 안만들어져서 간단하게만 추가해놓음(아직 사용 안하는걸 추천)
+ * ES 호출 : playES(String 효과명) 호출 하여 사용, 동식에 같은 ES 호출 가능
+ * BGM volume 변경 : modifyBGMVolume(String name, float volume) 호출
+ * ES volume 변경 : modifyESVolume(String name, float volume) 호출
+ *
+ * 위 사항들 모두 구현 완료 및 테스트 완료
  **/
+
+//  test code
+//    public static void main(String[] args) throws IOException, InterruptedException {
+//        SoundManager sm = SoundManager.getInstance();
+//        sm.playBGM("test");
+//        Thread.sleep(10000);
+//    }
+
     private SoundManager() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader("res/ES"));
-            String line;
-            ESFiles = new String[(int)br.lines().count()][2];
+            BufferedReader br = new BufferedReader(new FileReader("res/sound"));
+            int ESFileCount = Objects.requireNonNull((new File("res/Sound.assets/ES")).listFiles()).length;
+            int BGMFileCount = Objects.requireNonNull((new File("res/Sound.assets/BGM")).listFiles()).length;
 
-            br = new BufferedReader(new FileReader("res/ES"));
+            EffectSounds = new HashMap<String, String[]>(ESFileCount);
+            BGMs = new HashMap<String, Clip>(BGMFileCount);
+            ESFiles = new String[ESFileCount][3];
+            BGMFiles = new String[BGMFileCount][3];
+
             int idx = 0;
+            int idy = 0;
+            String line;
+
             while ((line = br.readLine()) != null) {
                 // 세미콜론(;)로 구분된 데이터를 파싱
-                String[] parts = line.split(";");
-                ESFiles[idx][0] = parts[0];
-                ESFiles[idx][1] = parts[1];
-                idx += 1;
+                String[] data = line.split(";");
+                if(data[0].equals("es")){
+                    ESFiles[idx][0] = data[1];
+                    ESFiles[idx][1] = data[2];
+                    ESFiles[idx][2] = data[3];
+                    this.presetEffectSound(ESFiles[idx][0], "res/Sound.assets/ES/"+ESFiles[idx][1], Float.parseFloat(ESFiles[idx][2]));
+                    idx += 1;
+                }else{
+                    BGMFiles[idy][0] = data[1];
+                    BGMFiles[idy][1] = data[2];
+                    BGMFiles[idy][2] = data[3];
+                    this.preloadBGM(BGMFiles[idy][0], "res/Sound.assets/BGM/"+BGMFiles[idy][1], Float.parseFloat(BGMFiles[idy][2]));
+                    idy += 1;
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e);
         }
-        for(int idx = 0; idx < ESFiles.length; idx++)
-            this.preloadEffectSound(ESFiles[idx][0], "res/ES/"+ESFiles[idx][1]);
     }
 
     public static SoundManager getInstance() {
@@ -52,41 +79,17 @@ public class SoundManager {
         return instance;
     }
 
-    public void playBGM(String fileName) {
-        stopBGM();
-        try {
-            File bgmFile = new File("res/sound/BGM/"+fileName);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(bgmFile);
-            AudioFormat baseFormat = audioStream.getFormat();
-            AudioFormat targetFormat = new AudioFormat(
-                    AudioFormat.Encoding.PCM_SIGNED,
-                    44100,
-                    16,
-                    baseFormat.getChannels(),
-                    baseFormat.getChannels() * 2,
-                    44100,
-                    false
-            );
-            AudioInputStream convertedStream = AudioSystem.getAudioInputStream(targetFormat, audioStream);
-            bgmClip = AudioSystem.getClip();
-            bgmClip.open(convertedStream);
-            bgmClip.loop(Clip.LOOP_CONTINUOUSLY); // 반복 재생
-            bgmClip.start();
-        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            e.printStackTrace();
+    public void stopAllBGM() {
+        for (Clip c : BGMs.values()) {
+            c.stop();
         }
     }
 
-    public void stopBGM() {
-        if (bgmClip != null && bgmClip.isRunning()) {
-            bgmClip.stop();
-        }
-    }
-
-    public void preloadEffectSound(String name, String filePath) {
+    public void preloadBGM(String name, String filePath, float volume){
         try {
-            if (!soundEffects.containsKey(name)) {
+            if (!BGMs.containsKey(name)) {
                 File soundFile = new File(filePath);
+                System.out.println(soundFile.getName()+" is loading");
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
                 AudioFormat baseFormat = audioStream.getFormat();
                 AudioFormat targetFormat = new AudioFormat(
@@ -99,19 +102,27 @@ public class SoundManager {
                         false
                 );
                 AudioInputStream convertedStream = AudioSystem.getAudioInputStream(targetFormat, audioStream);
+
                 Clip clip = AudioSystem.getClip();
                 clip.open(convertedStream);
-                soundEffects.put(name, clip); // 미리 로드하여 맵에 저장
+
+//                볼륨 조절
+                FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                volumeControl.setValue(volume);
+
+//                해쉬멥에 추가
+                BGMs.put(name, clip); // 미리 로드하여 맵에 저장
+                System.out.println(soundFile.getName()+" load complete");
             }
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
-    public int playPreloadedEffectSound(String name) {
-        Clip clip = soundEffects.get(name);
-        if (clip != null) {
-            clip.setFramePosition(0); // 재생 위치를 처음으로 설정
+    public int playPreloadedBGM(String name){
+        Clip clip = BGMs.get(name);
+        if(clip != null){
+            clip.setFramePosition(0);
             clip.start();
             return 1;
         }else{
@@ -119,11 +130,106 @@ public class SoundManager {
         }
     }
 
-    public int modifyEffectSoundVolume(String name, float volume){
-        Clip clip = soundEffects.get(name);
-        if (clip != null) {
+    public void presetEffectSound(String name, String filePath, float volume) {
+        try {
+            if (!EffectSounds.containsKey(name)) {
+                String[] tmp = {filePath, String.valueOf(volume)};
+                EffectSounds.put(name, tmp);
+                System.out.println(name+" is set");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public int playEffectSound(String name) {
+        try {
+            if (EffectSounds.containsKey(name)) {
+                String[] tmp = EffectSounds.get(name);
+                File soundFile = new File(tmp[0]);
+                System.out.println(soundFile.getName() + " is loading");
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+                AudioFormat baseFormat = audioStream.getFormat();
+                AudioFormat targetFormat = new AudioFormat(
+                        AudioFormat.Encoding.PCM_SIGNED,
+                        44100,
+                        16,
+                        baseFormat.getChannels(),
+                        baseFormat.getChannels() * 2,
+                        44100,
+                        false
+                );
+                AudioInputStream convertedStream = AudioSystem.getAudioInputStream(targetFormat, audioStream);
+
+                Clip clip = AudioSystem.getClip();
+                clip.open(convertedStream);
+
+//                볼륨 조절
+                FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                volumeControl.setValue(Float.parseFloat(tmp[1]));
+
+                clip.start();
+                clip.addLineListener(event -> {
+                            if(event.getType() == LineEvent.Type.STOP){
+                                clip.close();
+                            }
+                        }
+                );
+                System.out.println(soundFile.getName() + " load complete");
+                return 1;
+            }
+            System.out.println("there is no ES : " + name);
+            return 0;
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public int playBGM(String name){
+        try {
+            stopAllBGM();
+            new Thread(() -> playPreloadedBGM(name)).start();
+            return 1;
+        }catch (Exception e){
+            System.out.println(e);
+            return 0;
+        }
+    }
+
+    public int playES(String name){
+        try {
+            new Thread(() -> playEffectSound(name)).start();
+            return 1;
+        }catch (Exception e){
+            System.out.println(e);
+            return 0;
+        }
+    }
+
+    public int modifyBGMVolume(String name, float volume){
+        if(volume > 2 || volume < -60){
+            System.out.println("Error : volume is out of index!!!!!");
+            System.out.println("input volume : "+ volume);
+            return 0;
+        }
+        if(BGMs.containsKey(name)){
+            Clip clip = BGMs.get(name);
             FloatControl volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             volumeControl.setValue(volume);
+            return 1;
+        }
+        return 0;
+    }
+
+    public int modifyESVolume(String name, float volume){
+        if(volume > 2 || volume < -60){
+            System.out.println("Error : volume is out of index!!!!!");
+            System.out.println("input volume : "+ volume);
+            return 0;
+        }
+        if(EffectSounds.containsKey(name)){
+            EffectSounds.get(name)[1] = String.valueOf(volume);
             return 1;
         }else{
             return 0;

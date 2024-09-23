@@ -7,6 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,8 @@ import java.util.logging.Logger;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;
+
+import javax.imageio.ImageIO;
 
 /**
  * Manages screen drawing.
@@ -559,4 +562,22 @@ public final class DrawManager {
 			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
 					+ fontBigMetrics.getHeight() / 3);
 	}
+
+    /**
+	 * ###TEAM INTERNATIONAL###
+     * Background draw
+     */
+    public void drawBackground(final Screen screen) {
+		// I still have no clue how relative pathing or class pathing works
+		InputStream imageStream = getClass().getResourceAsStream("/backgrounds/background_level_1.jpg");
+		BufferedImage backgroundImage;
+		try {
+            assert imageStream != null;
+            backgroundImage = ImageIO.read(imageStream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		backBufferGraphics.drawImage(backgroundImage, 0, 0, null);
+    }
+
 }

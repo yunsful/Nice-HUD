@@ -78,7 +78,7 @@ public class GameScreen extends Screen {
 	 *            Current game state.
 	 * @param gameSettings
 	 *            Current game settings.
-	 * @param bonusLife
+	 * @param bonnusLife
 	 *            Checks if a bonus life is awarded this level.
 	 * @param width
 	 *            Screen width.
@@ -270,7 +270,7 @@ public class GameScreen extends Screen {
 	 */
 	private void manageCollisions() {
 		Set<Bullet> recyclable = new HashSet<Bullet>();
-		for (Bullet bullet : this.bullets) {
+		for (Bullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
@@ -288,17 +288,8 @@ public class GameScreen extends Screen {
 						this.score += enemyShip.getPointValue();
 						this.shipsDestroyed++;
 						this.enemyShipFormation.destroy(enemyShip);
-
-
-						// Handle collision based on piercing ability.
-						bullet.onCollision(enemyShip);
-
-						// If the bullet can no longer pierce, add it to the recycling list.
-						if (!bullet.isPiercing() || bullet.isDestroyed()) {
-							recyclable.add(bullet);
-						}
+						recyclable.add(bullet);
 					}
-				}
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
@@ -306,14 +297,7 @@ public class GameScreen extends Screen {
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
-
-					// Handle collision based on piercing ability.
-					bullet.onCollision(this.enemyShipSpecial);
-
-					// If the bullet can no longer pierce, add it to the recycling list.
-					if (!bullet.isPiercing() || bullet.isDestroyed()) {
-						recyclable.add(bullet);
-					}
+					recyclable.add(bullet);
 				}
 			}
 		this.bullets.removeAll(recyclable);

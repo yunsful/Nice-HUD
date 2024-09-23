@@ -17,9 +17,6 @@ public class Bullet extends Entity {
 	 * positive is down.
 	 */
 	private int speed;
-	private boolean isPiercing;  // Flag indicating whether the bullet is piercing
-	private int piercingCount;   // Variable to track the number of enemies the bullet can pierce
-	protected boolean isDestroyed;
 
 	/**
 	 * Constructor, establishes the bullet's properties.
@@ -32,63 +29,11 @@ public class Bullet extends Entity {
 	 *            Speed of the bullet, positive or negative depending on
 	 *            direction - positive is down.
 	 */
-	public Bullet(final int positionX, final int positionY, final int speed, boolean isPiercing, int piercingCount) {
+	public Bullet(final int positionX, final int positionY, final int speed) {
 		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
 
 		this.speed = speed;
 		setSprite();
-		this.isPiercing = isPiercing; // Set whether the bullet is piercing
-		this.piercingCount = piercingCount; // Set the number of times the bullet can pierce
-		this.isDestroyed = false; // Set the destroyed state to false upon initialization
-	}
-
-	// Getter for whether the bullet is piercing
-	public boolean isPiercing() {
-		return isPiercing;
-	}
-
-	// Setter for whether the bullet is piercing
-	public void setPiercing(boolean isPiercing) {
-		this.isPiercing = isPiercing;
-	}
-
-	// Setter for piercing count
-	public void setPiercingCount(int piercingCount) {
-		this.piercingCount = piercingCount;
-	}
-
-	/**
-	 * Collision handling logic
-	 */
-	public void onCollision(Entity entity) {
-		if (this.isPiercing) {
-			// If the bullet is piercing, decrease the number of pierceable targets
-			this.piercingCount--;
-			// If the piercing count reaches 0, destroy the bullet
-			if (this.piercingCount <= 0) {
-				this.destroy();
-			}
-		} else {
-			// If the bullet is not piercing, destroy it immediately
-			this.destroy();
-		}
-	}
-
-	/**
-	 * Destroys the ship, causing an explosion.
-	 */
-	public void destroy() {
-		this.isDestroyed = true;
-		this.spriteType = SpriteType.Explosion;
-	}
-
-	/**
-	 * Checks if the ship has been destroyed.
-	 *
-	 * @return True if the ship has been destroyed.
-	 */
-	public boolean isDestroyed() {
-		return this.isDestroyed;
 	}
 
 	/**

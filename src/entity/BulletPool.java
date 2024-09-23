@@ -35,7 +35,7 @@ public final class BulletPool {
 	 * @return Requested bullet.
 	 */
 	public static Bullet getBullet(final int positionX,
-			final int positionY, final int speed, boolean isPiercing, int piercingCount) {
+			final int positionY, final int speed) {
 		Bullet bullet;
 		if (!pool.isEmpty()) {
 			bullet = pool.iterator().next();
@@ -44,16 +44,11 @@ public final class BulletPool {
 			bullet.setPositionY(positionY);
 			bullet.setSpeed(speed);
 			bullet.setSprite();
-
-			// Reset piercing status and piercing count
-			bullet.setPiercing(isPiercing);
-			bullet.setPiercingCount(piercingCount); // Initialize piercing count when recycling
-			bullet.isDestroyed = false; // Reset destroyed state when recycling
 		} else {
-			bullet = new Bullet(positionX, positionY, speed, isPiercing, piercingCount);
+			bullet = new Bullet(positionX, positionY, speed);
 			bullet.setPositionX(positionX - bullet.getWidth() / 2);
 		}
- 		return bullet;
+		return bullet;
 	}
 
 	/**

@@ -38,8 +38,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private static final int Y_SPEED = 4;
 	/** Speed of the bullets shot by the members. */
 	private static final int BULLET_SPEED = 4;
-	/** Indicates whether the bullet is piercing. By default, it is not. */
-	private boolean isPiercing = false;
 	/** Proportion of differences between shooting times. */
 	private static final double SHOOTING_VARIANCE = .2;
 	/** Margin on the sides of the screen. */
@@ -50,6 +48,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private static final int DESCENT_DISTANCE = 20;
 	/** Minimum speed allowed. */
 	private static final int MINIMUM_SPEED = 10;
+
 	/** DrawManager instance. */
 	private DrawManager drawManager;
 	/** Application logger. */
@@ -338,9 +337,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
-			// For now, adds a non-piercing bullet to the bullets set, fired by the enemy ship.
 			bullets.add(BulletPool.getBullet(shooter.getPositionX()
-					+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED, false, 0));
+					+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED));
 		}
 	}
 

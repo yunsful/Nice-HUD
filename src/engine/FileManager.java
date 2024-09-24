@@ -348,12 +348,11 @@ public final class FileManager {
             String amount = bufferedReader.readLine();
             currency = Integer.parseInt(amount);
         }
-        // Use if you adopt the method of calling DefaultCurrency File
-//		catch (FileNotFoundException e) {
-//			// loads default if there's no user currency.
-//			logger.info("Loading default currency.");
-//			currency = loadDefaultCurrency();
-//		}
+		catch (FileNotFoundException e) {
+			// loads default if there's no user currency.
+			logger.info("Loading default currency.");
+			currency = loadDefaultCurrency();
+		}
         finally {
             if (bufferedReader != null)
                 bufferedReader.close();
@@ -361,4 +360,31 @@ public final class FileManager {
 
         return currency;
     }
+
+	/**
+	 * Returns the application default currency if there is no user currency files.
+	 *
+	 * @return Default currency.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 */
+	private int loadDefaultCurrency() throws IOException {
+		int currency;
+		InputStream inputStream = null;
+		BufferedReader reader = null;
+
+		try {
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("currency");
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+
+			String amount = reader.readLine();
+			currency = Integer.parseInt(amount);
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return currency;
+	}
 }

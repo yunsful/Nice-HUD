@@ -29,12 +29,12 @@ public class HighScoreScreen extends Screen {
 	 *            Frames per second, frame rate at which the game is run.
 	 */
 	public HighScoreScreen(final int width, final int height, final int fps) {
-		super(width, height, fps); // 너비, 높이, fps를 가지고 화면 구현
+		super(width, height, fps);
 
-		this.returnCode = 1; //returnCode를 1로 설정
+		this.returnCode = 1;
 
 		try {
-			this.highScores = Core.getFileManager().loadHighScores(); //신기록 파일 읽어옴
+			this.highScores = Core.getFileManager().loadHighScores();
 		} catch (NumberFormatException | IOException e) {
 			logger.warning("Couldn't load high scores!");
 		}
@@ -59,8 +59,8 @@ public class HighScoreScreen extends Screen {
 
 		draw();
 		if (inputManager.isKeyDown(KeyEvent.VK_SPACE)
-				&& this.inputDelay.checkFinished()) // inputDelay 쿨타임이 끝났고, 스페이스바 키가 입력됐으면,
-			this.isRunning = false; // 신기록 화면에서 나감.
+				&& this.inputDelay.checkFinished())
+			this.isRunning = false;
 	}
 
 	/**

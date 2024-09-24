@@ -31,11 +31,11 @@ import engine.DrawManager.SpriteType;
  */
 public final class FileManager {
 
-	/** 이 클래스의 싱글톤 객체. */
+	/** Singleton instance of the class. */
 	private static FileManager instance;
 	/** Application logger. */
 	private static Logger logger;
-	/** 최고 점수의 최대 개수. */
+	/** Max number of high scores. */
 	private static final int MAX_SCORES = 7;
 
 	/**
@@ -46,7 +46,7 @@ public final class FileManager {
 	}
 
 	/**
-	 * 하나의 싱글톤 파일매니저의 객체를 사용.
+	 * Returns shared instance of FileManager.
 	 * 
 	 * @return Shared instance of FileManager.
 	 */
@@ -57,7 +57,7 @@ public final class FileManager {
 	}
 
 	/**
-	 * 디스크에서 스프라이트 데이터 로드.
+	 * Loads sprites from disk.
 	 * 
 	 * @param spriteMap
 	 *            Mapping of sprite type and empty boolean matrix that will
@@ -67,40 +67,42 @@ public final class FileManager {
 	 */
 	public void loadSprite(final Map<SpriteType, boolean[][]> spriteMap)
 			throws IOException {
-		InputStream inputStream = null; //데이터를 읽기 위한 InputStream 사용, null로 초기화
+		InputStream inputStream = null;
 
 		try {
 			inputStream = DrawManager.class.getClassLoader()
-					.getResourceAsStream("graphics"); //리소스 파일에서 graphics 이름을 가진 리소스 읽기
-			char c; //읽어온 데이터를 저장할 변수
+					.getResourceAsStream("graphics");
+			char c;
 
 			// Sprite loading.
 			for (Map.Entry<SpriteType, boolean[][]> sprite : spriteMap
-					.entrySet()) { //Map의 형태로 (키, boolean[][]의 값)으로 엔트리를 저장
+					.entrySet()) {
 				for (int i = 0; i < sprite.getValue().length; i++)
-					for (int j = 0; j < sprite.getValue()[i].length; j++) { // boolean[][]의 각 행의 열을 순회
+					for (int j = 0; j < sprite.getValue()[i].length; j++) {
 						do
-							c = (char) inputStream.read();  //C에 읽은 데이터를 저장
-						while (c != '0' && c != '1'); //c가 0과 1이 아닐때 까지 반복
+							c = (char) inputStream.read();
+						while (c != '0' && c != '1');
 
-						if (c == '1') //c가 1이 되면
-							sprite.getValue()[i][j] = true; //읽은 데이터의 boolean의 해당 위치를 true로 변경
+						if (c == '1')
+							sprite.getValue()[i][j] = true;
 						else
-							sprite.getValue()[i][j] = false; //읽은 데이터의 boolean의 해당 위치를 false로 변경
+							sprite.getValue()[i][j] = false;
 					}
-				logger.fine("Sprite " + sprite.getKey() + " loaded."); //스프라이트 로드 메세지 출력
+				logger.fine("Sprite " + sprite.getKey() + " loaded.");
 			}
+			if (inputStream != null)
+				inputStream.close();
 		} finally {
-			if (inputStream != null) //데이터 읽기 종료
+			if (inputStream != null)
 				inputStream.close();
 		}
 	}
 
 	/**
-	 * 폰트를 주어진 사이즈로 로드
+	 * Loads a font of a given size.
 	 * 
 	 * @param size
-	 *            폰트의 사이즈
+	 *            Point size of the font.
 	 * @return New font.
 	 * @throws IOException
 	 *             In case of loading problems.
@@ -109,62 +111,66 @@ public final class FileManager {
 	 */
 	public Font loadFont(final float size) throws IOException,
 			FontFormatException {
-		InputStream inputStream = null; //inputStream으로 읽기
+		InputStream inputStream = null;
 		Font font;
 
 		try {
-			// Font loading.
 			inputStream = FileManager.class.getClassLoader()
-					.getResourceAsStream("font.ttf"); //클래스로더로 font.ttf파일 읽기
-			font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(
-					size); //truetype 폰트 지정, 폰트 사이즈 지정, 폰트 객체 반환
+					.getResourceAsStream("font.ttf");
+			if (inputStream != null) { 
+				font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(size);
+			} else {
+				// Set as default font, if inputStream is null
+				System.out.println("Custom font not found, applying default font.");
+				font = new Font("Serif", Font.PLAIN, (int) size); // Set as "Serif"
+			}
 		} finally {
-			if (inputStream != null) // 읽기 종료
+			if (inputStream != null)
 				inputStream.close();
 		}
 
-		return font; //읽어온 폰트 반환
+		return font;
 	}
 
 	/**
-	 * 유저의 최대 점수가 없는 경우, 어플리케이션의 기본 최대 점수를 반환
-	 *
+	 * Returns the application default scores if there is no user high scores
+	 * file.
 	 * 
-	 * @return 기본 최고 점수들
+	 * @return Default high scores.
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
 	private List<Score> loadDefaultHighScores() throws IOException {
-		List<Score> highScores = new ArrayList<Score>(); //Score객체 저장할 highscores 배열 선언
-		InputStream inputStream = null; // 데이터를 읽기 위해 inputstream 준비
+		List<Score> highScores = new ArrayList<Score>();
+		InputStream inputStream = null;
 		BufferedReader reader = null;
 
 		try {
 			inputStream = FileManager.class.getClassLoader()
 					.getResourceAsStream("scores");
-			reader = new BufferedReader(new InputStreamReader(inputStream)); //scores 파일에서 데이터 읽어옴
+			reader = new BufferedReader(new InputStreamReader(inputStream));
 
 			Score highScore = null;
 			String name = reader.readLine();
-			String score = reader.readLine(); //첫 두 줄을 읽고 각각 name과 score에 저장
+			String score = reader.readLine();
 
-			while ((name != null) && (score != null)) { //name과 score가 null이 아니면 반복
-				highScore = new Score(name, Integer.parseInt(score)); //읽어온 name과 score로 Score 객체 생성, score 정수로 변환
-				highScores.add(highScore); //생성한 score객체를 처음 만든 highscores 배열에 저장
+			while ((name != null) && (score != null)) {
+				highScore = new Score(name, Integer.parseInt(score));
+				highScores.add(highScore);
 				name = reader.readLine();
-				score = reader.readLine(); //다시 다음 두 줄을 읽고 name과 score에 저장
+				score = reader.readLine();
 			}
 		} finally {
-			if (inputStream != null) // 데이터 읽기 종료
+			if (inputStream != null)
 				inputStream.close();
 		}
 
-		return highScores; // scores 파일을 읽고 name과 scores(정수)를 가진 score 객체를 원소로 하는 highScores 배열 반환
+		return highScores;
 	}
 
 	/**
-	 * 최고점수를 파일로부터 로드하고, 스코어 점수에 따라 정렬
-	 *
+	 * Loads high scores from file, and returns a sorted list of pairs score -
+	 * value.
 	 * 
 	 * @return Sorted list of scores - players.
 	 * @throws IOException
@@ -172,9 +178,9 @@ public final class FileManager {
 	 */
 	public List<Score> loadHighScores() throws IOException {
 
-		List<Score> highScores = new ArrayList<Score>(); //배열 선언
+		List<Score> highScores = new ArrayList<Score>();
 		InputStream inputStream = null;
-		BufferedReader bufferedReader = null;  //데이터 읽을 준비
+		BufferedReader bufferedReader = null;
 
 		try {
 			String jarPath = FileManager.class.getProtectionDomain()

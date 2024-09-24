@@ -12,17 +12,17 @@ import engine.DrawManager.SpriteType;
  */
 public class Entity {
 
-	/** Position in the x-axis of the upper left corner of the entity. entity의 좌측 상단의 x좌표*/
+	/** Position in the x-axis of the upper left corner of the entity. */
 	protected int positionX;
-	/** Position in the y-axis of the upper left corner of the entity. entity의 좌측 상단의 y좌표*/
+	/** Position in the y-axis of the upper left corner of the entity. */
 	protected int positionY;
-	/** Width of the entity. entity의 너비*/
+	/** Width of the entity. */
 	protected int width;
-	/** Height of the entity. entity의 높이*/
+	/** Height of the entity. */
 	protected int height;
-	/** Color of the entity. entity의 색상*/
+	/** Color of the entity. */
 	private Color color;
-	/** Sprite type assigned to the entity. entity의 종류*/
+	/** Sprite type assigned to the entity. */
 	protected SpriteType spriteType;
 
 	/**
@@ -39,8 +39,6 @@ public class Entity {
 	 * @param color
 	 *            Color of the entity.
 	 */
-
-	// spriteType을 제외한 나머지 속성 정의
 	public Entity(final int positionX, final int positionY, final int width,
 			final int height, final Color color) {
 		this.positionX = positionX;

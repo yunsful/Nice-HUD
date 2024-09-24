@@ -11,40 +11,39 @@ import engine.GameState;
 import engine.Score;
 
 /**
- * 점수 화면 구현
+ * Implements the score screen.
  * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-//Screen 상속
 public class ScoreScreen extends Screen {
 
-	/** 유저 선택에 부여할 쿨타임 시간 */
+	/** Milliseconds between changes in user selection. */
 	private static final int SELECTION_TIME = 200;
-	/** 최대 점수의 최대 개수 */
+	/** Maximum number of high scores. */
 	private static final int MAX_HIGH_SCORE_NUM = 7;
-	/** Code of first mayus character. 신기록시 이용할 이름 입력다이얼의 첫 문자, A*/
+	/** Code of first mayus character. */
 	private static final int FIRST_CHAR = 65;
-	/** Code of last mayus character. 신기록시 이용할 이름 입력다이얼의 마지막 문자, Z*/
+	/** Code of last mayus character. */
 	private static final int LAST_CHAR = 90;
 
-	/** 현재 점수 */
+	/** Current score. */
 	private int score;
-	/** 플레이어의 남은 목숨 */
+	/** Player lives left. */
 	private int livesRemaining;
-	/** 플레이어가 쏜 총알의 총 개수 */
+	/** Total bullets shot by the player. */
 	private int bulletsShot;
-	/** 플레이어가 부신 함선의 총 개수 */
+	/** Total ships destroyed by the player. */
 	private int shipsDestroyed;
-	/** 과거 최대스코어들의 리스트. */
+	/** List of past high scores. */
 	private List<Score> highScores;
-	/** 현재 점수가 신기록인지에 대한 확인 변수 */
+	/** Checks if current score is a new high score. */
 	private boolean isNewRecord;
-	/** 기록에 입력할 플레이어의 이름 */
+	/** Player name for record input. */
 	private char[] name;
-	/** 신기록에 유지할 이름 입력을 위한 다이얼에 사용될 문자의 번째 */
+	/** Character of players name selected for change. */
 	private int nameCharSelected;
-	/** 유저 선택의 쿨타임 */
+	/** Time between changes in user selection. */
 	private Cooldown selectionCooldown;
 
 	/**
@@ -61,26 +60,26 @@ public class ScoreScreen extends Screen {
 	 */
 	public ScoreScreen(final int width, final int height, final int fps,
 			final GameState gameState) {
-		super(width, height, fps); //점수 화면의 너비, 높이, fps 인자로 받아서 초기화
+		super(width, height, fps);
 
-		this.score = gameState.getScore(); //현재 게임상태의 스코어
-		this.livesRemaining = gameState.getLivesRemaining(); //현재 게임의 남은 목숨
-		this.bulletsShot = gameState.getBulletsShot(); //현재 게임에서 쏜 총알 수
-		this.shipsDestroyed = gameState.getShipsDestroyed(); //현재 부신 적 함선 개수
-		this.isNewRecord = false; // 초기 신기록인지 체크는 false로 설정
-		this.name = "AAA".toCharArray(); //AAA를 ['A', 'A', 'A']로 변환하여 저장
+		this.score = gameState.getScore();
+		this.livesRemaining = gameState.getLivesRemaining();
+		this.bulletsShot = gameState.getBulletsShot();
+		this.shipsDestroyed = gameState.getShipsDestroyed();
+		this.isNewRecord = false;
+		this.name = "AAA".toCharArray();
 		this.nameCharSelected = 0;
-		this.selectionCooldown = Core.getCooldown(SELECTION_TIME); //유저 선택 쿨타임 객체 생성
-		this.selectionCooldown.reset();// 선택 쿨타임 적용 시작
+		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
+		this.selectionCooldown.reset();
 
 		try {
-			this.highScores = Core.getFileManager().loadHighScores(); //fileManger객체로 highscore(score 리스트) 불러옴.
+			this.highScores = Core.getFileManager().loadHighScores();
 			if (highScores.size() < MAX_HIGH_SCORE_NUM
-					|| highScores.get(highScores.size() - 1).getScore() // highscores 리스트의 요소 개수가 최대 개수보다 적거나 마지막 스코어가 지금 점수보다 낮으면
+					|| highScores.get(highScores.size() - 1).getScore()
 					< this.score)
-				this.isNewRecord = true; // 신기록임을 인정, true 대입
+				this.isNewRecord = true;
 
-		} catch (IOException e) { //예외 처리
+		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
 		}
 	}
@@ -100,48 +99,48 @@ public class ScoreScreen extends Screen {
 	 * Updates the elements on screen and checks for events.
 	 */
 	protected final void update() {
-		super.update(); //업데이트 메소드
+		super.update();
 
 		draw();
-		if (this.inputDelay.checkFinished()) { //inputDelay 쿨타임이 끝났으면 아래 블록 시행
-			if (inputManager.isKeyDown(KeyEvent.VK_ESCAPE)) { //ESC누르면
+		if (this.inputDelay.checkFinished()) {
+			if (inputManager.isKeyDown(KeyEvent.VK_ESCAPE)) {
 				// Return to main menu.
-				this.returnCode = 1; //메인메뉴로 이동
+				this.returnCode = 1;
 				this.isRunning = false;
-				if (this.isNewRecord) // 점수가 신기록일시
-					saveScore(); //점수 저장
-			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) { //스페이스바 입력시
+				if (this.isNewRecord)
+					saveScore();
+			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 				// Play again.
-				this.returnCode = 2; // 재시작
+				this.returnCode = 2;
 				this.isRunning = false;
-				if (this.isNewRecord) // 신기록일시
-					saveScore(); //점수 저장
+				if (this.isNewRecord)
+					saveScore();
 			}
 
-			if (this.isNewRecord && this.selectionCooldown.checkFinished()) { // 신기록이고 선택 쿨다운 완료시
-				if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) { // 오른쪽 방향키 입력시
+			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
+				if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)) {
 					this.nameCharSelected = this.nameCharSelected == 2 ? 0
-							: this.nameCharSelected + 1; //nameCharSelected가 2이면 0, 2가 아니면 +1을 더한 값을 저장
-					this.selectionCooldown.reset(); // 선택 쿨다운 재시작
+							: this.nameCharSelected + 1;
+					this.selectionCooldown.reset();
 				}
-				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)) { //왼쪽 방향키 누를 시
+				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)) {
 					this.nameCharSelected = this.nameCharSelected == 0 ? 2
-							: this.nameCharSelected - 1; //nameCharSelected가 0이면 2를, 0이 아니면 -1을 더한 값을 저장
-					this.selectionCooldown.reset(); // 선택 쿨다운 재시작
+							: this.nameCharSelected - 1;
+					this.selectionCooldown.reset();
 				}
-				if (inputManager.isKeyDown(KeyEvent.VK_UP)) { // 위 방향키를 입력시
-					this.name[this.nameCharSelected] = // name 리스트의 nameCharSelected 번째의 요소에 대입
+				if (inputManager.isKeyDown(KeyEvent.VK_UP)) {
+					this.name[this.nameCharSelected] =
 							(char) (this.name[this.nameCharSelected]
-									== LAST_CHAR ? FIRST_CHAR // 해당 요소가 LAST_CHAR이면 FIRST_CHAR로 돌아감, 아니면 +1을 더한 문자를 출력
+									== LAST_CHAR ? FIRST_CHAR
 							: this.name[this.nameCharSelected] + 1);
-					this.selectionCooldown.reset(); // 선택 쿨다운 재시작
+					this.selectionCooldown.reset();
 				}
-				if (inputManager.isKeyDown(KeyEvent.VK_DOWN)) { // 아래 방향키 입력시
-					this.name[this.nameCharSelected] = // name 리스트의 nameCharSelected 번째의 요소에 대입
+				if (inputManager.isKeyDown(KeyEvent.VK_DOWN)) {
+					this.name[this.nameCharSelected] =
 							(char) (this.name[this.nameCharSelected]
-									== FIRST_CHAR ? LAST_CHAR // 해당 요소가 FIRST_CHAR이면 LAST_CHAR로 돌아감, 아니면 -1을 더한 문자 출력
+									== FIRST_CHAR ? LAST_CHAR
 							: this.name[this.nameCharSelected] - 1);
-					this.selectionCooldown.reset(); // 선택 쿨다운 재시작
+					this.selectionCooldown.reset();
 				}
 			}
 		}
@@ -152,13 +151,13 @@ public class ScoreScreen extends Screen {
 	 * Saves the score as a high score.
 	 */
 	private void saveScore() {
-		highScores.add(new Score(new String(this.name), score)); // highsocres 리스트에 새 신기록인 score를 추가.
-		Collections.sort(highScores); // 정렬
-		if (highScores.size() > MAX_HIGH_SCORE_NUM) // 최대 신기록 개수를 넘어가면
-			highScores.remove(highScores.size() - 1); // 제일 마지막의 신기록 한 개를 삭제
+		highScores.add(new Score(new String(this.name), score));
+		Collections.sort(highScores);
+		if (highScores.size() > MAX_HIGH_SCORE_NUM)
+			highScores.remove(highScores.size() - 1);
 
 		try {
-			Core.getFileManager().saveHighScores(highScores); //파일매니저를 통해 신기록 리스트를 저장
+			Core.getFileManager().saveHighScores(highScores);
 		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
 		}

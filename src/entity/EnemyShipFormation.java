@@ -128,6 +128,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.positionY = INIT_POS_Y;
 		this.shooters = new ArrayList<EnemyShip>();
 		SpriteType spriteType;
+		int hp=1;
 
 		this.logger.info("Initializing " + nShipsWide + "x" + nShipsHigh
 				+ " ship formation in (" + positionX + "," + positionY + ")");
@@ -149,7 +150,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				column.add(new EnemyShip((SEPARATION_DISTANCE 
 						* this.enemyShips.indexOf(column))
 								+ positionX, (SEPARATION_DISTANCE * i)
-								+ positionY, spriteType));
+								+ positionY, spriteType,hp));
 				this.shipCount++;
 			}
 		}
@@ -349,38 +350,43 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 *            Ship to be destroyed.
 	 */
 	public final void destroy(final EnemyShip destroyedShip) {
+		boolean die = false;
 		for (List<EnemyShip> column : this.enemyShips)
 			for (int i = 0; i < column.size(); i++)
 				if (column.get(i).equals(destroyedShip)) {
-					column.get(i).destroy();
-					this.logger.info("Destroyed ship in ("
-							+ this.enemyShips.indexOf(column) + "," + i + ")");
+					die = column.get(i).hit();
+					if(die) {
+						this.logger.info("Destroyed ship in ("
+								+ this.enemyShips.indexOf(column) + "," + i + ")");
+					}
 				}
 
 		// Updates the list of ships that can shoot the player.
-		if (this.shooters.contains(destroyedShip)) {
-			int destroyedShipIndex = this.shooters.indexOf(destroyedShip);
-			int destroyedShipColumnIndex = -1;
+		if(die) {
+			if (this.shooters.contains(destroyedShip)) {
+				int destroyedShipIndex = this.shooters.indexOf(destroyedShip);
+				int destroyedShipColumnIndex = -1;
 
-			for (List<EnemyShip> column : this.enemyShips)
-				if (column.contains(destroyedShip)) {
-					destroyedShipColumnIndex = this.enemyShips.indexOf(column);
-					break;
+				for (List<EnemyShip> column : this.enemyShips)
+					if (column.contains(destroyedShip)) {
+						destroyedShipColumnIndex = this.enemyShips.indexOf(column);
+						break;
+					}
+
+				EnemyShip nextShooter = getNextShooter(this.enemyShips
+						.get(destroyedShipColumnIndex));
+
+				if (nextShooter != null)
+					this.shooters.set(destroyedShipIndex, nextShooter);
+				else {
+					this.shooters.remove(destroyedShipIndex);
+					this.logger.info("Shooters list reduced to "
+							+ this.shooters.size() + " members.");
 				}
-
-			EnemyShip nextShooter = getNextShooter(this.enemyShips
-					.get(destroyedShipColumnIndex));
-
-			if (nextShooter != null)
-				this.shooters.set(destroyedShipIndex, nextShooter);
-			else {
-				this.shooters.remove(destroyedShipIndex);
-				this.logger.info("Shooters list reduced to "
-						+ this.shooters.size() + " members.");
 			}
-		}
 
-		this.shipCount--;
+			this.shipCount--;
+		}
 	}
 
 	/**

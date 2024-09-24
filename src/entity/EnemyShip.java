@@ -23,6 +23,8 @@ public class EnemyShip extends Entity {
 	/** Point value of a bonus enemy. */
 	private static final int BONUS_TYPE_POINTS = 100;
 
+	/** EnemyShip's health point */
+	private int hp;
 	/** Cooldown between sprite changes. */
 	private Cooldown animationCooldown;
 	/** Checks if the ship has been hit by a bullet. */
@@ -40,10 +42,14 @@ public class EnemyShip extends Entity {
 	 * @param spriteType
 	 *            Sprite type, image corresponding to the ship.
 	 */
-	public EnemyShip(final int positionX, final int positionY,
-			final SpriteType spriteType) {
-		super(positionX, positionY, 12 * 2, 8 * 2, Color.WHITE);
 
+
+	public EnemyShip(final int positionX, final int positionY,
+			final SpriteType spriteType,int hp) {
+		super(positionX, positionY, 12 * 2, 8 * 2, determineColor(hp));
+
+
+		this.hp = hp;
 		this.spriteType = spriteType;
 		this.animationCooldown = Core.getCooldown(500);
 		this.isDestroyed = false;
@@ -67,6 +73,13 @@ public class EnemyShip extends Entity {
 		}
 	}
 
+	/** Constructor for EnemyShip that did not require hp*/
+	public EnemyShip(final int positionX, final int positionY,
+					 final SpriteType spriteType){
+		this(positionX,positionY,spriteType,1);
+	}
+
+
 	/**
 	 * Constructor, establishes the ship's properties for a special ship, with
 	 * known starting properties.
@@ -74,6 +87,7 @@ public class EnemyShip extends Entity {
 	public EnemyShip() {
 		super(-32, 60, 16 * 2, 7 * 2, Color.RED);
 
+		this.hp = 1;
 		this.spriteType = SpriteType.EnemyShipSpecial;
 		this.isDestroyed = false;
 		this.pointValue = BONUS_TYPE_POINTS;
@@ -139,6 +153,20 @@ public class EnemyShip extends Entity {
 	public final void destroy() {
 		this.isDestroyed = true;
 		this.spriteType = SpriteType.Explosion;
+	}
+
+	/**
+	 * When the EnemyShip is hit and its hp reaches 0, destroy the ship
+	 *
+	 * @return True if the ship has been destroyed.
+	 */
+	public final boolean hit(){
+		this.hp -= 1;
+		if (this.hp <= 0){
+			destroy();
+			return true;
+		}
+		return false;
 	}
 
 	/**

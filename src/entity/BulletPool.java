@@ -12,7 +12,7 @@ import java.util.Set;
 public final class BulletPool {
 
 	/** Set of already created bullets. */
-	private static Set<Bullet> pool = new HashSet<Bullet>(); // 해시 테이블을 이용해 재사용 가능한 bullet을 저장할 pool을 생성
+	private static Set<Bullet> pool = new HashSet<Bullet>();
 
 	/**
 	 * Constructor, not called.
@@ -37,16 +37,16 @@ public final class BulletPool {
 	public static Bullet getBullet(final int positionX,
 			final int positionY, final int speed) {
 		Bullet bullet;
-		if (!pool.isEmpty()) { // pool에 재사용 가능한 bullet이 있다면
-			bullet = pool.iterator().next(); // pool에서의 첫번째 bullet
-			pool.remove(bullet); // 방금 가져온 bullet은 재사용 중이므로 pool에서 제거
+		if (!pool.isEmpty()) {
+			bullet = pool.iterator().next();
+			pool.remove(bullet);
 			bullet.setPositionX(positionX - bullet.getWidth() / 2);
 			bullet.setPositionY(positionY);
-			bullet.setSpeed(speed); // bullet의 X축 위치, Y축 위치, 속도 설정
-			bullet.setSprite(); // speed에 따라 스프라이트 타입 설정
-		} else { // pool이 비어있다면
-			bullet = new Bullet(positionX, positionY, speed); // 새로운 bullet 생성
-			bullet.setPositionX(positionX - bullet.getWidth() / 2); // bullet의 X축 위치 설정
+			bullet.setSpeed(speed);
+			bullet.setSprite();
+		} else {
+			bullet = new Bullet(positionX, positionY, speed);
+			bullet.setPositionX(positionX - bullet.getWidth() / 2);
 		}
 		return bullet;
 	}
@@ -59,5 +59,5 @@ public final class BulletPool {
 	 */
 	public static void recycle(final Set<Bullet> bullet) {
 		pool.addAll(bullet);
-	} // set에 있는 bullet들을 pool에 추가
+	}
 }

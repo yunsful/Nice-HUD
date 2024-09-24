@@ -30,9 +30,9 @@ public class Bullet extends Entity {
 	 *            direction - positive is down.
 	 */
 	public Bullet(final int positionX, final int positionY, final int speed) {
-		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE); //Bullet의 위치와 너비와 높이 색깔 설정.
+		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
 
-		this.speed = speed; // 속도 설정
+		this.speed = speed;
 		setSprite();
 	}
 
@@ -40,10 +40,10 @@ public class Bullet extends Entity {
 	 * Sets correct sprite for the bullet, based on speed.
 	 */
 	public final void setSprite() {
-		if (speed < 0) //속도가 0 미만(위로가면) 이면
-			this.spriteType = SpriteType.Bullet; // 스프라이트 타입을 Bullet으로 설정
-		else // 속도가 0이상(아래로가면) 이면
-			this.spriteType = SpriteType.EnemyBullet; // 스프라이트 타입을 적 Bullet으로 설정
+		if (speed < 0)
+			this.spriteType = SpriteType.Bullet;
+		else
+			this.spriteType = SpriteType.EnemyBullet;
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class Bullet extends Entity {
 	 */
 	public final void update() {
 		this.positionY += this.speed;
-	} //Y값 위치를 속도만큼 변경
+	}
 
 	/**
 	 * Setter of the speed of the bullet.
@@ -61,7 +61,7 @@ public class Bullet extends Entity {
 	 */
 	public final void setSpeed(final int speed) {
 		this.speed = speed;
-	} //속도 setter
+	}
 
 	/**
 	 * Getter for the speed of the bullet.
@@ -70,5 +70,5 @@ public class Bullet extends Entity {
 	 */
 	public final int getSpeed() {
 		return this.speed;
-	} //속도 getter
+	}
 }

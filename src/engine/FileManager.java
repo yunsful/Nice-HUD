@@ -272,4 +272,48 @@ public final class FileManager {
 				bufferedWriter.close();
 		}
 	}
+
+	/**
+	 * Saves user currency to disk.
+	 *
+	 * @param currency
+	 *            amount of user currency to save.
+	 * @throws IOException
+	 *             In case of saving problems.
+	 */
+
+	public void saveCurrency(final int currency) throws IOException {
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			//Choose File root
+			String currencyPath = new File(jarPath).getParent();
+			currencyPath += File.separator;
+			currencyPath += "currency";
+
+			File currencyFile = new File(currencyPath);
+			//create File If there is no currencyFile
+			if (!currencyFile.exists())
+				currencyFile.createNewFile();
+
+			outputStream = new FileOutputStream(currencyFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
+
+			logger.info("Saving user's currency.");
+
+			// Saves user's currency
+			bufferedWriter.write(Integer.toString(currency));
+			bufferedWriter.newLine();
+
+		} finally {
+			if (bufferedWriter != null)
+				bufferedWriter.close();
+		}
+	}
 }

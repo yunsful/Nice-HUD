@@ -316,4 +316,49 @@ public final class FileManager {
 				bufferedWriter.close();
 		}
 	}
+
+	/**
+	 * Loads user currency from file, and returns current currency.
+	 *
+	 * @return amount of current currency.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 */
+	public int loadCurrency() throws IOException {
+        int currency;
+		InputStream inputStream = null;
+        BufferedReader bufferedReader = null;
+
+        try {
+            String jarPath = FileManager.class.getProtectionDomain()
+                    .getCodeSource().getLocation().getPath();
+            jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+            String currencyPath = new File(jarPath).getParent();
+            currencyPath += File.separator;
+            currencyPath += "currency";
+
+            File currencyFile = new File(currencyPath);
+            inputStream = new FileInputStream(currencyPath);
+            bufferedReader = new BufferedReader(new InputStreamReader(
+                    inputStream, Charset.forName("UTF-8")));
+
+            logger.info("Loading user's currency.");
+
+            String amount = bufferedReader.readLine();
+            currency = Integer.parseInt(amount);
+        }
+        // Use if you adopt the method of calling DefaultCurrency File
+//		catch (FileNotFoundException e) {
+//			// loads default if there's no user currency.
+//			logger.info("Loading default currency.");
+//			currency = loadDefaultCurrency();
+//		}
+        finally {
+            if (bufferedReader != null)
+                bufferedReader.close();
+        }
+
+        return currency;
+    }
 }

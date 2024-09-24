@@ -177,4 +177,22 @@ public class EnemyShip extends Entity {
 	public final boolean isDestroyed() {
 		return this.isDestroyed;
 	}
+
+	/**
+	 * Determine the color of the ship according to hp
+	 * @param hp
+	 * 			The ship's hp
+	 * @return if hp is 2, return yellow
+	 * 		   if hp is 3, return orange
+	 * 		   if hp is 1, return white
+	 */
+	private static Color determineColor(int hp){
+		if( hp == 2)
+			return new Color(0xFFEB3B);
+		else if(hp == 3)
+			return new Color(0xFFA500);
+		return new Color(0xFFFFFF);
+	}
+
+
 }

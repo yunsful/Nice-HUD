@@ -45,5 +45,6 @@
 
 
   - [Space Invaders Regular (font)](http://www.fonts2u.com/space-invaders-regular.font) - &copy; kylemaoin 2010
-  - [Pixelated Drive(bgm)](https://pixabay.com/ko/music/pixelated-drive-228439/) - &copy; Tim_Kulig 1980
-  - [Start Button(ES)](https://www.storyblocks.com/audio/stock/rocket-launch-game-futuristic-effect-4-bwrzyfuxfw8k8p11ip2.html) - &copy; None
+  - [ally_airship_damage(ES)](https://freesound.org/people/cabled_mess/sounds/350925/) - &copy; cabled_mess 2016
+  - [ally_airship_destroy_explosion(ES)](https://freesound.org/people/Mrthenoronha/sounds/506823/) - &copy; Mrthenoronha 2020
+  - [ally_airship_destroy_die(ES)](https://freesound.org/people/AceOfSpadesProduc100/sounds/333785/) - &copy; AceOfSpadesProduc100 2016

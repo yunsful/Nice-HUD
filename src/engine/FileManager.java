@@ -339,7 +339,7 @@ public final class FileManager {
             currencyPath += "currency";
 
             File currencyFile = new File(currencyPath);
-            inputStream = new FileInputStream(currencyPath);
+            inputStream = new FileInputStream(currencyFile);
             bufferedReader = new BufferedReader(new InputStreamReader(
                     inputStream, Charset.forName("UTF-8")));
 

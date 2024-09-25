@@ -5,7 +5,10 @@ import java.util.logging.Logger;
 
 
 public final class CurrencyManager {
+
+    /** Singleton instance of the class. */
     private static CurrencyManager instance;
+    /** Application logger. */
     private static Logger logger;
 
     /**
@@ -24,6 +27,16 @@ public final class CurrencyManager {
         return instance;
     }
 
+    /**
+     * Add an amount of money to the current currency.
+     */
+    public static void addCurrency(int amount) {
+        int current_currency = FileManager.loadCurrency();
+        amount += current_currency;
+        FileManager.saveCurrency(amount);
+    }
+
+
 
     public int calculateCurrency(int score, float hitRate, int
             clearTime, int maxTime) {
@@ -36,7 +49,7 @@ public final class CurrencyManager {
             currency += (int) (currency * 0.2); // 20% 보너스 지급
         }
         //
-        
+
         int timeBonus = (maxTime - clearTime) / 10;
         if (timeBonus > 0) {
             currency += timeBonus;

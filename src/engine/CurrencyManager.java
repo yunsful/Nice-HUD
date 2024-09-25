@@ -36,7 +36,20 @@ public final class CurrencyManager {
         FileManager.saveCurrency(amount);
     }
 
-
+    /**
+     * Consume as much money as the amount you have (cannot spend more than you currently have).
+     */
+    public static boolean spendCurrency(int amount) {
+        int current_currency = FileManager.loadCurrency();
+        if (amount <= current_currency) {
+            current_currency -= amount;
+            FileManager.saveCurrency(current_currency);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 
     public int calculateCurrency(int score, float hitRate, int
             clearTime, int maxTime) {

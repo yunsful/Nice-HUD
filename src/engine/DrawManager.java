@@ -325,6 +325,7 @@ public final class DrawManager {
 				/ 3 * 2 + fontRegularMetrics.getHeight() * 2);
 
 		// 2 player mode
+		// Planned for Scenario Use
 		if (option == 4)
 			backBufferGraphics.setColor(Color.GREEN);
 		else

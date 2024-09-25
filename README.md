@@ -46,3 +46,5 @@
 
   - [Space Invaders Regular (font)](http://www.fonts2u.com/space-invaders-regular.font) - &copy; kylemaoin 2010
   - [Pixelated Drive(bgm)](https://pixabay.com/ko/music/pixelated-drive-228439/) - &copy; Tim_Kulig 1980
+  - [Retro, Laser Shot 02(es)](https://freesound.org/people/MATRIXXX_/sounds/414886/) - &copy; MATRIXXX_ 2018
+  - [Retro Gun Shot(es)](https://freesound.org/people/Jofae/sounds/363698/) - &copy; Jofae 2016

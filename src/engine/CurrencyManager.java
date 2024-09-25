@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.IOException;
 import java.util.logging.Logger;
 
 
@@ -10,18 +11,22 @@ public final class CurrencyManager {
     private static CurrencyManager instance;
     /** Application logger. */
     private static Logger logger;
+    private static FileManager fileManager;
 
     /**
      * private constructor.
      */
-    private CurrencyManager() { logger = Core.getLogger(); }
+    private CurrencyManager() {
+        fileManager = Core.getFileManager();
+        logger = Core.getLogger();
+    }
 
     /**
      * Returns shared instance of FileManager.
      *
      * @return Shared instance of FileManager.
      */
-    private static CurrencyManager getInstance() {
+    protected static CurrencyManager getInstance() {
         if (instance == null)
              instance = new CurrencyManager();
         return instance;
@@ -30,20 +35,20 @@ public final class CurrencyManager {
     /**
      * Add an amount of money to the current currency.
      */
-    public static void addCurrency(int amount) {
-        int current_currency = FileManager.loadCurrency();
+    public void addCurrency(int amount) throws IOException {
+        int current_currency = fileManager.loadCurrency();
         amount += current_currency;
-        FileManager.saveCurrency(amount);
+        fileManager.saveCurrency(amount);
     }
 
     /**
      * Consume as much money as the amount you have (cannot spend more than you currently have).
      */
-    public static boolean spendCurrency(int amount) {
-        int current_currency = FileManager.loadCurrency();
+    public boolean spendCurrency(int amount) throws IOException {
+        int current_currency = fileManager.loadCurrency();
         if (amount <= current_currency) {
             current_currency -= amount;
-            FileManager.saveCurrency(current_currency);
+            fileManager.saveCurrency(current_currency);
             return true;
         }
         else {
@@ -71,7 +76,7 @@ public final class CurrencyManager {
     }
 
 
-    public static int getCurrency() {
-        return FileManager.loadCurrency();
+    public int getCurrency() throws IOException {
+        return fileManager.loadCurrency();
     }
 }

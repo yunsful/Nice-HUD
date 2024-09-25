@@ -45,6 +45,7 @@ public class ScoreScreen extends Screen {
 	private int nameCharSelected;
 	/** Time between changes in user selection. */
 	private Cooldown selectionCooldown;
+	private int currency;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -71,6 +72,7 @@ public class ScoreScreen extends Screen {
 		this.nameCharSelected = 0;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
+		this.currency = gameState.getCurrency();
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -107,14 +109,18 @@ public class ScoreScreen extends Screen {
 				// Return to main menu.
 				this.returnCode = 1;
 				this.isRunning = false;
-				if (this.isNewRecord)
+				if (this.isNewRecord) {
 					saveScore();
+				}
+				saveCurrency();
 			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 				// Play again.
 				this.returnCode = 2;
 				this.isRunning = false;
-				if (this.isNewRecord)
+				if (this.isNewRecord) {
 					saveScore();
+				}
+				saveCurrency();
 			}
 
 			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
@@ -162,6 +168,15 @@ public class ScoreScreen extends Screen {
 			logger.warning("Couldn't load high scores!");
 		}
 	}
+
+	private void saveCurrency() {
+		try {
+			Core.getCurrencyManager().addCurrency(currency);
+			logger.info("You eared $" + currency);
+		} catch (IOException e) {
+			logger.warning("Couldn't load currency!");
+        }
+    }
 
 	/**
 	 * Draws the elements associated with the screen.

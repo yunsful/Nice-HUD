@@ -7,21 +7,21 @@ import engine.Core;
 
 /**
  * Implements the title screen.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public class TitleScreen extends Screen {
 
 	/** Milliseconds between changes in user selection. */
 	private static final int SELECTION_TIME = 200;
-	
+
 	/** Time between changes in user selection. */
 	private Cooldown selectionCooldown;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
-	 * 
+	 *
 	 * @param width
 	 *            Screen width.
 	 * @param height
@@ -40,7 +40,7 @@ public class TitleScreen extends Screen {
 
 	/**
 	 * Starts the action.
-	 * 
+	 *
 	 * @return Next screen code.
 	 */
 	public final int run() {
@@ -77,12 +77,12 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item.
 	 */
 	private void nextMenuItem() {
-		if (this.returnCode == 3)
-			this.returnCode = 0;
+		if (this.returnCode == 4)
+			this.returnCode = 0; // from '2 player mode' to 'Exit'
 		else if (this.returnCode == 0)
-			this.returnCode = 2;
+			this.returnCode = 2; // from 'Exit' to 'Play'
 		else
-			this.returnCode++;
+			this.returnCode++; // go next
 	}
 
 	/**
@@ -90,11 +90,11 @@ public class TitleScreen extends Screen {
 	 */
 	private void previousMenuItem() {
 		if (this.returnCode == 0)
-			this.returnCode = 3;
+			this.returnCode = 4; // from 'Exit' to '2 player mode'
 		else if (this.returnCode == 2)
-			this.returnCode = 0;
+			this.returnCode = 0; // from 'Play' to 'Exit'
 		else
-			this.returnCode--;
+			this.returnCode--; // go previous
 	}
 
 	/**

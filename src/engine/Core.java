@@ -149,7 +149,7 @@ public final class Core {
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed(), 0);
+							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0));
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

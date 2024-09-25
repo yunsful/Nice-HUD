@@ -166,6 +166,7 @@ public class EnemyShip extends Entity {
 			destroy();
 			return true;
 		}
+		this.setColor(determineColor(this.hp));
 		return false;
 	}
 

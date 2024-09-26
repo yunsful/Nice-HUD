@@ -1,5 +1,10 @@
 bgm;test;pixelated-drive-228439.wav;-2.3
+<<<<<<< HEAD
 
 
 
 es;start_button_ES;start_button.wav;3.0
+=======
+es;basic_enemy_die;332056__qubodup__fast-collision.wav;-2
+es;special_enemy_die;MP_Blast;-2
+>>>>>>> origin/es-hsw

@@ -46,12 +46,13 @@
 
   - [Space Invaders Regular (font)](http://www.fonts2u.com/space-invaders-regular.font) - &copy; kylemaoin 2010
   - [Pixelated Drive(bgm)](https://pixabay.com/ko/music/pixelated-drive-228439/) - &copy; Tim_Kulig 1980
-  - [Basic Enemy Die(es)](https://freesound.org/people/qubodup/sounds/332056/) - &copy; qubodup 2015
-  - [Speical Enemy Die(es)](https://www.mewpot.com/sound-effects/1320) - &copy; Mike Koenig
-  - [ally_airship_damage(ES)](https://freesound.org/people/cabled_mess/sounds/350925/) - &copy; cabled_mess 2016
-  - [ally_airship_destroy_explosion(ES)](https://freesound.org/people/Mrthenoronha/sounds/506823/) - &copy; Mrthenoronha 2020
-  - [ally_airship_destroy_die(ES)](https://freesound.org/people/AceOfSpadesProduc100/sounds/333785/) - &copy; AceOfSpadesProduc100 2016
-  - [Retro, Laser Shot 02(es)](https://freesound.org/people/MATRIXXX_/sounds/414886/) - &copy; MATRIXXX_ 2018
+  - [Fast Collision(ES)](https://freesound.org/people/qubodup/sounds/332056/) - &copy; qubodup 2015
+  - [Blast(es)](https://www.mewpot.com/sound-effects/1320) - &copy; Mike Koenig
+  - [Hurt_C_08(ES)](https://freesound.org/people/cabled_mess/sounds/350925/) - &copy; cabled_mess 2016
+  - [Explosion 4 8 Bit.wav(ES)](https://freesound.org/people/Mrthenoronha/sounds/506823/) - &copy; Mrthenoronha 2020
+  - [8-bit "failure" sound(ES)](https://freesound.org/people/AceOfSpadesProduc100/sounds/333785/) - &copy; AceOfSpadesProduc100 2016
+  - [Retro, Laser Shot 02(ES)](https://freesound.org/people/MATRIXXX_/sounds/414886/) - &copy; MATRIXXX_ 2018
   - [Retro Gun Shot(ES)](https://freesound.org/people/Jofae/sounds/363698/) - &copy; Jofae 2016
-  - [Start Button(ES)](https://www.storyblocks.com/audio/stock/rocket-launch-game-futuristic-effect-4-bwrzyfuxfw8k8p11ip2.html) - &copy; None
-  - [UFO come up(ES)](https://freesound.org/s/276885/) -&copy; 18hiltc 2015
+  - [Rocket Launch Game Futuristic Effect 4](https://www.storyblocks.com/audio/stock/rocket-launch-game-futuristic-effect-4-bwrzyfuxfw8k8p11ip2.html) - &copy; None
+  - [Rocket Fly By.wav](https://freesound.org/s/276885/) -&copy; 18hiltc 2015
+  - [Laser blast x3(ES)](https://freesound.org/people/peridactyloptrix/sounds/214990/) -&copy; peridactyloptrix 

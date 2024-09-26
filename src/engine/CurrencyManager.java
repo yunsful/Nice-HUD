@@ -63,8 +63,9 @@ public final class CurrencyManager {
         int currency = score / 10;
         //
 
-        if (hitRate > 80.0) {
+        if (hitRate > 0.8) {
             currency += (int) (currency * 0.2); // 20% 보너스 지급
+            Core.getLogger().info("hitRate bonus occurs.");
         }
         //
 

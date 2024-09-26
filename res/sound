@@ -1,10 +1,19 @@
+<<<<<<< HEAD
 bgm;test;pixelated-drive-228439.wav;-2.3
 <<<<<<< HEAD
+=======
+es;ally_airship_damage;ally_airship_damage.wav;4.0
+>>>>>>> origin/es-ksm
 
+es;ally_airship_destroy_explosion;ally_airship_explosion.wav;4.0
 
+<<<<<<< HEAD
 
 es;start_button_ES;start_button.wav;3.0
 =======
 es;basic_enemy_die;332056__qubodup__fast-collision.wav;-2
 es;special_enemy_die;MP_Blast;-2
 >>>>>>> origin/es-hsw
+=======
+es;ally_airship_destroy_die;ally_airship_die.wav;4.0
+>>>>>>> origin/es-ksm

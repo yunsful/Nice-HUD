@@ -77,7 +77,7 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item.
 	 */
 	private void nextMenuItem() {
-		if (this.returnCode == 4)
+		if (this.returnCode == 5)
 			this.returnCode = 0; // from '2 player mode' to 'Exit'
 		else if (this.returnCode == 0)
 			this.returnCode = 2; // from 'Exit' to 'Play'
@@ -90,7 +90,7 @@ public class TitleScreen extends Screen {
 	 */
 	private void previousMenuItem() {
 		if (this.returnCode == 0)
-			this.returnCode = 4; // from 'Exit' to '2 player mode'
+			this.returnCode = 5; // from 'Exit' to '2 player mode'
 		else if (this.returnCode == 2)
 			this.returnCode = 0; // from 'Play' to 'Exit'
 		else

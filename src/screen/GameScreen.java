@@ -287,7 +287,7 @@ public class GameScreen extends Screen {
 							&& checkCollision(bullet, enemyShip)) {
 						this.score += enemyShip.getPointValue();
 						this.shipsDestroyed++;
-						this.enemyShipFormation.destroy(enemyShip);
+						this.enemyShipFormation.loseHp_or_destroy(enemyShip);
 						recyclable.add(bullet);
 					}
 				if (this.enemyShipSpecial != null

@@ -1,6 +1,5 @@
 package entity;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Logger;
@@ -345,36 +344,37 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	}
 
 	/**
-	 * Destroys a ship.
+	 * Ship lose Hp.
 	 * 
-	 * @param destroyedShip
-	 *            Ship to be destroyed.
+	 * @param loseHpShip
+	 *            Ship to lose Hp or be destroyed.
 	 */
-	public final void destroy(final EnemyShip destroyedShip) {
-		boolean die = false;
+	public final void loseHp_or_destroy(final EnemyShip loseHpShip) {
+		boolean destroyed = false;
 		for (List<EnemyShip> column : this.enemyShips)
 			for (int i = 0; i < column.size(); i++) {
-				if (column.get(i).getHp() > 0) {
-					this.logger.info("Enemy ship lost 1 HP in ("
-							+ this.enemyShips.indexOf(column) + "," + i + ")");
-				}
-				if (column.get(i).equals(destroyedShip)) {
-					die = column.get(i).hit();
-					if (die) {
+				if (column.get(i).equals(loseHpShip)) {
+					loseHpShip.hit();
+					destroyed = column.get(i).isDestroyed();
+					if (destroyed) {
 						this.logger.info("Destroyed ship in ("
+								+ this.enemyShips.indexOf(column) + "," + i + ")");
+					}
+					else {
+						this.logger.info("Lost 1 HP in ("
 								+ this.enemyShips.indexOf(column) + "," + i + ")");
 					}
 				}
 			}
 
 		// Updates the list of ships that can shoot the player.
-		if(die) {
-			if (this.shooters.contains(destroyedShip)) {
-				int destroyedShipIndex = this.shooters.indexOf(destroyedShip);
+		if(destroyed) {
+			if (this.shooters.contains(loseHpShip)) {
+				int destroyedShipIndex = this.shooters.indexOf(loseHpShip);
 				int destroyedShipColumnIndex = -1;
 
 				for (List<EnemyShip> column : this.enemyShips)
-					if (column.contains(destroyedShip)) {
+					if (column.contains(loseHpShip)) {
 						destroyedShipColumnIndex = this.enemyShips.indexOf(column);
 						break;
 					}

@@ -176,17 +176,13 @@ public class EnemyShip extends Entity {
 
 	/**
 	 * When the EnemyShip is hit and its hp reaches 0, destroy the ship
-	 *
-	 * @return True if the ship has been destroyed.
 	 */
-	public final boolean hit(){
+	public void hit(){
 		this.hp -= 1;
 		if (this.hp <= 0){
 			destroy();
-			return true;
 		}
 		this.setColor(determineColor(this.hp));
-		return false;
 	}
 
 	/**

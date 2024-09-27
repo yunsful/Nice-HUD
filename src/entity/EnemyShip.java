@@ -103,6 +103,25 @@ public class EnemyShip extends Entity {
 	}
 
 	/**
+	 * Getter for the Hp of this Enemy ship.
+	 *
+	 * @return Hp of the ship.
+	 */
+	public final int getHp() {
+		return this.hp;
+	}
+
+	/**
+	 * Setter for the Hp of the Enemy ship.
+	 *
+	 * @param hp
+	 * 			New hp of the Enemey ship.
+	 */
+	public void setHp(int hp) {
+		this.hp = hp;
+	}
+
+	/**
 	 * Moves the ship the specified distance.
 	 * 
 	 * @param distanceX

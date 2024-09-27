@@ -1,10 +1,8 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import screen.Screen;
@@ -355,14 +353,19 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	public final void destroy(final EnemyShip destroyedShip) {
 		boolean die = false;
 		for (List<EnemyShip> column : this.enemyShips)
-			for (int i = 0; i < column.size(); i++)
+			for (int i = 0; i < column.size(); i++) {
+				if (column.get(i).getHp() > 0) {
+					this.logger.info("Enemy ship lost 1 HP in ("
+							+ this.enemyShips.indexOf(column) + "," + i + ")");
+				}
 				if (column.get(i).equals(destroyedShip)) {
 					die = column.get(i).hit();
-					if(die) {
+					if (die) {
 						this.logger.info("Destroyed ship in ("
 								+ this.enemyShips.indexOf(column) + "," + i + ")");
 					}
 				}
+			}
 
 		// Updates the list of ships that can shoot the player.
 		if(die) {

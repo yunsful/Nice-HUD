@@ -303,6 +303,7 @@ public final class DrawManager {
 	 *            Option selected.
 	 */
 	public void drawMenu(final Screen screen, final int option) {
+		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
 		String playString = "Play";
 		String highScoresString = "High scores";
@@ -324,14 +325,23 @@ public final class DrawManager {
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()
 				/ 3 * 2 + fontRegularMetrics.getHeight() * 2);
 
-		// 2 player mode
+		// 1 player mode
 		// Planned for Scenario Use
 		if (option == 4)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
+		drawCenteredRegularString(screen, onePlayerModeString, screen.getHeight()
 				/ 3 * 2 + fontRegularMetrics.getHeight() * 4);
+
+		// 2 player mode
+		// Planned for Scenario Use
+		if (option == 5)
+			backBufferGraphics.setColor(Color.GREEN);
+		else
+			backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
+				/ 3 * 2 + fontRegularMetrics.getHeight() * 6);
 
 		//Exit
 		if (option == 0)
@@ -339,7 +349,7 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 3 * 2 + fontRegularMetrics.getHeight() * 6);
+				/ 5 * 2 + fontRegularMetrics.getHeight() * 8);
 	}
 
 	/**

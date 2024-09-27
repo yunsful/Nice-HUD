@@ -288,10 +288,10 @@ public final class DrawManager {
 
 		backBufferGraphics.setColor(Color.GRAY);
 		drawCenteredRegularString(screen, instructionsString,
-				screen.getHeight() / 2);
+				screen.getHeight() * 3 / 10);
 
 		backBufferGraphics.setColor(Color.GREEN);
-		drawCenteredBigString(screen, titleString, screen.getHeight() / 3);
+		drawCenteredBigString(screen, titleString, screen.getHeight() / 4);
 	}
 
 	/**
@@ -315,7 +315,7 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, playString,
-				screen.getHeight() / 3 * 2);
+				screen.getHeight() / 4 * 2);
 
 		// High scores
 		if (option == 3)
@@ -323,7 +323,7 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()
-				/ 3 * 2 + fontRegularMetrics.getHeight() * 2);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 2);
 
 		// 1 player mode
 		// Planned for Scenario Use
@@ -332,7 +332,7 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, onePlayerModeString, screen.getHeight()
-				/ 3 * 2 + fontRegularMetrics.getHeight() * 4);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 4);
 
 		// 2 player mode
 		// Planned for Scenario Use
@@ -341,7 +341,7 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
-				/ 3 * 2 + fontRegularMetrics.getHeight() * 6);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 6);
 
 		//Exit
 		if (option == 0)
@@ -349,7 +349,7 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 5 * 2 + fontRegularMetrics.getHeight() * 8);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 8);
 	}
 
 	/**

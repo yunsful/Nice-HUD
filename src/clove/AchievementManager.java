@@ -59,7 +59,7 @@ public class AchievementManager {
 
     public boolean setAchievementValue(Object achievement, Boolean completed){
         if(!hasAchivement(achievement)){
-            // TODO : 업적을 설정하는 것에 실패했따는 알림(또는 로그) 출력
+            // TODO : 업적을 설정하는 것에 실패했다는 알림(또는 로그) 출력
             return false;
         }
         achievementMap.replace(achievement, completed);

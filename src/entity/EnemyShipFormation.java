@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import Enemy.PiercingBullet;
 import screen.Screen;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 import engine.GameSettings;
-
+import Enemy.PiercingBulletPool;
 /**
  * Groups enemy ships into a formation that moves together.
  * 
@@ -330,15 +331,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * @param bullets
 	 *            Bullets set to add the bullet being shot.
 	 */
-	public final void shoot(final Set<Bullet> bullets) {
+	public final void shoot(final Set<PiercingBullet> bullets) {
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
 
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
-			bullets.add(BulletPool.getBullet(shooter.getPositionX()
-					+ shooter.width / 2, shooter.getPositionY(), BULLET_SPEED));
+			bullets.add(PiercingBulletPool.getPiercingBullet(
+					shooter.getPositionX() + shooter.width / 2,
+					shooter.getPositionY(),
+					BULLET_SPEED,
+					0));
 		}
 	}
 

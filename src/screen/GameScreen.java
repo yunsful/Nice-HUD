@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameSettings;
@@ -14,6 +15,8 @@ import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
+import Enemy.PiercingBulletPool;
+
 
 /**
  * Implements the game screen, where the action happens.
@@ -55,7 +58,7 @@ public class GameScreen extends Screen {
 	/** Time from finishing the level to screen change. */
 	private Cooldown screenFinishedCooldown;
 	/** Set of all bullets fired by on screen ships. */
-	private Set<Bullet> bullets;
+	private Set<PiercingBullet> bullets;
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -78,7 +81,7 @@ public class GameScreen extends Screen {
 	 *            Current game state.
 	 * @param gameSettings
 	 *            Current game settings.
-	 * @param bonnusLife
+	 * @param bonusLife
 	 *            Checks if a bonus life is awarded this level.
 	 * @param width
 	 *            Screen width.
@@ -119,7 +122,7 @@ public class GameScreen extends Screen {
 		this.enemyShipSpecialExplosionCooldown = Core
 				.getCooldown(BONUS_SHIP_EXPLOSION);
 		this.screenFinishedCooldown = Core.getCooldown(SCREEN_CHANGE_INTERVAL);
-		this.bullets = new HashSet<Bullet>();
+		this.bullets = new HashSet<PiercingBullet>();
 
 		// Special input delay / countdown.
 		this.gameStartTime = System.currentTimeMillis();
@@ -195,7 +198,7 @@ public class GameScreen extends Screen {
 			this.enemyShipFormation.shoot(this.bullets);
 		}
 
-		manageCollisions();
+		_manageCollisions();
 		cleanBullets();
 		draw();
 
@@ -225,7 +228,7 @@ public class GameScreen extends Screen {
 
 		enemyShipFormation.draw();
 
-		for (Bullet bullet : this.bullets)
+		for (PiercingBullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
 					bullet.getPositionY());
 
@@ -254,21 +257,20 @@ public class GameScreen extends Screen {
 	 * Cleans bullets that go off screen.
 	 */
 	private void cleanBullets() {
-		Set<Bullet> recyclable = new HashSet<Bullet>();
-		for (Bullet bullet : this.bullets) {
+		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
+		for (PiercingBullet bullet : this.bullets) {
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
 					|| bullet.getPositionY() > this.height)
 				recyclable.add(bullet);
 		}
 		this.bullets.removeAll(recyclable);
-		BulletPool.recycle(recyclable);
+		PiercingBulletPool.recycle(recyclable);
 	}
 
 	/**
-	 * Manages collisions between bullets and ships.
-	 */
-	private void manageCollisions() {
+	 * Manages collisions between bullets and ships. -original code
+	 */private void manageCollisions() {
 		Set<Bullet> recyclable = new HashSet<Bullet>();
 		for (Bullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
@@ -302,6 +304,51 @@ public class GameScreen extends Screen {
 			}
 		this.bullets.removeAll(recyclable);
 		BulletPool.recycle(recyclable);
+	}
+
+	/**
+	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
+	 */
+	private void _manageCollisions() {
+		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
+		for (PiercingBullet bullet : this.bullets)
+			if (bullet.getSpeed() > 0) {
+				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
+					recyclable.add(bullet);
+					if (!this.ship.isDestroyed()) {
+						this.ship.destroy();
+						this.lives--;
+						this.logger.info("Hit on player ship, " + this.lives
+								+ " lives remaining.");
+					}
+				}
+			} else {
+				for (EnemyShip enemyShip : this.enemyShipFormation)
+					if (!enemyShip.isDestroyed()
+							&& checkCollision(bullet, enemyShip)) {
+						this.score += enemyShip.getPointValue();
+						this.shipsDestroyed++;
+						this.enemyShipFormation.destroy(enemyShip);
+						bullet.onCollision(enemyShip);
+						if (bullet.getPiercingCount() <= 0) {
+							recyclable.add(bullet);
+						}
+					}
+				if (this.enemyShipSpecial != null
+						&& !this.enemyShipSpecial.isDestroyed()
+						&& checkCollision(bullet, this.enemyShipSpecial)) {
+					this.score += this.enemyShipSpecial.getPointValue();
+					this.shipsDestroyed++;
+					this.enemyShipSpecial.destroy();
+					this.enemyShipSpecialExplosionCooldown.reset();
+					bullet.onCollision(this.enemyShipSpecial);
+					if (bullet.getPiercingCount() <= 0) {
+						recyclable.add(bullet);
+					}
+				}
+			}
+		this.bullets.removeAll(recyclable);
+		PiercingBulletPool.recycle(recyclable);
 	}
 
 	/**

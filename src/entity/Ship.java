@@ -3,9 +3,11 @@ package entity;
 import java.awt.Color;
 import java.util.Set;
 
+import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+import Enemy.PiercingBulletPool;
 
 /**
  * Implements a ship, to be controlled by the player.
@@ -66,11 +68,18 @@ public class Ship extends Entity {
 	 *            List of bullets on screen, to add the new bullet.
 	 * @return Checks if the bullet was shot correctly.
 	 */
-	public final boolean shoot(final Set<Bullet> bullets) {
+	public final boolean shoot(final Set<PiercingBullet> bullets) {
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
-			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
-					positionY, BULLET_SPEED));
+
+			// Add a piercing bullet fired by the player's ship.
+			// This bullet can pierce 2 enemy ships.
+			bullets.add(PiercingBulletPool.getPiercingBullet(
+					positionX + this.width / 2,
+					positionY,
+					BULLET_SPEED,
+					2 // Number of enemies the bullet can pierce
+			));
 			return true;
 		}
 		return false;

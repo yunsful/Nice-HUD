@@ -33,7 +33,7 @@ public class ShipStatus {
 
 
     public void loadStatus(){
-        try (InputStream inputStream = ShipStatus.class.getClassLoader().getResourceAsStream("inventory_develop/Status_increase.properties")) {
+        try (InputStream inputStream = ShipStatus.class.getClassLoader().getResourceAsStream("Status_increase.properties")) {
             if (inputStream == null) {
                 System.out.println("FileNotFound");
                 return;
@@ -55,8 +55,6 @@ public class ShipStatus {
             BULLET_SPEED = statusValue;
             statusValue = Integer.parseInt(properties.getProperty("BULLET_SPEED.increase"));
             BULLET_SPEED_increase = statusValue;
-
-            System.out.println(this.SHOOTING_INTERVAL_increase);
 
         } catch (IOException e) {
             e.printStackTrace();

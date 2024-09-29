@@ -74,8 +74,6 @@ public final class Core {
 	private static ConsoleHandler consoleHandler;
 
 
-
-
 	/**
 	 * Test implementation.
 	 * 

@@ -43,6 +43,7 @@ public final class PiercingBulletPool {
             bullet.setPositionY(positionY);
             bullet.setSpeed(speed);
             bullet.setPiercingCount(piercingCount);  // Reset piercing count when recycling
+            bullet.setSprite(); // Prevents destroyed bullets from being reused incorrectly
         } else {
             bullet = new PiercingBullet(positionX, positionY, speed, piercingCount);
             bullet.setPositionX(positionX - bullet.getWidth() / 2);

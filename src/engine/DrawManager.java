@@ -22,7 +22,7 @@ import entity.Ship;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public final class DrawManager {
+public class DrawManager {
 
 	/** Singleton instance of the class. */
 	private static DrawManager instance;
@@ -35,13 +35,13 @@ public final class DrawManager {
 	/** Graphics context. */
 	private static Graphics graphics;
 	/** Buffer Graphics. */
-	private static Graphics backBufferGraphics;
+	public static Graphics backBufferGraphics;	// Modifying Access Restrictor to public - Lee Hyun Woo
 	/** Buffer image. */
 	private static BufferedImage backBuffer;
 	/** Normal sized font. */
-	private static Font fontRegular;
+	public static Font fontRegular;  // Modifying Access Restrictor to public - Lee Hyun Woo
 	/** Normal sized font properties. */
-	private static FontMetrics fontRegularMetrics;
+	public static FontMetrics fontRegularMetrics; // Modifying Access Restrictor to public - Lee Hyun Woo
 	/** Big sized font. */
 	private static Font fontBig;
 	/** Big sized font properties. */
@@ -80,8 +80,11 @@ public final class DrawManager {
 
 	/**
 	 * Private constructor.
+	 *
+	 * Modifying Access Restrictor to public
+	 * - HUDTeam - LeeHyunWoo
 	 */
-	private DrawManager() {
+	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
 		logger.info("Started loading resources.");
@@ -122,7 +125,7 @@ public final class DrawManager {
 	 * 
 	 * @return Shared instance of DrawManager.
 	 */
-	protected static DrawManager getInstance() {
+	static DrawManager getInstance() {
 		if (instance == null)
 			instance = new DrawManager();
 		return instance;

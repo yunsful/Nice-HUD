@@ -1,4 +1,7 @@
-package engine;
+package CtrlS;
+
+import engine.Core;
+import engine.FileManager;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -26,7 +29,7 @@ public final class CurrencyManager {
      *
      * @return Shared instance of FileManager.
      */
-    protected static CurrencyManager getInstance() {
+    public static CurrencyManager getInstance() {
         if (instance == null)
              instance = new CurrencyManager();
         return instance;

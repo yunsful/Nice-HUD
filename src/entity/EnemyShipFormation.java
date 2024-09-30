@@ -331,18 +331,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * @param bullets
 	 *            Bullets set to add the bullet being shot.
 	 */
-	public final void shoot(final Set<PiercingBullet> bullets) {
+	public final void shoot(final Set<PiercingBullet> bullets) { // Edited by Enemy
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
 
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
-			bullets.add(PiercingBulletPool.getPiercingBullet(
+			bullets.add(PiercingBulletPool.getPiercingBullet( // Edited by Enemy
 					shooter.getPositionX() + shooter.width / 2,
 					shooter.getPositionY(),
 					BULLET_SPEED,
-					0));
+					0)); // Edited by Enemy
 		}
 	}
 

@@ -78,11 +78,11 @@ public class TitleScreen extends Screen {
 	 */
 	private void nextMenuItem() {
 		if (this.returnCode == 5)
-			this.returnCode = 0; // from '2 player mode' to 'Exit'
+			this.returnCode = 0; // from '2 player mode' to 'Exit' (starter)
 		else if (this.returnCode == 0)
-			this.returnCode = 2; // from 'Exit' to 'Play'
+			this.returnCode = 2; // from 'Exit' to 'Play' (starter)
 		else
-			this.returnCode++; // go next
+			this.returnCode++; // go next (starter)
 	}
 
 	/**
@@ -90,11 +90,11 @@ public class TitleScreen extends Screen {
 	 */
 	private void previousMenuItem() {
 		if (this.returnCode == 0)
-			this.returnCode = 5; // from 'Exit' to '2 player mode'
+			this.returnCode = 5; // from 'Exit' to '2 player mode' (starter)
 		else if (this.returnCode == 2)
-			this.returnCode = 0; // from 'Play' to 'Exit'
+			this.returnCode = 0; // from 'Play' to 'Exit' (starter)
 		else
-			this.returnCode--; // go previous
+			this.returnCode--; // go previous (starter)
 	}
 
 	/**

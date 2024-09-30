@@ -77,7 +77,7 @@ public final class DrawManager {
 		/** Destroyed enemy ship. */
 		Explosion,
 		/**HEART Graphics Produced by Nice HUD Team*/
-		heart,
+		heart, //Please have the Nice HUD team fix it. - Enemy team
 		/**Item*/
 		Item //by enemy team
 	};

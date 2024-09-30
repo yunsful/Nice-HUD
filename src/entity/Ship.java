@@ -3,19 +3,18 @@ package entity;
 import java.awt.Color;
 import java.util.Set;
 
-import Enemy.PiercingBullet;
+import Enemy.PiercingBullet; // Edited by Enemy
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
-import Enemy.PiercingBulletPool;
+import Enemy.PiercingBulletPool; // Edited by Enemy
 
-// PlayerGrowth 클래스 임포트 / Import PlayerGrowth class
-import Enemy.PlayerGrowth;
+// Import PlayerGrowth class
+import Enemy.PlayerGrowth; // Edited by Enemy
 
 /**
  * Implements a ship, to be controlled by the player.
  *
- * 기존 코드에 PlayerGrowth 클래스를 사용한 추가 기능 적용 /
  * Adds functionality for player growth based on PlayerGrowth class without modifying existing code.
  *
  * @author Roberto Izquierdo Amo
@@ -35,8 +34,8 @@ public class Ship extends Entity {
 	/** Time spent inactive between hits. */
 	private Cooldown destructionCooldown;
 
-	/** PlayerGrowth 인스턴스 / PlayerGrowth instance */
-	private PlayerGrowth growth;
+	/** PlayerGrowth instance */
+	private PlayerGrowth growth; //Edited by Enemy
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -53,8 +52,8 @@ public class Ship extends Entity {
 		this.shootingCooldown = Core.getCooldown(SHOOTING_INTERVAL);
 		this.destructionCooldown = Core.getCooldown(1000);
 
-		// PlayerGrowth 객체 생성 및 초기 스탯 설정 / Create PlayerGrowth object and set initial stats
-		this.growth = new PlayerGrowth();
+		//Create PlayerGrowth object and set initial stats
+		this.growth = new PlayerGrowth(); //Edited by Enemy
 	}
 
 	/**
@@ -62,7 +61,7 @@ public class Ship extends Entity {
 	 * reached.
 	 */
 	public final void moveRight() {
-		this.positionX += growth.getMoveSpeed(); // PlayerGrowth로 이동 속도 적용 / Use PlayerGrowth for movement speed
+		this.positionX += growth.getMoveSpeed(); // Use PlayerGrowth for movement speed //Edited by Enemy
 	}
 
 	/**
@@ -70,7 +69,7 @@ public class Ship extends Entity {
 	 * reached.
 	 */
 	public final void moveLeft() {
-		this.positionX -= growth.getMoveSpeed(); // PlayerGrowth로 이동 속도 적용 / Use PlayerGrowth for movement speed
+		this.positionX -= growth.getMoveSpeed(); // Use PlayerGrowth for movement speed//Edited by Enemy
 	}
 
 	/**
@@ -81,7 +80,7 @@ public class Ship extends Entity {
 	 * @return Checks if the bullet was shot correctly.
 	 */
 	public final boolean shoot(final Set<PiercingBullet> bullets) {
-		// PlayerGrowth에서 발사 딜레이 가져오기 / Get shooting delay from PlayerGrowth
+		// Get shooting delay from PlayerGrowth //Edited by Enemy
 		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay());
 
 		if (this.shootingCooldown.checkFinished()) {
@@ -91,7 +90,7 @@ public class Ship extends Entity {
 			bullets.add(PiercingBulletPool.getPiercingBullet(
 					positionX + this.width / 2,
 					positionY,
-					growth.getBulletSpeed(), // PlayerGrowth로 총알 속도 적용 / Use PlayerGrowth for bullet speed
+					growth.getBulletSpeed(), // Use PlayerGrowth for bullet speed //Edited by Enemy
 					2 // Number of enemies the bullet can pierce
 			));
 			return true;
@@ -127,29 +126,29 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * 스탯을 증가시키는 메서드들 (PlayerGrowth 클래스 사용)
+	 *
 	 * Methods to increase stats (using PlayerGrowth)
 	 */
 
-	// 체력 증가 / Increases health
+	//Increases health //Edited by Enemy
 	public void increaseHealth(int increment) {
 		growth.increaseHealth(increment);
 	}
 
-	// 이동 속도 증가 / Increases movement speed
+	//Increases movement speed //Edited by Enemy
 	public void increaseMoveSpeed(int increment) {
 		growth.increaseMoveSpeed(increment);
 	}
 
-	// 총알 속도 증가 / Increases bullet speed
+	//Increases bullet speed //Edited by Enemy
 	public void increaseBulletSpeed(int increment) {
 		growth.increaseBulletSpeed(increment);
 	}
 
-	// 발사 딜레이 감소 / Decreases shooting delay
+	//Decreases shooting delay //Edited by Enemy
 	public void decreaseShootingDelay(int decrement) {
 		growth.decreaseShootingDelay(decrement);
-		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay()); // 새로운 발사 딜레이 적용 / Apply new shooting delay
+		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay()); // Apply new shooting delay //Edited by Enemy
 	}
 
 	/**

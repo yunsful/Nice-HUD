@@ -386,9 +386,11 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						this.score += enemyShip.getPointValue();
-						this.shipsDestroyed++;
-						this.enemyShipFormation.destroy(enemyShip);
+						this.enemyShipFormation._destroy(enemyShip);
+						if(enemyShip.getHp() <= 0) {
+							this.score += enemyShip.getPointValue();
+							this.shipsDestroyed++;
+						}
 						recyclable.add(bullet);
 
 						// Drop item to 30%

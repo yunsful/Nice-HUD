@@ -79,6 +79,8 @@ public class Ship extends Entity {
 	 * @param bullets
 	 *            List of bullets on screen, to add the new bullet.
 	 * @return Checks if the bullet was shot correctly.
+	 *
+	 * You can set Number of enemies the bullet can pierce at here.
 	 */
 	//Edit by Enemy
 	public final boolean shoot(final Set<PiercingBullet> bullets) {

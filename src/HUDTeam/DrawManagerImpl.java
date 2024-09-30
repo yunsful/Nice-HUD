@@ -19,5 +19,12 @@ public class DrawManagerImpl extends DrawManager {
 
         backBufferGraphics.drawString(levelText, xPosition, yPosition);
     } // Lee Hyun Woo - level
+    
+    public static void drawAttackSpeed(final Screen screen, final double attackSpeed) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        String attackSpeedText = String.format("AS: %.2f ", attackSpeed);
+        backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 25); // 화면 상단 좌측에 표시
+    }
 
 }

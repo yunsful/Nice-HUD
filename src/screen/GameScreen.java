@@ -235,6 +235,7 @@ public class GameScreen extends Screen {
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawLevel(this, this.level);
+		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
 //		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 
 		// Countdown to game start.

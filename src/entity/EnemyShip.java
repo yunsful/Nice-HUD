@@ -57,15 +57,15 @@ public class EnemyShip extends Entity {
 		switch (this.spriteType) {
 		case EnemyShipA1:
 		case EnemyShipA2:
-			this.pointValue = A_TYPE_POINTS;
+			this.pointValue = this.hp * A_TYPE_POINTS;
 			break;
 		case EnemyShipB1:
 		case EnemyShipB2:
-			this.pointValue = B_TYPE_POINTS;
+			this.pointValue = this.hp * B_TYPE_POINTS;
 			break;
 		case EnemyShipC1:
 		case EnemyShipC2:
-			this.pointValue = C_TYPE_POINTS;
+			this.pointValue = this.hp * C_TYPE_POINTS;
 			break;
 		default:
 			this.pointValue = 0;

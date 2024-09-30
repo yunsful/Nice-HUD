@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameSettings;
@@ -233,6 +234,8 @@ public class GameScreen extends Screen {
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
+		DrawManagerImpl.drawLevel(this, this.level);
+//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {

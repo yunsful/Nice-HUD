@@ -195,7 +195,7 @@ public class GameScreen extends Screen {
 			this.enemyShipFormation.shoot(this.bullets);
 		}
 
-		manageCollisions();
+		_manageCollisions(); // Edited by Enemy
 		cleanBullets();
 		draw();
 
@@ -285,11 +285,9 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						this.enemyShipFormation.loseHp_or_destroy(enemyShip);
-						if (enemyShip.getHp() <= 0) {
-							this.score += enemyShip.getPointValue();
-							this.shipsDestroyed++;
-						}
+						this.score += enemyShip.getPointValue();
+						this.shipsDestroyed++;
+						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
 					}
 				if (this.enemyShipSpecial != null
@@ -340,4 +338,45 @@ public class GameScreen extends Screen {
 		return new GameState(this.level, this.score, this.lives,
 				this.bulletsShot, this.shipsDestroyed);
 	}
+	/**
+	 * Manages collisions between bullets and ships.
+	 */
+	private void _manageCollisions() {// Edited by Enemy
+		Set<Bullet> recyclable = new HashSet<Bullet>();
+		for (Bullet bullet : this.bullets)
+			if (bullet.getSpeed() > 0) {
+				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
+					recyclable.add(bullet);
+					if (!this.ship.isDestroyed()) {
+						this.ship.destroy();
+						this.lives--;
+						this.logger.info("Hit on player ship, " + this.lives
+								+ " lives remaining.");
+					}
+				}
+			} else {
+				for (EnemyShip enemyShip : this.enemyShipFormation)
+					if (!enemyShip.isDestroyed()
+							&& checkCollision(bullet, enemyShip)) {
+						this.enemyShipFormation._destroy(enemyShip);
+						if (enemyShip.getHp() <= 0) {
+							this.score += enemyShip.getPointValue();
+							this.shipsDestroyed++;
+						}
+						recyclable.add(bullet);
+					}
+				if (this.enemyShipSpecial != null
+						&& !this.enemyShipSpecial.isDestroyed()
+						&& checkCollision(bullet, this.enemyShipSpecial)) {
+					this.score += this.enemyShipSpecial.getPointValue();
+					this.shipsDestroyed++;
+					this.enemyShipSpecial.destroy();
+					this.enemyShipSpecialExplosionCooldown.reset();
+					recyclable.add(bullet);
+				}
+			}
+		this.bullets.removeAll(recyclable);
+		BulletPool.recycle(recyclable);
+	}
+
 }

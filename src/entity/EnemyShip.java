@@ -2,6 +2,7 @@ package entity;
 
 import java.awt.Color;
 
+import Enemy.HpEnemyShip;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
@@ -24,7 +25,7 @@ public class EnemyShip extends Entity {
 	private static final int BONUS_TYPE_POINTS = 100;
 
 	/** EnemyShip's health point */
-	private int hp;
+	private int hp; // Edited by Enemy
 	/** Cooldown between sprite changes. */
 	private Cooldown animationCooldown;
 	/** Checks if the ship has been hit by a bullet. */
@@ -45,11 +46,10 @@ public class EnemyShip extends Entity {
 
 
 	public EnemyShip(final int positionX, final int positionY,
-			final SpriteType spriteType,int hp) {
-		super(positionX, positionY, 12 * 2, 8 * 2, determineColor(hp));
+			final SpriteType spriteType,int hp) {// Edited by Enemy
+		super(positionX, positionY, 12 * 2, 8 * 2, HpEnemyShip.determineColor(hp));
 
-
-		this.hp = hp;
+		this.hp = hp;// Edited by Enemy
 		this.spriteType = spriteType;
 		this.animationCooldown = Core.getCooldown(500);
 		this.isDestroyed = false;
@@ -57,28 +57,21 @@ public class EnemyShip extends Entity {
 		switch (this.spriteType) {
 		case EnemyShipA1:
 		case EnemyShipA2:
-			this.pointValue = this.hp * A_TYPE_POINTS;
+			this.pointValue = A_TYPE_POINTS;
 			break;
 		case EnemyShipB1:
 		case EnemyShipB2:
-			this.pointValue = this.hp * B_TYPE_POINTS;
+			this.pointValue = B_TYPE_POINTS;
 			break;
 		case EnemyShipC1:
 		case EnemyShipC2:
-			this.pointValue = this.hp * C_TYPE_POINTS;
+			this.pointValue = C_TYPE_POINTS;
 			break;
 		default:
 			this.pointValue = 0;
 			break;
 		}
 	}
-
-	/** Constructor for EnemyShip that did not require hp*/
-	public EnemyShip(final int positionX, final int positionY,
-					 final SpriteType spriteType){
-		this(positionX,positionY,spriteType,1);
-	}
-
 
 	/**
 	 * Constructor, establishes the ship's properties for a special ship, with
@@ -87,11 +80,12 @@ public class EnemyShip extends Entity {
 	public EnemyShip() {
 		super(-32, 60, 16 * 2, 7 * 2, Color.RED);
 
-		this.hp = 1;
+		this.hp = 1; // Edited by Enemy
 		this.spriteType = SpriteType.EnemyShipSpecial;
 		this.isDestroyed = false;
 		this.pointValue = BONUS_TYPE_POINTS;
 	}
+
 
 	/**
 	 * Getter for the score bonus if this ship is destroyed.
@@ -100,25 +94,6 @@ public class EnemyShip extends Entity {
 	 */
 	public final int getPointValue() {
 		return this.pointValue;
-	}
-
-	/**
-	 * Getter for the Hp of this Enemy ship.
-	 *
-	 * @return Hp of the ship.
-	 */
-	public final int getHp() {
-		return this.hp;
-	}
-
-	/**
-	 * Setter for the Hp of the Enemy ship.
-	 *
-	 * @param hp
-	 * 			New hp of the Enemey ship.
-	 */
-	public void setHp(int hp) {
-		this.hp = hp;
 	}
 
 	/**
@@ -175,17 +150,6 @@ public class EnemyShip extends Entity {
 	}
 
 	/**
-	 * When the EnemyShip is hit and its hp reaches 0, destroy the ship
-	 */
-	public void hit(){
-		this.hp -= 1;
-		if (this.hp <= 0){
-			destroy();
-		}
-		this.setColor(determineColor(this.hp));
-	}
-
-	/**
 	 * Checks if the ship has been destroyed.
 	 * 
 	 * @return True if the ship has been destroyed.
@@ -194,21 +158,32 @@ public class EnemyShip extends Entity {
 		return this.isDestroyed;
 	}
 
+
+	/** Constructor for original EnemyShip that did not have hp.
+	 * That enemyShip is moved to a constructor with the hp default of 1*/
+	public EnemyShip(final int positionX, final int positionY,
+					 final SpriteType spriteType){
+		this(positionX,positionY,spriteType,1);
+	}// Edited by Enemy
+
 	/**
-	 * Determine the color of the ship according to hp
-	 * @param hp
-	 * 			The ship's hp
-	 * @return if hp is 2, return yellow
-	 * 		   if hp is 3, return orange
-	 * 		   if hp is 1, return white
+	 * Getter for the Hp of this Enemy ship.
+	 *
+	 * @return Hp of the ship.
 	 */
-	private static Color determineColor(int hp){
-		if( hp == 2)
-			return new Color(0xFFEB3B);
-		else if(hp == 3)
-			return new Color(0xFFA500);
-		return new Color(0xFFFFFF);
-	}
+	public final int getHp() {
+		return this.hp;
+	}// Edited by Enemy
+
+	/**
+	 * Setter for the Hp of the Enemy ship.
+	 *
+	 * @param hp
+	 * 			New hp of the Enemey ship.
+	 */
+	public void setHp(int hp) {
+		this.hp = hp;
+	}// Edited by Enemy
 
 
 }

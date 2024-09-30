@@ -16,6 +16,9 @@ import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
 import Enemy.PiercingBulletPool;
+import Enemy.Item;
+import Enemy.ItemManager;
+
 
 
 /**
@@ -58,7 +61,9 @@ public class GameScreen extends Screen {
 	/** Time from finishing the level to screen change. */
 	private Cooldown screenFinishedCooldown;
 	/** Set of all bullets fired by on screen ships. */
-	private Set<PiercingBullet> bullets; // Edited by Enemy
+	private Set<PiercingBullet> bullets;
+	/** Add an itemManager Instance */
+	private ItemManager itemManager; //by Enemy team
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -115,6 +120,11 @@ public class GameScreen extends Screen {
 		enemyShipFormation = new EnemyShipFormation(this.gameSettings);
 		enemyShipFormation.attach(this);
 		this.ship = new Ship(this.width / 2, this.height - 30);
+
+		/** initialize itemManager */
+		this.itemManager = new ItemManager(this.height, drawManager); //by Enemy team
+		this.itemManager.initialize(); //by Enemy team
+
 		// Appears each 10-30 seconds.
 		this.enemyShipSpecialCooldown = Core.getVariableCooldown(
 				BONUS_SHIP_INTERVAL, BONUS_SHIP_VARIANCE);
@@ -197,9 +207,11 @@ public class GameScreen extends Screen {
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
 		}
-
-		_manageCollisions();
+		//manageCollisions();
+		//_manageCollisions(); //by Enemy team
+		manageCollisions_add_tiem(); //by Enemy team
 		cleanBullets();
+		this.itemManager.cleanItems(); //by Enemy team
 		draw();
 
 		if ((this.enemyShipFormation.isEmpty() || this.lives == 0)
@@ -231,6 +243,8 @@ public class GameScreen extends Screen {
 		for (PiercingBullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
 					bullet.getPositionY());
+
+		this.itemManager.drawItems(); //by Enemy team
 
 		// Interface.
 		drawManager.drawScore(this, this.score);
@@ -351,6 +365,57 @@ public class GameScreen extends Screen {
 		this.bullets.removeAll(recyclable);
 		PiercingBulletPool.recycle(recyclable);
 	}
+	/**
+	 * Manages collisions between bullets and ships. -Edited code for Drop Item
+	 */
+	//by Enemy team
+	private void manageCollisions_add_tiem() {
+		Set<Bullet> recyclable = new HashSet<Bullet>();
+		for (Bullet bullet : this.bullets)
+			if (bullet.getSpeed() > 0) {
+				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
+					recyclable.add(bullet);
+					if (!this.ship.isDestroyed()) {
+						this.ship.destroy();
+						this.lives--;
+						this.logger.info("Hit on player ship, " + this.lives
+								+ " lives remaining.");
+					}
+				}
+			} else {
+				for (EnemyShip enemyShip : this.enemyShipFormation)
+					if (!enemyShip.isDestroyed()
+							&& checkCollision(bullet, enemyShip)) {
+						this.score += enemyShip.getPointValue();
+						this.shipsDestroyed++;
+						this.enemyShipFormation.destroy(enemyShip);
+						recyclable.add(bullet);
+
+						// Drop item to 30%
+						this.itemManager.dropItem(enemyShip,0.3,1);
+					}
+				if (this.enemyShipSpecial != null
+						&& !this.enemyShipSpecial.isDestroyed()
+						&& checkCollision(bullet, this.enemyShipSpecial)) {
+					this.score += this.enemyShipSpecial.getPointValue();
+					this.shipsDestroyed++;
+					this.enemyShipSpecial.destroy();
+					this.enemyShipSpecialExplosionCooldown.reset();
+					recyclable.add(bullet);
+
+					//// Drop item to 100%
+					this.itemManager.dropItem(enemyShipSpecial,1,2);
+				}
+			}
+		this.bullets.removeAll(recyclable);
+		BulletPool.recycle(recyclable);
+
+		//Check item and ship collision
+		for(Item item : itemManager.items){
+			itemManager.addItemRecycle(checkCollision(item,ship)?item:null);
+		}
+	}
+
 
 	/**
 	 * Checks if two entities are colliding.

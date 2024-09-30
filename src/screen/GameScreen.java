@@ -414,6 +414,7 @@ public class GameScreen extends Screen {
 		for(Item item : itemManager.items){
 			itemManager.addItemRecycle(checkCollision(item,ship)?item:null);
 		}
+		itemManager.removeAllReItems();
 	}
 
 

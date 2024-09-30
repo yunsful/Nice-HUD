@@ -19,6 +19,7 @@ public class GameState {
 	/** Ships destroyed until now. */
 	private int shipsDestroyed;
 	/** Current currency **/
+	// Team-Ctrl-S(Currency)
 	private int currency;
 
 	/**
@@ -43,7 +44,7 @@ public class GameState {
 		this.livesRemaining = livesRemaining;
 		this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
-		this.currency = currency;
+		this.currency = currency; // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -84,6 +85,7 @@ public class GameState {
 	/**
 	 * @return the currency
 	 */
+	// Team-Ctrl-S(Currency)
 	public final int getCurrency() {
 		return currency;
 	}

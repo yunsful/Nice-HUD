@@ -252,6 +252,12 @@ public final class Core {
 		return new Cooldown(milliseconds, variance);
 	}
 
+	/**
+	 * Controls access to the currency manager.
+	 *
+	 * @return Application currency manager.
+	 */
+	// Team-Ctrl-S(Currency)
 	public static CurrencyManager getCurrencyManager() {
 		return CurrencyManager.getInstance();
 	}

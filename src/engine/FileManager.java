@@ -281,7 +281,7 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of saving problems.
 	 */
-
+	// Team-Ctrl-S(Currency)
 	public void saveCurrency(final int currency) throws IOException {
 		OutputStream outputStream = null;
 		BufferedWriter bufferedWriter = null;
@@ -324,6 +324,7 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
+	// Team-Ctrl-S(Currency)
 	public int loadCurrency() throws IOException {
         int currency;
 		InputStream inputStream = null;
@@ -368,6 +369,7 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
+	// Team-Ctrl-S(Currency)
 	private int loadDefaultCurrency() throws IOException {
 		int currency;
 		InputStream inputStream = null;

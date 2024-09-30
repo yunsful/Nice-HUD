@@ -1,4 +1,4 @@
-package engine;
+package Sound_Operator;
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -13,20 +13,21 @@ public class SoundManager {
     static String[][] ESFiles;
     static String[][] BGMFiles;
 /**
- * 코드 설명
- * Base : bgm 파일은 res/sound/BGM 에 저장
- *        ES 파일은 res/sound/ES 에 저장, res/ES 파일에 [종류];[별칭];[파일 이름];[볼륨크기] 으로 명시 필요
- *          -> 종류 : bgm, es
- *          -> 볼륨 크기 : -80.0 ~ 6.0 사잇값
- * 사용법
- * 매니저 호출 : getInstance()
- * BGM 호출 : playBGM(String 파일이름) 호출하여 사용, 무한 루프 이며 끝내려면 stopBGM() 호출
- * ES 호출 : playES(String 효과명) 호출 하여 사용, 동식에 같은 ES 호출 가능
- * BGM volume 변경 : modifyBGMVolume(String name, float volume) 호출
- * ES volume 변경 : modifyESVolume(String name, float volume) 호출
- *
- * 위 사항들 모두 구현 완료 및 테스트 완료
- **/
+* Code Description
+* Base: BGM files are stored in res/sound/BGM
+*       ES files are stored in res/sound/ES, and should be specified in res/ES file in the format: [Type];[Alias];[File Name];[Volume]
+        *         -> Type: bgm, es
+*         -> Volume: A value between -80.0 and 6.0
+        * Usage
+* Manager Call: Use getInstance() to call the manager
+* BGM Call: Use playBGM(String fileName) to play BGM. It will loop indefinitely, and you can stop it by calling stopBGM()
+* ES Call: Use playES(String effectName) to play sound effects. The same ES can be called simultaneously.
+* Change BGM Volume: Use modifyBGMVolume(String name, float volume) to modify the volume
+* Change ES Volume: Use modifyESVolume(String name, float volume) to modify the volume
+*
+* All the above functionalities have been implemented and tested successfully.
+*/
+
 
 //  test code
 //    public static void main(String[] args) throws IOException, InterruptedException {

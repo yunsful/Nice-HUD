@@ -18,6 +18,7 @@ public class ItemManager {
     private DrawManager drawManager;
     private GameScreen gameScreen;
     protected Logger logger = Core.getLogger();
+    private Set<Item> recyclableItems = new HashSet<>();
 
     public ItemManager(int screenHeight, DrawManager drawManager) {
         this.items = new HashSet<>();
@@ -54,13 +55,13 @@ public class ItemManager {
         }
     }
     public void addItemRecycle(Item item) {
-        Set<Item> recyclableItems = new HashSet<>();
-        if(item != null){
+        if(item != null) {
             recyclableItems.add(item);
             this.logger.info("get item");
         }
+    }
+    public void removeAllReItems(){
         this.items.removeAll(recyclableItems);
         ItemPool.recycle(recyclableItems);
     }
-
 }

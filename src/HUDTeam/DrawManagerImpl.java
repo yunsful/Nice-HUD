@@ -27,4 +27,10 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 25); // 화면 상단 좌측에 표시
     }
 
+    public static void drawSpeed(final Screen screen, final int speed) {
+        String speedString = "MS : " + speed;
+        backBufferGraphics.setColor(Color.WHITE);
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.drawString(speedString, 85, screen.getHeight() - 25);
+    }
 }

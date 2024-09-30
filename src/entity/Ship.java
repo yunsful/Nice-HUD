@@ -68,17 +68,17 @@ public class Ship extends Entity {
 	 *            List of bullets on screen, to add the new bullet.
 	 * @return Checks if the bullet was shot correctly.
 	 */
-	public final boolean shoot(final Set<PiercingBullet> bullets) {
+	public final boolean shoot(final Set<PiercingBullet> bullets) { // Edited by Enemy
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
 
 			// Add a piercing bullet fired by the player's ship.
 			// This bullet can pierce 2 enemy ships.
-			bullets.add(PiercingBulletPool.getPiercingBullet(
+			bullets.add(PiercingBulletPool.getPiercingBullet( // Edited by Enemy
 					positionX + this.width / 2,
 					positionY,
 					BULLET_SPEED,
-					2 // Number of enemies the bullet can pierce
+					2 // Number of enemies the bullet can pierce // Edited by Enemy
 			));
 			return true;
 		}

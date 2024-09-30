@@ -78,6 +78,8 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
+	/** Total currency **/
+	private int currency; // Team-Ctrl-S(Currency)
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -109,6 +111,7 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
+		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -421,6 +424,6 @@ public class GameScreen extends Screen {
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed);
+				this.bulletsShot, this.shipsDestroyed, this.currency); // Team-Ctrl-S(Currency)
 	}
 }

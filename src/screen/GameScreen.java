@@ -70,6 +70,12 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
+	/**
+	 * Added by the Level Design team
+	 *
+	 * Counts the number of waves destroyed
+	 * **/
+	private int waveCounter;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -101,6 +107,13 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
+
+		/**
+		 * Added by the Level Design team
+		 *
+		 * Sets the wave counter
+		 * **/
+		this.waveCounter = 1;
 	}
 
 	/**
@@ -122,9 +135,17 @@ public class GameScreen extends Screen {
 		this.bullets = new HashSet<Bullet>();
 
 		// Special input delay / countdown.
-		this.gameStartTime = System.currentTimeMillis();
-		this.inputDelay = Core.getCooldown(INPUT_DELAY);
-		this.inputDelay.reset();
+		/**
+		 * Added by the Level Design team
+		 *
+		 * Enables the cooldown only for the first wave
+		 * **/
+		if (this.waveCounter == 1) {
+			this.gameStartTime = System.currentTimeMillis();
+			this.inputDelay = Core.getCooldown(INPUT_DELAY);
+			this.inputDelay.reset();
+		}
+
 	}
 
 	/**
@@ -199,8 +220,27 @@ public class GameScreen extends Screen {
 		cleanBullets();
 		draw();
 
+		/**
+		 * Added by the Level Design team
+		 *
+		 * Counts and checks if the number of waves destroyed match the intended number of waves for this level
+		 * Spawn another wave
+		 **/
+		if (this.enemyShipFormation.isEmpty() && waveCounter < this.gameSettings.getWavesNumber()) {
+
+			waveCounter++;
+
+			this.initialize();
+		}
+
+		/**
+		 * Wave counter condition added by the Level Design team
+		 *
+		 * Checks if the intended number of waves for this level was destroyed
+		 * **/
 		if ((this.enemyShipFormation.isEmpty() || this.lives == 0)
-				&& !this.levelFinished) {
+				&& !this.levelFinished
+				&& waveCounter == this.gameSettings.getWavesNumber()) {
 			this.levelFinished = true;
 			this.screenFinishedCooldown.reset();
 		}
@@ -234,8 +274,13 @@ public class GameScreen extends Screen {
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 
+		/**
+		 * Wave counter condition added by the Level Design team
+		 *
+		 * Removes the countdown for the next waves (after the first one)
+		 * **/
 		// Countdown to game start.
-		if (!this.inputDelay.checkFinished()) {
+		if (!this.inputDelay.checkFinished() && this.waveCounter == 1) {
 			int countdown = (int) ((INPUT_DELAY
 					- (System.currentTimeMillis()
 							- this.gameStartTime)) / 1000);

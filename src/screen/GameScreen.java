@@ -132,7 +132,7 @@ public class GameScreen extends Screen {
 		this.enemyShipSpecialExplosionCooldown = Core
 				.getCooldown(BONUS_SHIP_EXPLOSION);
 		this.screenFinishedCooldown = Core.getCooldown(SCREEN_CHANGE_INTERVAL);
-		this.bullets = new HashSet<PiercingBullet>();
+		this.bullets = new HashSet<PiercingBullet>(); // Edited by Enemy
 
 		// Special input delay / countdown.
 		this.gameStartTime = System.currentTimeMillis();
@@ -271,20 +271,21 @@ public class GameScreen extends Screen {
 	 * Cleans bullets that go off screen.
 	 */
 	private void cleanBullets() {
-		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
-		for (PiercingBullet bullet : this.bullets) {
+		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>(); // Edited by Enemy
+		for (PiercingBullet bullet : this.bullets) { // Edited by Enemy
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
 					|| bullet.getPositionY() > this.height)
 				recyclable.add(bullet);
 		}
 		this.bullets.removeAll(recyclable);
-		PiercingBulletPool.recycle(recyclable);
+		PiercingBulletPool.recycle(recyclable); // Edited by Enemy
 	}
 
 	/**
 	 * Manages collisions between bullets and ships. -original code
-	 */private void manageCollisions() {
+	 */
+	private void manageCollisions() {
 		Set<Bullet> recyclable = new HashSet<Bullet>();
 		for (Bullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
@@ -322,7 +323,7 @@ public class GameScreen extends Screen {
 
 	/**
 	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
-	 */
+	 */ // Edited by Enemy
 	private void _manageCollisions() {
 		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
 		for (PiercingBullet bullet : this.bullets)

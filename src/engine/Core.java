@@ -73,6 +73,7 @@ public final class Core {
 	private static Handler fileHandler;
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
+	// Sound Operator
 	private static SoundManager sm;
 
 
@@ -91,7 +92,7 @@ public final class Core {
 
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new MinimalFormatter());
-
+			// Sound Operator
 			sm = SoundManager.getInstance();
 
 			LOGGER.addHandler(fileHandler);
@@ -122,7 +123,6 @@ public final class Core {
 		int returnCode = 1;
 		do {
 			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0);
-
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -135,6 +135,8 @@ public final class Core {
 			case 2:
 				// Game & score.
 				LOGGER.info("Starting inGameBGM");
+				// Sound Operator
+				sm.playES("start_button_ES");
 				sm.playBGM("inGame_bgm");
 
 				do {
@@ -163,6 +165,7 @@ public final class Core {
 						&& gameState.getLevel() <= NUM_LEVELS);
 
 				LOGGER.info("Stop InGameBGM");
+				// Sound Operator
 				sm.stopAllBGM();
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT

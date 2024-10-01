@@ -500,6 +500,7 @@ public final class FileManager {
 
             logger.info("Loading user's gem.");
 
+            bufferedReader.readLine(); // Ignore first(currency) line
             String amount = bufferedReader.readLine();
             gem = Integer.parseInt(amount);
         } catch (FileNotFoundException e) {
@@ -531,6 +532,7 @@ public final class FileManager {
                     .getResourceAsStream("gem");
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
+            reader.readLine(); //Ignore first(currency) line
             String amount = reader.readLine();
             gem = Integer.parseInt(amount);
         } finally {

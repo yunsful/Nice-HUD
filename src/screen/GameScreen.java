@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import HUDTeam.Achievement;
+import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameSettings;
@@ -216,6 +218,12 @@ public class GameScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
+		// Jo minseo / HUD team
+		if(Achievement.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
+			Achievement.addTimer();
+		}
+
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
 				this.ship.getPositionY());
 		if (this.enemyShipSpecial != null)
@@ -225,6 +233,8 @@ public class GameScreen extends Screen {
 
 		enemyShipFormation.draw();
 
+		DrawManagerImpl.drawSpeed(this, ship.getSpeed());
+
 		for (Bullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
 					bullet.getPositionY());
@@ -233,6 +243,9 @@ public class GameScreen extends Screen {
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
+		DrawManagerImpl.drawLevel(this, this.level);
+		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
+//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {

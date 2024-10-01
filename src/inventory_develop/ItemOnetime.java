@@ -41,7 +41,7 @@ public class ItemOnetime extends Entity {
 
     /**
      * gamescreen에서 CleanItem메소드를 만들어서 사용
-     * 아이템의 위치를 지정 (일단은 일자로 떨어지게끔만)
+     * 아이템의 위치를 지정 (일단은 일자로 떨어지게끔)
      */
     public final void update() {
         this.positionY += this.speed;

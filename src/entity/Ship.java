@@ -3,12 +3,17 @@ package entity;
 import java.awt.Color;
 import java.util.Set;
 
+import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+import Enemy.PiercingBulletPool;
+// Import PlayerGrowth class
+import Enemy.PlayerGrowth;
+// Import NumberOfBullet class
 import inventory_develop.NumberOfBullet;
+// Import ShipStatus class
 import inventory_develop.ShipStatus;
-
 /**
  * Implements a ship, to be controlled by the player.
  * 
@@ -29,6 +34,8 @@ public class Ship extends Entity {
 	private Cooldown shootingCooldown;
 	/** Time spent inactive between hits. */
 	private Cooldown destructionCooldown;
+	/** PlayerGrowth 인스턴스 / PlayerGrowth instance */
+	private PlayerGrowth growth;
 
 	private NumberOfBullet NBPool = new NumberOfBullet();
 
@@ -40,11 +47,18 @@ public class Ship extends Entity {
 	 * @param positionY
 	 *            Initial position of the ship in the Y axis.
 	 */
+	//Edit by Enemy
 	public Ship(final int positionX, final int positionY) {
-		super(positionX, positionY, 13 * 2, 8 * 2, Color.GREEN);
+		super(positionX, positionY - 50, 13 * 2, 8 * 2, Color.GREEN);
 
 		this.spriteType = SpriteType.Ship;
-		this.shootingCooldown = Core.getCooldown(SHOOTING_INTERVAL);
+
+		// Create PlayerGrowth object and set initial stats
+		this.growth = new PlayerGrowth();  // PlayerGrowth 객체를 먼저 초기화
+
+		//  Now use the initialized growth object
+		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay());
+
 		this.destructionCooldown = Core.getCooldown(1000);
 	}
 	/* Status_update */
@@ -57,21 +71,23 @@ public class Ship extends Entity {
 	}
 
 
+
 	/**
 	 * Moves the ship speed uni ts right, or until the right screen border is
 	 * reached.
 	 */
 	public final void moveRight() {
-		this.positionX += SPEED;
-	}
+		this.positionX += growth.getMoveSpeed(); //  Use PlayerGrowth for movement speed
+	} //Edit by Enemy
+
 
 	/**
 	 * Moves the ship speed units left, or until the left screen border is
 	 * reached.
 	 */
 	public final void moveLeft() {
-		this.positionX -= SPEED;
-	}
+		this.positionX -= growth.getMoveSpeed(); // Use PlayerGrowth for movement speed
+	} //Edit by Enemy
 
 	/**
 	 * Shoots a bullet upwards.
@@ -79,8 +95,12 @@ public class Ship extends Entity {
 	 * @param bullets
 	 *            List of bullets on screen, to add the new bullet.
 	 * @return Checks if the bullet was shot correctly.
+	 *
+	 * You can set Number of enemies the bullet can pierce at here.
 	 */
-	public final boolean shoot(final Set<Bullet> bullets) {
+	//Edit by Enemy
+	public final boolean shoot(final Set<PiercingBullet> bullets) {
+		// Do not reset cooldown every time
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
 			for (Bullet bullet : NBPool.AddBullet(positionX + this.width / 2,
@@ -91,6 +111,9 @@ public class Ship extends Entity {
 		}
 		return false;
 	}
+
+
+
 
 	/**
 	 * Updates status of the ship.
@@ -117,6 +140,35 @@ public class Ship extends Entity {
 	public final boolean isDestroyed() {
 		return !this.destructionCooldown.checkFinished();
 	}
+	/**
+	 * 스탯을 증가시키는 메서드들 (PlayerGrowth 클래스 사용)
+	 * Methods to increase stats (using PlayerGrowth)
+	 */
+
+	// Increases health
+	//Edit by Enemy
+	public void increaseHealth(int increment) {
+		growth.increaseHealth(increment);
+	}
+
+	//  Increases movement speed
+	//Edit by Enemy
+	public void increaseMoveSpeed(int increment) {
+		growth.increaseMoveSpeed(increment);
+	}
+
+	// Increases bullet speed
+	//Edit by Enemy
+	public void increaseBulletSpeed(int increment) {
+		growth.increaseBulletSpeed(increment);
+	}
+
+	//  Decreases shooting delay
+	//Edit by Enemy
+	public void decreaseShootingDelay(int decrement) {
+		growth.decreaseShootingDelay(decrement);
+		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay()); // Apply new shooting delay
+	}
 
 	/**
 	 * Getter for the ship's speed.
@@ -125,5 +177,14 @@ public class Ship extends Entity {
 	 */
 	public final int getSpeed() {
 		return SPEED;
+	}
+	
+	/**
+	 * Calculates and returns the attack speed in bullets per second.
+	 *
+	 * @return Attack speed (bullets per second).
+	 */
+	public final double getAttackSpeed() {
+		return 1000.0 / SHOOTING_INTERVAL;
 	}
 }

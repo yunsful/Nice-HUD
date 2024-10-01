@@ -81,6 +81,12 @@ public class DrawManager {
 		/**Item*/
 		Item //by enemy team
 		/** Player Lives. */
+
+		/** Item */
+		ItemAttackSpeed,
+		ItemBomb,
+		ItemBarrier,
+		ItemRecovery
 	};
 
 	/**

@@ -17,11 +17,11 @@ import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
+// Import inventory team's class
 import Enemy.PiercingBulletPool;
 import Enemy.Item;
 import Enemy.ItemManager;
-
-
+import inventory_develop.TemporaryShield;
 
 /**
  * Implements the game screen, where the action happens.
@@ -92,6 +92,9 @@ public class GameScreen extends Screen {
 	private int playTimePre = 0;
 
 
+	private TemporaryShield shield;
+
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -120,13 +123,16 @@ public class GameScreen extends Screen {
 		this.lives = gameState.getLivesRemaining();
 		if (this.bonusLife)
 			this.lives++;
+
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
+		this.shield = new TemporaryShield();
 	}
 
 	/**
 	 * Initializes basic screen properties, and adds necessary elements.
 	 */
+
 	public final void initialize() {
 		super.initialize();
 
@@ -220,6 +226,7 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
+			this.shield.update();
 			this.ship.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
@@ -322,10 +329,10 @@ public class GameScreen extends Screen {
 	private void manageCollisions() {
 		Set<Bullet> recyclable = new HashSet<Bullet>();
 		for (Bullet bullet : this.bullets)
-			if (bullet.getSpeed() > 0) {
+			if (bullet.getSpeed() > 0 ) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()) {
+					if (!this.ship.isDestroyed() && !this.shield.isActive()) {
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
@@ -458,5 +465,11 @@ public class GameScreen extends Screen {
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
 				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency); // Team-Ctrl-S(Currency)
+	}
+	public int getLives() {
+		return lives;
+	}
+	public void setLives(int lives) {
+		this.lives = lives;
 	}
 }

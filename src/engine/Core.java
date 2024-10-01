@@ -31,11 +31,11 @@ public final class Core {
 	private static final int FPS = 60;
 
 	/** Max lives. */
-	private static final int MAX_LIVES = 3;
+	public static final int MAX_LIVES = 3; // CLOVER Dongjun Suh : Fixed MAX_LIVES from private to public for usage in achievement
 	/** Levels between extra life. */
 	private static final int EXTRA_LIFE_FRECUENCY = 3;
 	/** Total number of levels. */
-	private static final int NUM_LEVELS = 7;
+	public static final int NUM_LEVELS = 7; // CLOVER Dongjun Suh : Fixed NUM_LEVELS from privated to public for usage in achievement
 	
 	/** Difficulty settings for level 1. */
 	private static final GameSettings SETTINGS_LEVEL_1 =

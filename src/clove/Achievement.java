@@ -1,34 +1,95 @@
 package clove;
 
 public class Achievement {
-    private String achievementName; // 업적의 이름
-    private String achievementDescription; // 업적에 대한 설명
-    private int requiredKills; // 필요한 처치 수
-    private boolean isCompleted;
-
-    // 생성자에서 requiredKills도 매개변수로 받아 초기화
-    public Achievement(String achievementName, String achievementDescription, int requiredKills) {
-        this.achievementName = achievementName;
-        this.achievementDescription = achievementDescription;
-        this.requiredKills = requiredKills;
-        this.isCompleted = false;
+    public enum AchievementType {
+        KILLS,
+        KILLSTREAKS,
+        LIVES,
+        STAGE,
+        TRIALS,
+        FASTKILL,
+        SCORE
     }
 
-    public String getAchievementName() {
-        return achievementName; // 업적의 이름 반환
+    private String achievementName;
+    private String achievementDescription;
+    private int requiredKills;
+    private int requiredScore;
+    private int requiredStages;
+    private boolean isCompleted;
+    private AchievementType type;
+
+    public Achievement(String achievementName, String achievementDescription, int requiredValue, AchievementType type) {
+        this.achievementName = achievementName;
+        this.achievementDescription = achievementDescription;
+        this.isCompleted = false;
+        this.type = type;
+
+        // 타입에 따라 적절한 필드에 값 할당
+        switch (type) {
+            case KILLS:
+            case KILLSTREAKS:
+                this.requiredKills = requiredValue;
+                break;
+            case SCORE:
+                this.requiredScore = requiredValue;
+                break;
+            case STAGE:
+            case TRIALS:
+                this.requiredStages = requiredValue;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported AchievementType: " + type);
+        }
+    }
+
+    public AchievementType getType() {
+        return type;
+    }
+
+    public int getRequiredScore() {
+        return requiredScore;
+    }
+
+    public int getRequiredKills() {
+        return requiredKills;
+    }
+
+    public int getRequiredStages() {
+        return requiredStages;
     }
 
     public String getAchievementDescription() {
-        return achievementDescription; // 업적의 설명 반환
+        return achievementDescription;
     }
 
-    public boolean isCompleted() { // 업적 달성 여부 확인
+    public String getAchievementName() {
+        return achievementName;
+    }
+
+    public boolean isCompleted() {
         return isCompleted;
     }
 
-    // 처치 수를 기준으로 업적 달성 조건 대조
     public boolean checkKillConditions(int currentKills) {
-        return currentKills >= requiredKills; // requiredKills를 기준으로 조건 확인
+        if (this.type == AchievementType.KILLS || this.type == AchievementType.KILLSTREAKS) {
+            return currentKills >= requiredKills;
+        }
+        return false;
+    }
+
+    public boolean checkStageConditions(int currentStages) {
+        if (this.type == AchievementType.STAGE || this.type == AchievementType.TRIALS) {
+            return currentStages >= requiredStages;
+        }
+        return false;
+    }
+
+    public boolean checkScoreConditions(int currentScore) {
+        if (this.type == AchievementType.SCORE) {
+            return currentScore >= requiredScore;
+        }
+        return false;
     }
 
     public void completeAchievement() {
@@ -38,15 +99,7 @@ public class Achievement {
         }
     }
 
-    public void printAchievementStatus() {
-        if (isCompleted) {
-            System.out.println("Achievement: " + achievementName + " - Status: Completed"); // 달성된 경우 출력
-        } else {
-            System.out.println("Achievement: " + achievementName + " - Status: Not Completed"); // 달성되지 않은 경우 출력
-        }
-    }
-
-    @Override // 두 개의 업적 객체가 동일한 이름을 가진다면 같은 업적으로 처리
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -54,12 +107,12 @@ public class Achievement {
         return achievementName.equals(that.achievementName);
     }
 
-    @Override // 해시값 반환
+    @Override
     public int hashCode() {
         return achievementName.hashCode();
     }
 
-    @Override // 업적 객체를 문자열로 표현
+    @Override
     public String toString() {
         return "Achievement{" + "Achieved: " + achievementName + " - " + achievementDescription + "}";
     }

@@ -13,7 +13,7 @@ public class GameState {
 	/** Current score. */
 	private int score;
 	/** Lives currently remaining. */
-	private int livesRemaining;
+	public static int livesRemaining; // CLOVER Dongjun Suh : Changed livesRemaining from public to private for usage in achievement
 	/** Bullets shot until now. */
 	private int bulletsShot;
 	/** Ships destroyed until now. */
@@ -45,6 +45,10 @@ public class GameState {
 		this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
 		this.currency = currency; // Team-Ctrl-S(Currency)
+	}
+
+	public static int livesRemaining() { // CLOVER DongjunSuh : Added public static for achievement
+		return livesRemaining;
 	}
 
 	/**

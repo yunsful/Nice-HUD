@@ -24,7 +24,7 @@ public class AchievementConditions {
 
     public AchievementConditions() {
 
-        // TODO 아직 작동하지 않는 코드 일부 있음.(fastKillAchievement,trialAchievement) 관련 기록 기능 추가되면 수정 필요
+        // TODO Some of the codes below are non-operational.(fastKillAchievement,trialAchievement) Will be updated if related record fuctions are added.
         noDeathAchievements.add(new Achievement("Aerobatics","Maintain Maximum Life",1, Achievement.AchievementType.LIVES));
 
         killAchievements.add(new Achievement("Rookie Pilot", "Destroy 25 enemies", 1, Achievement.AchievementType.KILLS));
@@ -120,7 +120,7 @@ public class AchievementConditions {
             resetKillTimer();
         }
     }
-    // 시간 내 연속처치 업적에 필요한 타이머
+    // Timer for Kill Streak achievements
     private void resetKillTimer() {
         killStartTime = 0;
         enemiesKilledInTime = 0;
@@ -137,8 +137,8 @@ public class AchievementConditions {
         }
     }
 
-    // TODO 현재 아래의 미완성 코드는 주석으로 처리한 상태
-    // TODO getRequiredTrials : 현재 플레이 횟수를 추적하는 기능 필요
+    // TODO Annotations below are unfinished codes
+    // TODO getRequiredTrials : Function to track current number of plays required
     /*
     public void trials(int currentTrials) {
         for (Achievement achievement : trialAchievements) {
@@ -147,7 +147,7 @@ public class AchievementConditions {
             }
         }
     }
-    // TODO getRequiredStreaks : 현재 연속처치(탄 누수 없이 적을 연속으로 처치)한 횟수를 기록하는 기능 필요
+    // TODO getRequiredStreaks : Function to track current Kill Streak(Enemy kill without missing the bullets) required
     public void killStreak(int currentStreak) {
         for (Achievement achievement : streakAchievements) {
             if (currentStreak >= achievement.getRequiredStreaks() && !achievement.isCompleted()) {
@@ -155,22 +155,22 @@ public class AchievementConditions {
             }
         }
     }
-    // TODO 추가할 업적 : 보스 처치 업적 / 이후 개방되는 히든 업적
+    // TODO Achievements to add : Boss Achievements / Hidden Achievements
     */
 
     private void completeAchievement(Achievement achievement) {
-        if (!unlockedAchievements.contains(achievement.getAchievementName())) {  // 중복 확인
+        if (!unlockedAchievements.contains(achievement.getAchievementName())) {
             System.out.println("Achievement Unlocked: " + achievement.getAchievementName() + " - " + achievement.getAchievementDescription());
             unlockedAchievements.add(achievement.getAchievementName());
-            achievement.completeAchievement(); // Achievement 클래스에서 달성 처리
+            achievement.completeAchievement();
         }
     }
 
-    public List<String> getUnlockedAchievements() {  // static 제거
-        return new ArrayList<>(unlockedAchievements); // 리스트 복사본을 반환
+    public List<String> getUnlockedAchievements() {
+        return new ArrayList<>(unlockedAchievements);
     }
 
-    public int getTotalAchievements() {  // static 제거
+    public int getTotalAchievements() {
         return unlockedAchievements.size();
     }
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 // TODO : Replace Object to Achievement Class
-// 수정 완료, 테스트 필요
+// Fixed, need testing
 public class AchievementManager {
     /*
         Variables
@@ -62,8 +62,8 @@ public class AchievementManager {
 
     public boolean setAchievementValue(Achievement achievement, Boolean completed) { // Object -> Achievement
         if(!hasAchivement(achievement)){
-            // TODO : 업적을 설정하는 것에 실패했다는 알림(또는 로그) 출력
-            // 로그 출력 코드 작성 완료, 테스트 필요
+            // TODO : Output a notification (or log) that setting an achievement failed
+            //Completed writing log output code, needs testing
             System.out.println("Failed to set achievement: " + achievement.getAchievementName()); // 로그 추가
             return false;
         }
@@ -75,15 +75,16 @@ public class AchievementManager {
     }
 
     public boolean getAchievementValue(Achievement achievement) { // Object -> Achievement
-        // Boolean 타입을 boolean 타입으로 변환하여 반환
+        // Converts Boolean type to boolean type and returns
         return Boolean.TRUE.equals(achievementMap.getOrDefault(achievement, false));
     }
 
     /*
-        편의성 함수
-        (코드를 편하게 사용하기 위해 추가된 함수)
-     */
-    public boolean completeAchievement(Achievement achievement) { // 코드 추가
+    Convenience function
+    (Function added to make the code easier to use)
+    */
+
+    public boolean completeAchievement(Achievement achievement) { // Added Code
         if (!achievement.isCompleted()) {
             achievement.completeAchievement();
             return setAchievementValue(achievement, true);

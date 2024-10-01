@@ -25,7 +25,7 @@ public class Achievement {
         this.isCompleted = false;
         this.type = type;
 
-        // 타입에 따라 적절한 필드에 값 할당
+        // Assign values to appropriate fields based on type
         switch (type) {
             case KILLS:
             case KILLSTREAKS:

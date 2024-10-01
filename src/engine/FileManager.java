@@ -425,7 +425,7 @@ public final class FileManager {
             //Choose File root
             String gemPath = new File(jarPath).getParent();
             gemPath += File.separator;
-            gemPath += "gem";
+            gemPath += "currency";
 
             File gemFile = new File(gemPath);
             //create File If there is no gemFile
@@ -491,7 +491,7 @@ public final class FileManager {
 
             String gemPath = new File(jarPath).getParent();
             gemPath += File.separator;
-            gemPath += "gem";
+            gemPath += "currency";
 
             File gemFile = new File(gemPath);
             inputStream = new FileInputStream(gemFile);
@@ -529,7 +529,7 @@ public final class FileManager {
 
         try {
             inputStream = FileManager.class.getClassLoader()
-                    .getResourceAsStream("gem");
+                    .getResourceAsStream("currency");
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
             reader.readLine(); //Ignore first(currency) line

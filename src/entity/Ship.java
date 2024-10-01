@@ -92,7 +92,8 @@ public class Ship extends Entity {
 		// Do not reset cooldown every time
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
-
+			sm = SoundManager.getInstance();
+			sm.playES("My_Gun_Shot");
 			// Add a piercing bullet fired by the player's ship.
 			bullets.add(PiercingBulletPool.getPiercingBullet(
 					positionX + this.width / 2,

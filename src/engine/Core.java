@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
+import Sound_Operator.SoundManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
@@ -72,6 +73,7 @@ public final class Core {
 	private static Handler fileHandler;
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
+	private static SoundManager sm;
 
 
 	/**
@@ -89,6 +91,8 @@ public final class Core {
 
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new MinimalFormatter());
+
+			sm = SoundManager.getInstance();
 
 			LOGGER.addHandler(fileHandler);
 			LOGGER.addHandler(consoleHandler);
@@ -130,6 +134,9 @@ public final class Core {
 				break;
 			case 2:
 				// Game & score.
+				LOGGER.info("Starting inGameBGM");
+				sm.playBGM("inGame_bgm");
+
 				do {
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
@@ -143,7 +150,7 @@ public final class Core {
 							+ " game screen at " + FPS + " fps.");
 					frame.setScreen(currentScreen);
 					LOGGER.info("Closing game screen.");
-
+					System.out.println("test");
 					gameState = ((GameScreen) currentScreen).getGameState();
 
 					gameState = new GameState(gameState.getLevel() + 1,
@@ -154,6 +161,9 @@ public final class Core {
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
+
+				LOGGER.info("Stop InGameBGM");
+				sm.stopAllBGM();
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " score screen at " + FPS + " fps, with a score of "

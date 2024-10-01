@@ -81,7 +81,10 @@ public final class DrawManager {
 		ItemAttackSpeed,
 		ItemBomb,
 		ItemBarrier,
-		ItemRecovery
+		ItemRecovery,
+		ItemSpeed,
+		ItemCoinIncrease,
+		ItemNumberOfBullet,
 
 	};
 
@@ -108,9 +111,11 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
-			spriteMap.put(SpriteType.ItemBarrier, new boolean[8][9]);
-			spriteMap.put(SpriteType.ItemBomb, new boolean[9][11]);
-			spriteMap.put(SpriteType.ItemRecovery, new boolean[8][8]);
+			spriteMap.put(SpriteType.ItemSpeed, new boolean[14][7]);
+			spriteMap.put(SpriteType.ItemCoinIncrease, new boolean[12][12]);
+			spriteMap.put(SpriteType.ItemNumberOfBullet, new boolean[9][8]);
+			spriteMap.put(SpriteType.ItemAttackSpeed, new boolean[3][12]);
+
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");

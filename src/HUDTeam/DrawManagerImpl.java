@@ -2,12 +2,14 @@ package HUDTeam;
 
 import engine.DrawManager;
 import screen.Screen;
+import entity.Entity;
+import java.awt.Color;
 
 import java.awt.*;
 
 public class DrawManagerImpl extends DrawManager {
 
-    // 메서드 추가
+    // Add method
     public static void drawLevel(final Screen screen, final int level){
         String levelText = "Level: " + level;
 
@@ -24,7 +26,7 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
         String attackSpeedText = String.format("AS: %.2f ", attackSpeed);
-        backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 25); // 화면 상단 좌측에 표시
+        backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 25);
     }
 
     public static void drawSpeed(final Screen screen, final int speed) {
@@ -33,6 +35,18 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.drawString(speedString, 85, screen.getHeight() - 25);
     }
+
+    public void drawLivesWithHeart(final Screen screen, final int lives) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+
+        Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.RED);
+        heart.setSpriteType(SpriteType.Heart);
+
+        for (int i = 0; i < lives; i++) {
+            drawEntity(heart, 20 + 30 * i, 10);
+        }
+    } // Saeum Jung - heart graphic
 
     /**
      * Show accomplished achievement

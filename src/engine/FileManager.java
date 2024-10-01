@@ -387,4 +387,48 @@ public final class FileManager {
 
 		return currency;
 	}
+
+	/**
+	 * Saves user gem to disk.
+	 *
+	 * @param gem
+	 *            amount of user gem to save.
+	 * @throws IOException
+	 *             In case of saving problems.
+	 */
+	// Team-Ctrl-S(Currency)
+	public void saveGem(final int gem) throws IOException {
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			//Choose File root
+			String gemPath = new File(jarPath).getParent();
+			gemPath += File.separator;
+			gemPath += "gem";
+
+			File gemFile = new File(gemPath);
+			//create File If there is no gemFile
+			if (!gemFile.exists())
+				gemFile.createNewFile();
+
+			outputStream = new FileOutputStream(gemFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
+
+			logger.info("Saving user's gem.");
+
+			// Saves user's gem
+			bufferedWriter.write(Integer.toString(gem));
+			bufferedWriter.newLine();
+
+		} finally {
+			if (bufferedWriter != null)
+				bufferedWriter.close();
+		}
+	}
 }

@@ -116,7 +116,8 @@ public final class Core {
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
+			// Add playtime parameter - Soomin Lee / TeamHUD
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0);
 
 			switch (returnCode) {
 			case 1:
@@ -145,11 +146,13 @@ public final class Core {
 
 					gameState = ((GameScreen) currentScreen).getGameState();
 
+					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed());
+							gameState.getShipsDestroyed(),
+							gameState.getTime());
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

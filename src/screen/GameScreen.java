@@ -219,7 +219,7 @@ public class GameScreen extends Screen {
 				this.enemyShipSpecialCooldown.reset();
 				//Sound Operator
 				sm = SoundManager.getInstance();
-				sm.playEs();
+				sm.playES("UFO_come_up");
 				this.logger.info("A special ship appears");
 			}
 			if (this.enemyShipSpecial != null

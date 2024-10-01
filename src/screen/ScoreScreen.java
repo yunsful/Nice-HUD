@@ -47,6 +47,8 @@ public class ScoreScreen extends Screen {
 	private Cooldown selectionCooldown;
 	/** Total currency earned this game */
 	private int currency; // Team-Ctrl-S(Currency)
+	/** User's Final Reached Level */ //Team Clove
+	private int level;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -74,6 +76,7 @@ public class ScoreScreen extends Screen {
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.level = gameState.getLevel(); //Team Clove
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -158,7 +161,7 @@ public class ScoreScreen extends Screen {
 	 * Saves the score as a high score.
 	 */
 	private void saveScore() {
-		highScores.add(new Score(new String(this.name), score));
+		highScores.add(new Score(new String(this.name), score, bulletsShot, shipsDestroyed, level)); //Team Clove Fixed
 		Collections.sort(highScores);
 		if (highScores.size() > MAX_HIGH_SCORE_NUM)
 			highScores.remove(highScores.size() - 1);

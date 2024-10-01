@@ -130,6 +130,10 @@ public final class Core {
 			case 2:
 				// Game & score.
 				do {
+					// Record the start time
+					// Ctrl-S
+					long startTime = System.currentTimeMillis();
+
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
@@ -149,7 +153,12 @@ public final class Core {
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0));
+							gameState.getShipsDestroyed(),
+							// Ctrl-S
+							Core.getCurrencyManager().calculateCurrency(gameState.getScore(),
+								gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(),
+								startTime,
+								System.currentTimeMillis()));
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

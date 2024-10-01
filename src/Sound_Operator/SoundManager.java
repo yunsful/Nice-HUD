@@ -125,6 +125,7 @@ public class SoundManager {
         if(clip != null){
             clip.setFramePosition(0);
             clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
             return 1;
         }else{
             return 0;

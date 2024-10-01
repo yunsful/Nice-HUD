@@ -7,6 +7,7 @@ import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+import inventory_develop.Bomb;
 import Enemy.PiercingBulletPool;
 // Import PlayerGrowth class
 import Enemy.PlayerGrowth;
@@ -106,6 +107,13 @@ public class Ship extends Entity {
 //		return false;
 //	}
 		if (this.shootingCooldown.checkFinished()) {
+      
+// 			this.shootingCooldown.reset();
+// 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
+// 					positionY, BULLET_SPEED));
+// 			Bomb.setCanShoot(false);
+      
+      
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
 
 			// Add a piercing bullet fired by the player's ship.

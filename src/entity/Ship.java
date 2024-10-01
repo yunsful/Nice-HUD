@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.Set;
 
 import Enemy.PiercingBullet;
+import Sound_Operator.SoundManager;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
@@ -35,6 +36,8 @@ public class Ship extends Entity {
 	/** PlayerGrowth 인스턴스 / PlayerGrowth instance */
 	private PlayerGrowth growth;
 
+	private static SoundManager sm;
+
 	/**
 	 * Constructor, establishes the ship's properties.
 	 * 
@@ -56,6 +59,7 @@ public class Ship extends Entity {
 		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay());
 
 		this.destructionCooldown = Core.getCooldown(1000);
+//		this.sm = SoundManager.getInstance();
 	}
 
 
@@ -89,6 +93,7 @@ public class Ship extends Entity {
 	public final boolean shoot(final Set<PiercingBullet> bullets) {
 		// Do not reset cooldown every time
 		if (this.shootingCooldown.checkFinished()) {
+//			sm.playES("My_Gun_Shot");
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
 
 			// Add a piercing bullet fired by the player's ship.

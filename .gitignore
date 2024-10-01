@@ -170,6 +170,8 @@ pip-log.txt
 
 log*
 .checkstyle
+Nice-HUD.iml
 
 # running files
 out/
+.idea/

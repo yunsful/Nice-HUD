@@ -46,7 +46,7 @@ public class Ship extends Entity {
 	 */
 	//Edit by Enemy
 	public Ship(final int positionX, final int positionY) {
-		super(positionX, positionY, 13 * 2, 8 * 2, Color.GREEN);
+		super(positionX, positionY - 50, 13 * 2, 8 * 2, Color.GREEN);
 
 		this.spriteType = SpriteType.Ship;
 
@@ -170,5 +170,14 @@ public class Ship extends Entity {
 	 */
 	public final int getSpeed() {
 		return SPEED;
+	}
+	
+	/**
+	 * Calculates and returns the attack speed in bullets per second.
+	 *
+	 * @return Attack speed (bullets per second).
+	 */
+	public final double getAttackSpeed() {
+		return 1000.0 / SHOOTING_INTERVAL;
 	}
 }

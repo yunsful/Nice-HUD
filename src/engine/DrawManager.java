@@ -17,6 +17,8 @@ import screen.Screen;
 import entity.Entity;
 import entity.Ship;
 
+import level_design.Background;
+
 import javax.imageio.ImageIO;
 
 /**
@@ -564,12 +566,14 @@ public final class DrawManager {
 	}
 
     /**
-	 * ###TEAM INTERNATIONAL###
-     * Background draw
+	 * ### TEAM INTERNATIONAL ###
+     * Background draw and update method
      */
-    public void drawBackground(final Screen screen) {
+	Background background = new Background();
+
+	public void drawBackground(final Screen screen, int levelNumber, boolean backgroundMoveRight, boolean backgroundMoveLeft) {
 		// I still have no clue how relative pathing or class pathing works
-		InputStream imageStream = getClass().getResourceAsStream("/backgrounds/background_level_1.jpg");
+		InputStream imageStream = Background.getBackgroundImageStream(levelNumber);
 		BufferedImage backgroundImage;
 		try {
             assert imageStream != null;
@@ -577,7 +581,10 @@ public final class DrawManager {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		backBufferGraphics.drawImage(backgroundImage, 0, 0, null);
-    }
 
+		int verticalOffset = background.getVerticalOffset(frame);
+		int horizontalOffset = background.getHorizontalOffset(frame, backgroundMoveRight, backgroundMoveLeft);
+
+        backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
+    }
 }

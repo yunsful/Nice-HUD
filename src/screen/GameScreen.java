@@ -71,6 +71,11 @@ public class GameScreen extends Screen {
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
 
+	/** ### TEAM INTERNATIONAL ### */
+	/** Booleans for horizontal background movement */
+	private boolean backgroundMoveLeft = false;
+	private boolean backgroundMoveRight = false;
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -162,9 +167,11 @@ public class GameScreen extends Screen {
 
 				if (moveRight && !isRightBorder) {
 					this.ship.moveRight();
+					this.backgroundMoveRight = true;
 				}
 				if (moveLeft && !isLeftBorder) {
 					this.ship.moveLeft();
+					this.backgroundMoveLeft = true;
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
 					if (this.ship.shoot(this.bullets))
@@ -216,7 +223,10 @@ public class GameScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		drawManager.drawBackground(this);
+		/** ### TEAM INTERNATIONAL ### */
+		drawManager.drawBackground(this, this.level, backgroundMoveRight, backgroundMoveLeft);
+		this.backgroundMoveRight = false;
+		this.backgroundMoveLeft = false;
 
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
 				this.ship.getPositionY());

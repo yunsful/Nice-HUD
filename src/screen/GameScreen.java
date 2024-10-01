@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import HUDTeam.Achievement;
+import HUDTeam.DrawManagerImpl;
 import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
@@ -81,6 +83,15 @@ public class GameScreen extends Screen {
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
 
+	// Soomin Lee / TeamHUD
+	/** Moment the user starts to play */
+	private long playStartTime;
+	/** Total time to play */
+	private int playTime = 0;
+	/** Play time on previous levels */
+	private int playTimePre = 0;
+
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -111,7 +122,6 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -141,6 +151,10 @@ public class GameScreen extends Screen {
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
+
+		// Soomin Lee / TeamHUD
+		this.playStartTime = gameStartTime + INPUT_DELAY;
+		this.playTimePre = playTime;
 	}
 
 	/**
@@ -233,6 +247,12 @@ public class GameScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
+		// Jo minseo / HUD team
+		if(Achievement.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
+			Achievement.addTimer();
+		}
+
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
 				this.ship.getPositionY());
 		if (this.enemyShipSpecial != null)
@@ -241,6 +261,8 @@ public class GameScreen extends Screen {
 					this.enemyShipSpecial.getPositionY());
 
 		enemyShipFormation.draw();
+
+		DrawManagerImpl.drawSpeed(this, ship.getSpeed());
 
 		for (PiercingBullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
@@ -252,6 +274,11 @@ public class GameScreen extends Screen {
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
+		DrawManagerImpl.drawLevel(this, this.level);
+		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
+//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
+		DrawManagerImpl.drawTime(this, this.playTime);
+		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {
@@ -264,6 +291,11 @@ public class GameScreen extends Screen {
 					/ 12);
 			drawManager.drawHorizontalLine(this, this.height / 2 + this.height
 					/ 12);
+		}
+
+		// Soomin Lee / TeamHUD
+		if (this.inputDelay.checkFinished()) {
+			playTime = (int) ((System.currentTimeMillis() - playStartTime) / 1000) + playTimePre;
 		}
 
 		drawManager.completeDrawing(this);
@@ -418,12 +450,13 @@ public class GameScreen extends Screen {
 	}
 
 	/**
+	 * Add playtime parameter - Soomin Lee / TeamHUD
 	 * Returns a GameState object representing the status of the game.
-	 * 
+	 *
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.currency); // Team-Ctrl-S(Currency)
+				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency); // Team-Ctrl-S(Currency)
 	}
 }

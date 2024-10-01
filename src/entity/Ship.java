@@ -6,6 +6,7 @@ import java.util.Set;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+import inventory_develop.Bomb;
 import inventory_develop.ShipStatus;
 
 /**
@@ -82,6 +83,7 @@ public class Ship extends Entity {
 			this.shootingCooldown.reset();
 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
 					positionY, BULLET_SPEED));
+			Bomb.setCanShoot(false);
 			return true;
 		}
 		return false;

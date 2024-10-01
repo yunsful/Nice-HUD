@@ -140,6 +140,7 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
+
 	private List<Score> loadDefaultHighScores() throws IOException {
 		List<Score> highScores = new ArrayList<Score>();
 		InputStream inputStream = null;
@@ -153,12 +154,25 @@ public final class FileManager {
 			Score highScore = null;
 			String name = reader.readLine();
 			String score = reader.readLine();
+			String bulletsShot = reader.readLine(); //Team Clove
+			String shipsDestroyed = reader.readLine(); //Team Clove
+			String level = reader.readLine(); //Team Clove
 
 			while ((name != null) && (score != null)) {
-				highScore = new Score(name, Integer.parseInt(score));
+				highScore = new Score(name, Integer.parseInt(score), Integer.parseInt(bulletsShot),
+						Integer.parseInt(shipsDestroyed), Integer.parseInt(level)); //Team Clove
 				highScores.add(highScore);
 				name = reader.readLine();
 				score = reader.readLine();
+
+				for(int i = 0; i < 3; i++){
+					reader.readLine();
+				}
+				/*
+				Team Clove
+				Repeat the loop for the number of variables you want to skip
+				Current Skipped Number of Variables = 3
+				*/
 			}
 		} finally {
 			if (inputStream != null)
@@ -176,6 +190,7 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
+
 	public List<Score> loadHighScores() throws IOException {
 
 		List<Score> highScores = new ArrayList<Score>();
@@ -201,12 +216,25 @@ public final class FileManager {
 			Score highScore = null;
 			String name = bufferedReader.readLine();
 			String score = bufferedReader.readLine();
+			String bulletsShot = bufferedReader.readLine();
+			String shipsDestroyed = bufferedReader.readLine();
+			String level = bufferedReader.readLine();
 
 			while ((name != null) && (score != null)) {
-				highScore = new Score(name, Integer.parseInt(score));
+				highScore = new Score(name, Integer.parseInt(score), Integer.parseInt(bulletsShot),
+						Integer.parseInt(shipsDestroyed), Integer.parseInt(level)); //Team Clove
 				highScores.add(highScore);
 				name = bufferedReader.readLine();
 				score = bufferedReader.readLine();
+
+				for(int i = 0; i < 3; i++){
+					bufferedReader.readLine();
+				}
+				/*
+				Team Clove
+				Repeat the loop for the number of variables you want to skip
+				Current Skipped Number of Variables = 3
+				 */
 			}
 
 		} catch (FileNotFoundException e) {
@@ -230,8 +258,8 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
-	public void saveHighScores(final List<Score> highScores) 
-			throws IOException {
+
+	public void saveHighScores(final List<Score> highScores) throws IOException {
 		OutputStream outputStream = null;
 		BufferedWriter bufferedWriter = null;
 
@@ -264,6 +292,12 @@ public final class FileManager {
 				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getScore()));
 				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getBulletsShot())); //Team Clove
+				bufferedWriter.newLine(); //Team Clove
+				bufferedWriter.write(Integer.toString(score.getShipsDestroyed())); //Team Clove
+				bufferedWriter.newLine(); //Team Clove
+				bufferedWriter.write(Integer.toString(score.getLevel())); //Team Clove
+				bufferedWriter.newLine(); //Team Clove
 				savedCount++;
 			}
 

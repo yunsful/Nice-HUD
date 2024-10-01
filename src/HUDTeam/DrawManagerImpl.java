@@ -35,6 +35,25 @@ public class DrawManagerImpl extends DrawManager {
     }
 
     /**
+     * Draws current score on screen.
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param playTime
+     *            Current playtime.
+     *
+     * by Soomin Lee - TeamHUD
+     */
+    public static void drawTime(final Screen screen, final int playTime) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        int playTimeMinutes = playTime / 60;
+        int playTimeSeconds = playTime % 60;
+        String playTimeString = String.format("%d"+"m "+"%d"+"s", playTimeMinutes, playTimeSeconds);
+        backBufferGraphics.drawString(playTimeString, screen.getWidth() / 2 - 20, 25);
+    }
+
+    /**
      * Show accomplished achievement
      *
      * @param screen

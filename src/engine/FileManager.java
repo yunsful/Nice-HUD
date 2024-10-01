@@ -412,8 +412,10 @@ public final class FileManager {
      */
     // Team-Ctrl-S(Currency)
     public void saveGem(final int gem) throws IOException {
+        InputStream inputStream = null;
         OutputStream outputStream = null;
         BufferedWriter bufferedWriter = null;
+        BufferedReader bufferedReader = null;
 
         try {
             String jarPath = FileManager.class.getProtectionDomain()
@@ -430,17 +432,41 @@ public final class FileManager {
             if (!gemFile.exists())
                 gemFile.createNewFile();
 
+            List<String> lines = new ArrayList<>();
+            inputStream = new FileInputStream(gemFile);
             outputStream = new FileOutputStream(gemFile);
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(
                     outputStream, Charset.forName("UTF-8")));
+            bufferedReader = new BufferedReader(new InputStreamReader(
+                    inputStream, Charset.forName("UTF-8")));
+
+            // Read the file's current content
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                lines.add(line);
+            }
+
+            // Modify the second line (gem)
+            if (!lines.isEmpty()) {
+                lines.set(1, Integer.toString(gem));
+            } else {
+                // If the file was empty, add the new currency as the first line and the new gem as the second line
+                lines.add("0");
+                lines.add(Integer.toString(gem));
+            }
+
+            // Write back the modified content
+            for (String l : lines) {
+                bufferedWriter.write(l);
+                bufferedWriter.newLine();
+            }
 
             logger.info("Saving user's gem.");
 
-            // Saves user's gem
-            bufferedWriter.write(Integer.toString(gem));
-            bufferedWriter.newLine();
-
         } finally {
+            if (bufferedReader != null)
+                bufferedReader.close();
+
             if (bufferedWriter != null)
                 bufferedWriter.close();
         }

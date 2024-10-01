@@ -476,4 +476,32 @@ public final class FileManager {
 
 		return gem;
 	}
+
+	/**
+	 * Returns the application default gem if there is no user gem files.
+	 *
+	 * @return Default gem.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 */
+	// Team-Ctrl-S(Currency)
+	private int loadDefaultGem() throws IOException {
+		int gem;
+		InputStream inputStream = null;
+		BufferedReader reader = null;
+
+		try {
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("gem");
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+
+			String amount = reader.readLine();
+			gem = Integer.parseInt(amount);
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return gem;
+	}
 }

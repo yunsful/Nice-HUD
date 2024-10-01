@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * TwoBulletPool extends BulletPool to manage firing two bullets at once.
  */
-public class NumberOfBullet extends Entity {
+public class NumberOfBullet{
 
     /** Offset to ensure bullets don't overlap when fired together. */
     private static final int OFFSET_X_TWOBULLETS = 15;

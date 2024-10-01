@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 
 import engine.Cooldown;
 import engine.Core;
+// Sound Operator
+import Sound_Operator.SoundManager;
 
 /**
  * Implements the title screen.
@@ -36,6 +38,9 @@ public class TitleScreen extends Screen {
 		this.returnCode = 2;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
+
+		// Sound Operator
+		SoundManager.getInstance().playBGM("mainMenu_bgm");
 	}
 
 	/**
@@ -62,11 +67,15 @@ public class TitleScreen extends Screen {
 					|| inputManager.isKeyDown(KeyEvent.VK_W)) {
 				previousMenuItem();
 				this.selectionCooldown.reset();
+				// Sound Operator
+				SoundManager.getInstance().playES("menuSelect_es");
 			}
 			if (inputManager.isKeyDown(KeyEvent.VK_DOWN)
 					|| inputManager.isKeyDown(KeyEvent.VK_S)) {
 				nextMenuItem();
 				this.selectionCooldown.reset();
+				// Sound Operator
+				SoundManager.getInstance().playES("menuSelect_es");
 			}
 			if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
 				this.isRunning = false;

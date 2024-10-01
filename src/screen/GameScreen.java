@@ -73,6 +73,15 @@ public class GameScreen extends Screen {
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
 
+	// Soomin Lee / TeamHUD
+	/** Moment the user starts to play */
+	private long playStartTime;
+	/** Total time to play */
+	private int playTime = 0;
+	/** Play time on previous levels */
+	private int playTimePre = 0;
+
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -80,7 +89,7 @@ public class GameScreen extends Screen {
 	 *            Current game state.
 	 * @param gameSettings
 	 *            Current game settings.
-	 * @param bonnusLife
+	 * @param bonusLife
 	 *            Checks if a bonus life is awarded this level.
 	 * @param width
 	 *            Screen width.
@@ -103,6 +112,9 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
+
+		// Soomin Lee / TeamHUD
+		this.playTime = gameState.getTime();
 	}
 
 	/**
@@ -127,6 +139,10 @@ public class GameScreen extends Screen {
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
+
+		// Soomin Lee / TeamHUD
+		this.playStartTime = gameStartTime + INPUT_DELAY;
+		this.playTimePre = playTime;
 	}
 
 	/**
@@ -246,6 +262,8 @@ public class GameScreen extends Screen {
 		DrawManagerImpl.drawLevel(this, this.level);
 		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
 //		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
+		DrawManagerImpl.drawTime(this, this.playTime);
+		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {
@@ -258,6 +276,11 @@ public class GameScreen extends Screen {
 					/ 12);
 			drawManager.drawHorizontalLine(this, this.height / 2 + this.height
 					/ 12);
+		}
+
+		// Soomin Lee / TeamHUD
+		if (this.inputDelay.checkFinished()) {
+			playTime = (int) ((System.currentTimeMillis() - playStartTime) / 1000) + playTimePre;
 		}
 
 		drawManager.completeDrawing(this);
@@ -343,12 +366,13 @@ public class GameScreen extends Screen {
 	}
 
 	/**
+	 * Add playtime parameter - Soomin Lee / TeamHUD
 	 * Returns a GameState object representing the status of the game.
-	 * 
+	 *
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed);
+				this.bulletsShot, this.shipsDestroyed, this.playTime);
 	}
 }

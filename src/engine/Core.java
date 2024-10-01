@@ -147,8 +147,10 @@ public final class Core {
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0));
 
-					//Show receiptScreen if
-					if (gameState.getLevel() <= 7) {
+					// Show receiptScreen
+					// If it is not the last round and the game is not over
+					// Ctrl-S
+					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
 						LOGGER.info("loading receiptScreen");
 						currentScreen = new ReceiptScreen(width, height, FPS, gameState.getScore(), gameState.getCurrency());
 

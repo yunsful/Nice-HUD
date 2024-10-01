@@ -559,4 +559,27 @@ public final class DrawManager {
 			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
 					+ fontBigMetrics.getHeight() / 3);
 	}
+
+	/**
+	 * Show ReceiptScreen
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param score
+	 *            score that player got
+	 * @param currency
+	 * 			  currency that player earned
+	 */
+
+	public void drawReceipt(final Screen screen, final int score, final int currency) {
+		String testString = "Test String";
+		String instructionsString = "Press Space to play";
+
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, testString, screen.getHeight() / 8);
+
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 5);
+	}
 }

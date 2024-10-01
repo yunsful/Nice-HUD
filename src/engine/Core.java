@@ -8,11 +8,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import screen.GameScreen;
-import screen.HighScoreScreen;
-import screen.ScoreScreen;
-import screen.Screen;
-import screen.TitleScreen;
+import screen.*;
 
 /**
  * Implements core game logic.
@@ -134,7 +130,7 @@ public final class Core {
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
 							&& gameState.getLivesRemaining() < MAX_LIVES;
-					
+
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
 							bonusLife, width, height, FPS);
@@ -150,6 +146,17 @@ public final class Core {
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0));
+
+					//Show receiptScreen if
+					if (gameState.getLevel() <= 7) {
+						LOGGER.info("loading receiptScreen");
+						currentScreen = new ReceiptScreen(width, height, FPS, gameState.getScore(), gameState.getCurrency());
+
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " receipt screen at " + FPS + " fps.");
+						frame.setScreen(currentScreen);
+						LOGGER.info("Closing receiptScreen.");
+					}
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

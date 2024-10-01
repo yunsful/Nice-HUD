@@ -1,11 +1,21 @@
 package entity;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.Set;
 
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+
+/** Sound Operator Team **/
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Implements a ship, to be controlled by the player.
@@ -69,8 +79,22 @@ public class Ship extends Entity {
 	public final boolean shoot(final Set<Bullet> bullets) {
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
+
+			/** Sound Operator Team **/
+			try {
+				File wavFile = new File("res/Sound.assets/ES/start_button.wav");
+				AudioInputStream audioStream = AudioSystem.getAudioInputStream(wavFile);
+				Clip clip = AudioSystem.getClip();
+				clip.open(audioStream);
+				clip.start();
+			} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+				e.printStackTrace();
+			}
+			/** Sound Operator Team **/
+
 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
 					positionY, BULLET_SPEED));
+
 			return true;
 		}
 		return false;

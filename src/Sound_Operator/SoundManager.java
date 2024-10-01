@@ -60,7 +60,7 @@ public class SoundManager {
                     ESFiles[idx][2] = data[3];
                     this.presetEffectSound(ESFiles[idx][0], "res/Sound.assets/ES/"+ESFiles[idx][1], Float.parseFloat(ESFiles[idx][2]));
                     idx += 1;
-                }else{
+                }else if(data[0].equals("bgm")){
                     BGMFiles[idy][0] = data[1];
                     BGMFiles[idy][1] = data[2];
                     BGMFiles[idy][2] = data[3];

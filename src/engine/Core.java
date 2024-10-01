@@ -8,6 +8,7 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import CtrlS.CurrencyManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
@@ -23,9 +24,9 @@ import screen.TitleScreen;
 public final class Core {
 
 	/** Width of current screen. */
-	private static final int WIDTH = 448;
+	private static final int WIDTH = 630;
 	/** Height of current screen. */
-	private static final int HEIGHT = 520;
+	private static final int HEIGHT = 720;
 	/** Max fps of current screen. */
 	private static final int FPS = 60;
 
@@ -118,8 +119,8 @@ public final class Core {
 
 		int returnCode = 1;
 		do {
-
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
+			// Add playtime parameter - Soomin Lee / TeamHUD
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0);
 
 			switch (returnCode) {
 			case 1:
@@ -148,11 +149,14 @@ public final class Core {
 
 					gameState = ((GameScreen) currentScreen).getGameState();
 
+					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed());
+							gameState.getShipsDestroyed(),
+                            Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0),
+							gameState.getTime());
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
@@ -252,5 +256,15 @@ public final class Core {
 	public static Cooldown getVariableCooldown(final int milliseconds,
 			final int variance) {
 		return new Cooldown(milliseconds, variance);
+	}
+
+	/**
+	 * Controls access to the currency manager.
+	 *
+	 * @return Application currency manager.
+	 */
+	// Team-Ctrl-S(Currency)
+	public static CurrencyManager getCurrencyManager() {
+		return CurrencyManager.getInstance();
 	}
 }

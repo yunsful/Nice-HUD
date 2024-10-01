@@ -431,4 +431,49 @@ public final class FileManager {
 				bufferedWriter.close();
 		}
 	}
+
+	/**
+	 * Loads user gem from file, and returns current gem.
+	 *
+	 * @return amount of current gem.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 */
+	// Team-Ctrl-S(Currency)
+	public int loadGem() throws IOException {
+		int gem;
+		InputStream inputStream = null;
+		BufferedReader bufferedReader = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String gemPath = new File(jarPath).getParent();
+			gemPath += File.separator;
+			gemPath += "gem";
+
+			File gemFile = new File(gemPath);
+			inputStream = new FileInputStream(gemFile);
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					inputStream, Charset.forName("UTF-8")));
+
+			logger.info("Loading user's gem.");
+
+			String amount = bufferedReader.readLine();
+			gem = Integer.parseInt(amount);
+		}
+		catch (FileNotFoundException e) {
+			// loads default if there's no user gem.
+			logger.info("Loading default gem.");
+			gem = loadDefaultGem();
+		}
+		finally {
+			if (bufferedReader != null)
+				bufferedReader.close();
+		}
+
+		return gem;
+	}
 }

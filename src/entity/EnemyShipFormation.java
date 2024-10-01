@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import Enemy.PiercingBullet;
 import Enemy.HpEnemyShip;
+import Sound_Operator.SoundManager;
 import screen.Screen;
 import engine.Cooldown;
 import engine.Core;
@@ -20,6 +21,8 @@ import Enemy.PiercingBulletPool;
  * 
  */
 public class EnemyShipFormation implements Iterable<EnemyShip> {
+	// Sound Operator
+	private static SoundManager sm;
 
 	/** Initial position in the x-axis. */
 	private static final int INIT_POS_X = 20;
@@ -167,6 +170,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		for (List<EnemyShip> column : this.enemyShips)
 			this.shooters.add(column.get(column.size() - 1));
+
 	}
 
 	/**
@@ -340,6 +344,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
+			sm = SoundManager.getInstance();
+			sm.playES("Enemy_Gun_Shot_1_ES");
 			bullets.add(PiercingBulletPool.getPiercingBullet( // Edited by Enemy
 					shooter.getPositionX() + shooter.width / 2,
 					shooter.getPositionY(),

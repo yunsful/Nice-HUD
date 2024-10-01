@@ -39,6 +39,11 @@ public class Entity {
 	 * @param color
 	 *            Color of the entity.
 	 */
+
+	public void setSpriteType(SpriteType spriteType) {
+		this.spriteType = spriteType;
+	}
+
 	public Entity(final int positionX, final int positionY, final int width,
 			final int height, final Color color) {
 		this.positionX = positionX;

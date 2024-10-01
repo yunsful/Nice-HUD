@@ -8,6 +8,8 @@ import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
 import Enemy.PiercingBulletPool;
+// Sound Operator
+import Sound_Operator.SoundManager;
 // Import PlayerGrowth class
 import Enemy.PlayerGrowth;
 /**
@@ -31,6 +33,9 @@ public class Ship extends Entity {
 	private Cooldown destructionCooldown;
 	/** PlayerGrowth 인스턴스 / PlayerGrowth instance */
 	private PlayerGrowth growth;
+
+	// Sound Operator
+	private static SoundManager sm;
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -118,6 +123,9 @@ public class Ship extends Entity {
 	 */
 	public final void destroy() {
 		this.destructionCooldown.reset();
+		// Sound Operator
+		sm = SoundManager.getInstance();
+		sm.playES("ally_airship_damage");
 	}
 
 	/**

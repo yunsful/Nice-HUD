@@ -8,6 +8,8 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import CtrlS.CurrencyManager;
+import Sound_Operator.SoundManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
@@ -23,9 +25,9 @@ import screen.TitleScreen;
 public final class Core {
 
 	/** Width of current screen. */
-	private static final int WIDTH = 448;
+	private static final int WIDTH = 630;
 	/** Height of current screen. */
-	private static final int HEIGHT = 520;
+	private static final int HEIGHT = 720;
 	/** Max fps of current screen. */
 	private static final int FPS = 60;
 
@@ -71,6 +73,7 @@ public final class Core {
 	private static Handler fileHandler;
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
+	private static SoundManager sm;
 
 
 	/**
@@ -88,6 +91,8 @@ public final class Core {
 
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new MinimalFormatter());
+
+			sm = SoundManager.getInstance();
 
 			LOGGER.addHandler(fileHandler);
 			LOGGER.addHandler(consoleHandler);
@@ -116,7 +121,8 @@ public final class Core {
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
+			// Add playtime parameter - Soomin Lee / TeamHUD
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0);
 
 			switch (returnCode) {
 			case 1:
@@ -129,6 +135,9 @@ public final class Core {
 				break;
 			case 2:
 				// Game & score.
+				LOGGER.info("Starting inGameBGM");
+				sm.playBGM("inGame_bgm");
+
 				do {
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
@@ -142,17 +151,23 @@ public final class Core {
 							+ " game screen at " + FPS + " fps.");
 					frame.setScreen(currentScreen);
 					LOGGER.info("Closing game screen.");
-
+					System.out.println("test");
 					gameState = ((GameScreen) currentScreen).getGameState();
 
+					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed());
+							gameState.getShipsDestroyed(),
+                            Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0),
+							gameState.getTime());
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
+
+				LOGGER.info("Stop InGameBGM");
+				sm.stopAllBGM();
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " score screen at " + FPS + " fps, with a score of "
@@ -249,5 +264,15 @@ public final class Core {
 	public static Cooldown getVariableCooldown(final int milliseconds,
 			final int variance) {
 		return new Cooldown(milliseconds, variance);
+	}
+
+	/**
+	 * Controls access to the currency manager.
+	 *
+	 * @return Application currency manager.
+	 */
+	// Team-Ctrl-S(Currency)
+	public static CurrencyManager getCurrencyManager() {
+		return CurrencyManager.getInstance();
 	}
 }

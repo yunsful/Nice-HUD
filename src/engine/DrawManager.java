@@ -79,8 +79,16 @@ public class DrawManager {
 		/**HEART Graphics Produced by Nice HUD Team*/
 		Heart, //Please have the Nice HUD team fix it. - Enemy team
 		/**Item*/
-		Item //by enemy team
+		Item, //by enemy team
 		/** Player Lives. */
+		/** Item */
+		ItemAttackSpeed,
+		ItemBomb,
+		ItemBarrier,
+		ItemRecovery,
+		ItemSpeed,
+		ItemCoinIncrease,
+		ItemNumberOfBullet,
 	};
 
 	/**
@@ -111,6 +119,7 @@ public class DrawManager {
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
 			spriteMap.put(SpriteType.Item, new boolean[5][5]); //by Enemy team
+
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
 

@@ -56,8 +56,8 @@ public final class CurrencyManager {
         }
     }
 
-    public int calculateCurrency(int score, float hitRate, int
-            clearTime, int maxTime) {
+    public int calculateCurrency(int score, float hitRate, long
+            startTime, long endTime) {
         //
 
         int currency = score / 10;
@@ -69,7 +69,7 @@ public final class CurrencyManager {
         }
         //
 
-        int timeBonus = (maxTime - clearTime) / 10;
+        long timeBonus = (startTime - endTime) / 10;
         if (timeBonus > 0) {
             currency += timeBonus;
         }

@@ -75,7 +75,9 @@ public final class DrawManager {
 		/** Bonus ship. */
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
-		Explosion
+		Explosion,
+		/** Player Lives. */
+		Heart
 	};
 
 	/**
@@ -101,6 +103,7 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
+			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
@@ -254,12 +257,14 @@ public final class DrawManager {
 	public void drawLives(final Screen screen, final int lives) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
-		backBufferGraphics.drawString(Integer.toString(lives), 20, 25);
-		Ship dummyShip = new Ship(0, 0);
-		for (int i = 0; i < lives; i++)
-			drawEntity(dummyShip, 40 + 35 * i, 10);
-	}
+//		backBufferGraphics.drawString(Integer.toString(lives), 20, 25);
 
+		Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.RED);
+		heart.setSpriteType(SpriteType.Heart);
+
+		for (int i = 0; i < lives; i++)
+			drawEntity(heart, 20 + 30 * i, 10);
+	}
 	/**
 	 * Draws a thick line from side to side of the screen.
 	 * 

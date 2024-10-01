@@ -62,7 +62,7 @@ public class GameScreen extends Screen {
 	/** Time from finishing the level to screen change. */
 	private Cooldown screenFinishedCooldown;
 	/** Set of all bullets fired by on screen ships. */
-	private Set<PiercingBullet> bullets;
+	private Set<PiercingBullet> bullets; //by Enemy team
 	/** Add an itemManager Instance */
 	private ItemManager itemManager; //by Enemy team
 	/** Current score. */
@@ -79,6 +79,8 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
+	/** Total currency **/
+	private int currency; // Team-Ctrl-S(Currency)
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -110,6 +112,7 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
+		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -209,7 +212,6 @@ public class GameScreen extends Screen {
 			this.enemyShipFormation.shoot(this.bullets);
 		}
 		//manageCollisions();
-		//_manageCollisions(); //by Enemy team
 		manageCollisions_add_tiem(); //by Enemy team
 		cleanBullets();
 		this.itemManager.cleanItems(); //by Enemy team
@@ -322,57 +324,15 @@ public class GameScreen extends Screen {
 		BulletPool.recycle(recyclable);
 	}
 
-	/**
-	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
-	 */ // Edited by Enemy
-	private void _manageCollisions() {
-		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
-		for (PiercingBullet bullet : this.bullets)
-			if (bullet.getSpeed() > 0) {
-				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
-					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()) {
-						this.ship.destroy();
-						this.lives--;
-						this.logger.info("Hit on player ship, " + this.lives
-								+ " lives remaining.");
-					}
-				}
-			} else {
-				for (EnemyShip enemyShip : this.enemyShipFormation)
-					if (!enemyShip.isDestroyed()
-							&& checkCollision(bullet, enemyShip)) {
-						this.score += enemyShip.getPointValue();
-						this.shipsDestroyed++;
-						this.enemyShipFormation.destroy(enemyShip);
-						bullet.onCollision(enemyShip);
-						if (bullet.getPiercingCount() <= 0) {
-							recyclable.add(bullet);
-						}
-					}
-				if (this.enemyShipSpecial != null
-						&& !this.enemyShipSpecial.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
-					this.shipsDestroyed++;
-					this.enemyShipSpecial.destroy();
-					this.enemyShipSpecialExplosionCooldown.reset();
-					bullet.onCollision(this.enemyShipSpecial);
-					if (bullet.getPiercingCount() <= 0) {
-						recyclable.add(bullet);
-					}
-				}
-			}
-		this.bullets.removeAll(recyclable);
-		PiercingBulletPool.recycle(recyclable);
-	}
+
 	/**
 	 * Manages collisions between bullets and ships. -Edited code for Drop Item
+	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
 	 */
 	//by Enemy team
 	private void manageCollisions_add_tiem() {
-		Set<Bullet> recyclable = new HashSet<Bullet>();
-		for (Bullet bullet : this.bullets)
+		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
+		for (PiercingBullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
@@ -395,7 +355,13 @@ public class GameScreen extends Screen {
 							this.score += enemyShip.getPointValue();
 							this.shipsDestroyed++;
 						}
-						recyclable.add(bullet);
+
+						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
+
+						// Check PiercingBullet piercing count and add to recyclable if necessary
+						if (bullet.getPiercingCount() <= 0) {
+							recyclable.add(bullet);
+						}
 
 
 					}
@@ -406,14 +372,20 @@ public class GameScreen extends Screen {
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
-					recyclable.add(bullet);
+
+					bullet.onCollision(this.enemyShipSpecial); // Handle bullet collision with special enemy
+
+					// Check PiercingBullet piercing count for special enemy and add to recyclable if necessary
+					if (bullet.getPiercingCount() <= 0) {
+						recyclable.add(bullet);
+					}
 
 					//// Drop item to 100%
 					this.itemManager.dropItem(enemyShipSpecial,1,2);
 				}
 			}
 		this.bullets.removeAll(recyclable);
-		BulletPool.recycle(recyclable);
+		PiercingBulletPool.recycle(recyclable);
 
 		//Check item and ship collision
 		for(Item item : itemManager.items){
@@ -455,6 +427,6 @@ public class GameScreen extends Screen {
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed);
+				this.bulletsShot, this.shipsDestroyed, this.currency); // Team-Ctrl-S(Currency)
 	}
 }

@@ -108,6 +108,9 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
+			spriteMap.put(SpriteType.ItemBarrier, new boolean[8][9]);
+			spriteMap.put(SpriteType.ItemBomb, new boolean[9][11]);
+			spriteMap.put(SpriteType.ItemRecovery, new boolean[8][8]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");

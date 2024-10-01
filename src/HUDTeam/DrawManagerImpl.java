@@ -33,4 +33,34 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.drawString(speedString, 85, screen.getHeight() - 25);
     }
+
+    /**
+     * Show accomplished achievement
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param achievementText
+     *            Accomplished achievement text.
+     */
+    public static void drawAchievement(final Screen screen, String achievementText) {
+        int width = screen.getWidth() / 4;
+        int height = screen.getHeight() / 16;
+
+        backBufferGraphics.setColor(Color.white);
+        backBufferGraphics.drawRect(screen.getWidth() - width - 8, screen.getHeight() - height - 20, width, height);
+
+        backBufferGraphics.setColor(Color.white);
+        backBufferGraphics.setFont(fontRegular);
+        if(achievementText.length() < 14){
+            backBufferGraphics.drawString(achievementText, screen.getWidth() - width, screen.getHeight() - 35);
+        }
+        else if(achievementText.length() < 27){
+            backBufferGraphics.drawString(achievementText.substring(0,13), screen.getWidth() - width, screen.getHeight() - 45);
+            backBufferGraphics.drawString(achievementText.substring(13), screen.getWidth() - width, screen.getHeight() - 25);
+        }
+        else{
+            backBufferGraphics.drawString(achievementText.substring(0,13), screen.getWidth() - width, screen.getHeight() - 45);
+            backBufferGraphics.drawString(achievementText.substring(13,26), screen.getWidth() - width, screen.getHeight() - 25);
+        }
+    }
 }

@@ -106,4 +106,9 @@ public final class CurrencyManager {
             return false;
         }
     }
+
+    // Team-Ctrl-S(Currency)
+    public int getGem() throws IOException {
+        return fileManager.loadGem();
+    }
 }

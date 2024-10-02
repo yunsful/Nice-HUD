@@ -217,6 +217,9 @@ public class GameScreen extends Screen {
 					&& this.enemyShipSpecialCooldown.checkFinished()) {
 				this.enemyShipSpecial = new EnemyShip();
 				this.enemyShipSpecialCooldown.reset();
+				//Sound Operator
+				sm = SoundManager.getInstance();
+				sm.playES("UFO_come_up");
 				this.logger.info("A special ship appears");
 			}
 			if (this.enemyShipSpecial != null

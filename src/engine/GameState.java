@@ -52,6 +52,24 @@ public class GameState {
 	}
 
 	/**
+	 * Team Clove Create Constructor for using in "engine.Score"
+	 *
+	 * Constructor for Save file
+	 *
+	 * @param bulletsShot
+	 *            Bullets shot until now.
+	 * @param shipsDestroyed
+	 *            Ships destroyed until now.
+	 * @param level
+	 *            Current game level.
+	 */
+	public GameState(int bulletsShot, int shipsDestroyed, int level) { //Team Clove
+		this.bulletsShot = bulletsShot;
+		this.shipsDestroyed = shipsDestroyed;
+		this.level = level;
+	}
+
+	/**
 	 * @return the level
 	 */
 	public final int getLevel() {
@@ -61,9 +79,7 @@ public class GameState {
 	/**
 	 * @return the score
 	 */
-	public final int getScore() {
-		return score;
-	}
+	public final int getScore() { return score; }
 
 	/**
 	 * @return the livesRemaining

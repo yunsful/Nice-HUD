@@ -341,7 +341,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		// For now, only ships in the bottom row are able to shoot.
 		int index = (int) (Math.random() * this.shooters.size());
 		EnemyShip shooter = this.shooters.get(index);
-
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset();
 			sm = SoundManager.getInstance();

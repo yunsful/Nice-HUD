@@ -20,6 +20,8 @@ import entity.Ship;
 import Enemy.PiercingBulletPool;
 import Enemy.Item;
 import Enemy.ItemManager;
+// Sound Operator
+import Sound_Operator.SoundManager;
 import inventory_develop.TemporaryShield;
 
 
@@ -93,6 +95,9 @@ public class GameScreen extends Screen {
 	private int playTime = 0;
 	/** Play time on previous levels */
 	private int playTimePre = 0;
+
+	// Sound Operator
+	private static SoundManager sm;
 
 
 	/**
@@ -216,6 +221,9 @@ public class GameScreen extends Screen {
 					&& this.enemyShipSpecialCooldown.checkFinished()) {
 				this.enemyShipSpecial = new EnemyShip();
 				this.enemyShipSpecialCooldown.reset();
+				//Sound Operator
+				sm = SoundManager.getInstance();
+				sm.playES("UFO_come_up");
 				this.logger.info("A special ship appears");
 			}
 			if (this.enemyShipSpecial != null
@@ -377,6 +385,20 @@ public class GameScreen extends Screen {
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
 								+ " lives remaining.");
+
+						// Sound Operator
+						if (this.lives == 0) {
+							sm = SoundManager.getInstance();
+							sm.playES("ally_airship_destroy_explosion");
+							new Thread(() -> {
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									throw new RuntimeException(e);
+								}
+								sm.playES("ally_airship_destroy_die");
+							}).start();
+						}
 					}
 				}
 			} else {

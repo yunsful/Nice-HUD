@@ -16,6 +16,7 @@ local.properties
 .settings/
 .loadpath
 .idea/misc.xml
+.idea/vcs.xml
 
 
 # External tool builders

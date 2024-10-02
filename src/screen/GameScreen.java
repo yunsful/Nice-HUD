@@ -14,12 +14,13 @@ import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
+import clove.ScoreManager;    //clove
 
 /**
  * Implements the game screen, where the action happens.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public class GameScreen extends Screen {
 
@@ -70,15 +71,21 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
+	/** Score calculation. */
+	private ScoreManager scoreManager;    //clove
+	/** Check start-time*/
+	private long startTime;    //clove
+	/** Check end-time*/
+	private long endTime;    //clove
 
 	/**
 	 * Constructor, establishes the properties of the screen.
-	 * 
+	 *
 	 * @param gameState
 	 *            Current game state.
 	 * @param gameSettings
 	 *            Current game settings.
-	 * @param bonnusLife
+	 * @param bonusLife
 	 *            Checks if a bonus life is awarded this level.
 	 * @param width
 	 *            Screen width.
@@ -101,11 +108,13 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-	}
 
-	/**
-	 * Initializes basic screen properties, and adds necessary elements.
-	 */
+		this.scoreManager = new ScoreManager(this.level, this);    //clove
+		this.scoreManager.startGame();    //clove
+	}
+		/**
+         * Initializes basic screen properties, and adds necessary elements.
+         */
 	public final void initialize() {
 		super.initialize();
 
@@ -121,6 +130,8 @@ public class GameScreen extends Screen {
 		this.screenFinishedCooldown = Core.getCooldown(SCREEN_CHANGE_INTERVAL);
 		this.bullets = new HashSet<Bullet>();
 
+		this.startTime = System.currentTimeMillis();    //clove
+
 		// Special input delay / countdown.
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
@@ -129,14 +140,14 @@ public class GameScreen extends Screen {
 
 	/**
 	 * Starts the action.
-	 * 
+	 *
 	 * @return Next screen code.
 	 */
 	public final int run() {
 		super.run();
 
 		this.score += LIFE_SCORE * (this.lives - 1);
-		this.logger.info("Screen cleared with a score of " + this.score);
+		this.logger.info("Screen cleared with a score of " + this.scoreManager.getAccumulatedScore());    //clove
 
 		return this.returnCode;
 	}
@@ -169,6 +180,7 @@ public class GameScreen extends Screen {
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
 					if (this.ship.shoot(this.bullets))
 						this.bulletsShot++;
+
 			}
 
 			if (this.enemyShipSpecial != null) {
@@ -205,9 +217,13 @@ public class GameScreen extends Screen {
 			this.screenFinishedCooldown.reset();
 		}
 
-		if (this.levelFinished && this.screenFinishedCooldown.checkFinished())
-			this.isRunning = false;
+		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
+			this.endTime = System.currentTimeMillis();    //clove
+			long playTime = (this.endTime - this.startTime) / 1000;    //clove
+			//this.logger.info("Final Playtime: " + playTime + " seconds");    //clove
 
+			this.isRunning = false;
+		}
 	}
 
 	/**
@@ -230,7 +246,7 @@ public class GameScreen extends Screen {
 					bullet.getPositionY());
 
 		// Interface.
-		drawManager.drawScore(this, this.score);
+		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 
@@ -285,7 +301,7 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						this.score += enemyShip.getPointValue();
+						this.scoreManager.addScore(enemyShip.getPointValue());    //clove
 						this.shipsDestroyed++;
 						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
@@ -293,7 +309,7 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
+					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue());    //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
@@ -306,7 +322,7 @@ public class GameScreen extends Screen {
 
 	/**
 	 * Checks if two entities are colliding.
-	 * 
+	 *
 	 * @param a
 	 *            First entity, the bullet.
 	 * @param b
@@ -329,13 +345,17 @@ public class GameScreen extends Screen {
 		return distanceX < maxDistanceX && distanceY < maxDistanceY;
 	}
 
+	public int getBulletsShot(){    //clove
+		return this.bulletsShot;    //clove
+	}                               //clove
+
 	/**
 	 * Returns a GameState object representing the status of the game.
-	 * 
+	 *
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
-		return new GameState(this.level, this.score, this.lives,
+		return new GameState(this.level, this.scoreManager.getAccumulatedScore(), this.lives,
 				this.bulletsShot, this.shipsDestroyed);
 	}
 }

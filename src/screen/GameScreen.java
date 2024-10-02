@@ -360,7 +360,7 @@ public class GameScreen extends Screen {
 							&& checkCollision(bullet, enemyShip)) {
 						this.enemyShipFormation._destroy(enemyShip);
 						if(enemyShip.getHp() <= 0) {
-							this.score += enemyShip.getPointValue();
+							this.scoreManager.addScore(enemyShip.getPointValue()); //clove
 							this.shipsDestroyed++;
 						}
 
@@ -377,7 +377,7 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
+					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue()); //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();

@@ -12,6 +12,7 @@ public class ReceiptScreen extends Screen {
 
 	private final int score;
 	private final int currency;
+	private final boolean hitrateBonus;
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 *
@@ -22,11 +23,12 @@ public class ReceiptScreen extends Screen {
 	 * @param fps
 	 *            Frames per second, frame rate at which the game is run.
 	 */
-	public ReceiptScreen(final int width, final int height, final int fps, final int score, final int currency) {
+	public ReceiptScreen(final int width, final int height, final int fps, final int score, final int currency, final boolean hitrateBonus) {
 		super(width, height, fps);
 
 		this.score = score;
 		this.currency = currency;
+		this.hitrateBonus = hitrateBonus;
 
 		this.returnCode = 2;
 	}
@@ -60,7 +62,7 @@ public class ReceiptScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		drawManager.drawReceipt(this, this.score, this.currency);
+		drawManager.drawReceipt(this, this.score, this.currency, this.hitrateBonus);
 
 		drawManager.completeDrawing(this);
 	}

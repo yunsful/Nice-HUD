@@ -10,6 +10,8 @@ import engine.Core;
 import engine.DrawManager.SpriteType;
 
 import Enemy.PiercingBulletPool;
+// Sound Operator
+import Sound_Operator.SoundManager;
 // Import PlayerGrowth class
 import Enemy.PlayerGrowth;
 
@@ -34,8 +36,9 @@ public class Ship extends Entity {
 	private Cooldown destructionCooldown;
 	/** PlayerGrowth 인스턴스 / PlayerGrowth instance */
 	private PlayerGrowth growth;
+	// Sound Operator
+	private static SoundManager sm;
 
-	
 	/**
 	 * Constructor, establishes the ship's properties.
 	 * 
@@ -91,7 +94,9 @@ public class Ship extends Entity {
 		// Do not reset cooldown every time
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
-
+			// Sound Operator, Apply a Shooting sound
+			sm = SoundManager.getInstance();
+			sm.playES("My_Gun_Shot");
 			// Add a piercing bullet fired by the player's ship.
 			bullets.add(PiercingBulletPool.getPiercingBullet(
 					positionX + this.width / 2,
@@ -123,6 +128,9 @@ public class Ship extends Entity {
 	 */
 	public final void destroy() {
 		this.destructionCooldown.reset();
+		// Sound Operator
+		sm = SoundManager.getInstance();
+		sm.playES("ally_airship_damage");
 	}
 
 	/**

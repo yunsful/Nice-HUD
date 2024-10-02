@@ -15,13 +15,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
-
 import engine.DrawManager.SpriteType;
+
+import clove.Statistics; //Team Clove
 
 /**
  * Manages files used in the application.
@@ -308,6 +306,135 @@ public final class FileManager {
 	}
 
 	/**
+	 *  save userData(Statistics) to disk
+	 *
+	 * @param playerStatistics
+	 * 				Player's Statistics list to save.
+	 * @throws IOException
+	 * 				In case of saving problems.
+	 *
+	 */
+
+    public void saveUserData(final List<Statistics> playerStatistics) throws IOException {
+		Properties properties = new Properties();
+		OutputStream outputStream = null;
+
+        try {
+            String jarPath = FileManager.class.getProtectionDomain()
+                    .getCodeSource().getLocation().getPath();
+            jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+            String staticsPath = new File(jarPath).getParent();
+            staticsPath += File.separator;
+			staticsPath += "Statistic.properties";
+
+            File staticsFile = new File(staticsPath);
+
+            if (!staticsFile.exists())
+				staticsFile.createNewFile();
+
+			if(!playerStatistics.isEmpty()){
+				Statistics stat = playerStatistics.get(0);
+				properties.setProperty("shipsDestructionStreak", String.valueOf(stat.getShipsDestructionStreak()));
+				properties.setProperty("playedGameNumber", String.valueOf(stat.getPlayedGameNumber()));
+				properties.setProperty("clearAchievementNumber", String.valueOf(stat.getClearAchievementNumber()));
+			}
+			outputStream = new FileOutputStream(staticsFile);
+			properties.store(new OutputStreamWriter(outputStream, Charset.forName("UTF-8")),
+					"PlayerGameStatistics");
+
+
+        } finally {
+            if (outputStream != null)
+                outputStream.close();
+        }
+    }
+
+	/**
+	 *
+	 * load userData(Statistics) from file, and return userData(Statistics)
+	 *
+	 * @return Player's Statistics
+	 * @throws IOException
+	 * 				In case of loading problems.
+	 */
+
+	public Statistics loadUserData() throws IOException {
+		Properties properties = new Properties();
+		InputStream inputStream = null;
+
+		Statistics stat;
+
+		try{
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String staticsPath = new File(jarPath).getParent();
+			staticsPath += File.separator;
+			staticsPath += "Statistic.properties";
+
+			File staticsFile = new File(staticsPath);
+
+			inputStream = new FileInputStream(staticsFile);
+			properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+
+			int shipsDestructionStreak = Integer.parseInt(properties.getProperty("shipsDestructionStreak"));
+			int playedGameNumber = Integer.parseInt(properties.getProperty("playedGameNumber"));
+			int clearAchievementNumber = Integer.parseInt(properties.getProperty("clearAchievementNumber"));
+
+			stat = new Statistics(shipsDestructionStreak, playedGameNumber, clearAchievementNumber);
+
+		} catch (FileNotFoundException e){
+			logger.info("Loading default user statistics.");
+			stat = loadDefaultUserData();
+		} finally {
+			if(inputStream != null){
+				inputStream.close();
+			}
+
+		}
+
+		return stat;
+	}
+
+	/**
+	 * Returns the application default userData(Statistics)
+	 * if there is no Statistic.properties file.
+	 *
+	 *
+	 * @return Default Player's Statistics
+	 * @throws IOException
+	 * 				In case of loading problems.
+	 */
+
+	public Statistics loadDefaultUserData() throws IOException {
+		Properties properties = new Properties();
+		InputStream inputStream = null;
+
+		Statistics stat;
+
+		try{
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("Statistic.properties");
+
+			properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+
+			int shipsDestructionStreak = Integer.parseInt(properties.getProperty("shipsDestructionStreak"));
+			int playedGameNumber = Integer.parseInt(properties.getProperty("playedGameNumber"));
+			int clearAchievementNumber = Integer.parseInt(properties.getProperty("clearAchievementNumber"));
+
+			stat = new Statistics(shipsDestructionStreak, playedGameNumber, clearAchievementNumber);
+
+		} finally {
+			if(inputStream != null){
+				inputStream.close();
+			}
+		}
+		return stat;
+	}
+
+	/**
 	 * Saves user currency to disk.
 	 *
 	 * @param currency
@@ -424,3 +551,6 @@ public final class FileManager {
 		return currency;
 	}
 }
+
+
+

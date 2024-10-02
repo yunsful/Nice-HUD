@@ -50,16 +50,19 @@ public class ItemManager {
 
     public void dropItem(EnemyShip enemyShip, double probability, int enemyship_type) {
         if(Math.random() < probability) {
-            Item item = ItemPool.getBullet(enemyShip.getPositionX(), enemyShip.getPositionY(), 5, enemyship_type);
+            Item item = ItemPool.getItem(enemyShip.getPositionX(), enemyShip.getPositionY(), 3, enemyship_type);
             this.items.add(item);
         }
     }
+
     public void addItemRecycle(Item item) {
         if(item != null) {
             recyclableItems.add(item);
-            this.logger.info("get item");
+            String itemLog = item.getSpriteType().toString().substring(4);
+            this.logger.info("get " + itemLog + " item");   // Change log for each item
         }
     }
+
     public void removeAllReItems(){
         this.items.removeAll(recyclableItems);
         ItemPool.recycle(recyclableItems);

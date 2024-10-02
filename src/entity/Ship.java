@@ -23,11 +23,11 @@ import inventory_develop.ShipStatus;
 public class Ship extends Entity {
 
 	/** Time between shots. */
-	private int SHOOTING_INTERVAL = 750;
+	private static final int SHOOTING_INTERVAL = 750;
 	/** Speed of the bullets shot by the ship. */
-	private int BULLET_SPEED = -6;
+	private static final int BULLET_SPEED = -6;
 	/** Movement of the ship for each unit of time. */
-	private int SPEED = 2;
+	private static final int SPEED = 2;
 	
 	/** Minimum time between shots. */
 	private Cooldown shootingCooldown;

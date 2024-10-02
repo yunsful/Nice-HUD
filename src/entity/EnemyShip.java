@@ -151,10 +151,15 @@ public class EnemyShip extends Entity {
 	 */
 	public final void destroy() {
 		this.isDestroyed = true;
-		this.spriteType = SpriteType.Explosion;
 		// Sound Operator
 		sm = SoundManager.getInstance();
-		sm.playES("basic_enemy_die");
+		if(this.spriteType == SpriteType.EnemyShipSpecial){
+			sm.playES("special_enemy_die");
+		}else{
+			sm.playES("basic_enemy_die");
+		}
+		this.spriteType = SpriteType.Explosion;
+
 	}
 
 	/**

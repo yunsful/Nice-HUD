@@ -95,16 +95,6 @@ public class Ship extends Entity {
 	//Edit by Enemy
 	public final boolean shoot(final Set<PiercingBullet> bullets) {
 		// Do not reset cooldown every time
-//		if (this.shootingCooldown.checkFinished()) {
-//			this.shootingCooldown.reset();
-//			for (Bullet bullet : NBPool.AddBullet(positionX + this.width / 2,
-//					positionY, BULLET_SPEED))
-//
-//				bullets.add(bullet);
-//			return true;
-//		}
-//		return false;
-//	}
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
 

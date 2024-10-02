@@ -22,6 +22,7 @@ import Enemy.Item;
 import Enemy.ItemManager;
 // Sound Operator
 import Sound_Operator.SoundManager;
+import inventory_develop.TemporaryShield;
 
 
 
@@ -84,6 +85,8 @@ public class GameScreen extends Screen {
 	private boolean bonusLife;
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
+	/** Shield item */
+	private TemporaryShield shield;
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */
@@ -127,6 +130,7 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
+		this.shield = new TemporaryShield();
 	}
 
 	/**
@@ -228,6 +232,7 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
+			this.shield.update();
 			this.ship.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
@@ -333,7 +338,7 @@ public class GameScreen extends Screen {
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()) {
+					if (!this.ship.isDestroyed() && !this.shield.isActive()) {
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
@@ -480,5 +485,11 @@ public class GameScreen extends Screen {
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
 				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency); // Team-Ctrl-S(Currency)
+	}
+	public int getLives() {
+		return lives;
+	}
+	public void setLives(int lives) {
+		this.lives = lives;
 	}
 }

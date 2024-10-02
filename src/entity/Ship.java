@@ -14,7 +14,10 @@ import Enemy.PiercingBulletPool;
 import Sound_Operator.SoundManager;
 // Import PlayerGrowth class
 import Enemy.PlayerGrowth;
-
+// Import NumberOfBullet class
+//import inventory_develop.NumberOfBullet;
+// Import ShipStatus class
+import inventory_develop.ShipStatus;
 /**
  * Implements a ship, to be controlled by the player.
  * 
@@ -38,6 +41,10 @@ public class Ship extends Entity {
 	private PlayerGrowth growth;
 	// Sound Operator
 	private static SoundManager sm;
+	/** ShipStaus instance*/
+	private ShipStatus shipStatus;
+	/** NumberOfBullet instance*/
+//	private NumberOfBullet NBPool = new NumberOfBullet();
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -56,12 +63,14 @@ public class Ship extends Entity {
 		// Create PlayerGrowth object and set initial stats
 		this.growth = new PlayerGrowth();  // PlayerGrowth 객체를 먼저 초기화
 
+		this.shipStatus = new ShipStatus();
+		shipStatus.loadStatus();
+
 		//  Now use the initialized growth object
 		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay());
 
 		this.destructionCooldown = Core.getCooldown(1000);
 	}
-
 
 	/**
 	 * Moves the ship speed uni ts right, or until the right screen border is
@@ -113,6 +122,7 @@ public class Ship extends Entity {
 
 
 
+
 	/**
 	 * Updates status of the ship.
 	 */
@@ -154,20 +164,20 @@ public class Ship extends Entity {
 
 	//  Increases movement speed
 	//Edit by Enemy
-	public void increaseMoveSpeed(int increment) {
-		growth.increaseMoveSpeed(increment);
+	public void increaseMoveSpeed() {
+		growth.increaseMoveSpeed(shipStatus.getSpeedIn());
 	}
 
 	// Increases bullet speed
 	//Edit by Enemy
-	public void increaseBulletSpeed(int increment) {
-		growth.increaseBulletSpeed(increment);
+	public void increaseBulletSpeed() {
+		growth.increaseBulletSpeed(shipStatus.getBulletSpeedIn());
 	}
 
 	//  Decreases shooting delay
 	//Edit by Enemy
-	public void decreaseShootingDelay(int decrement) {
-		growth.decreaseShootingDelay(decrement);
+	public void decreaseShootingDelay() {
+		growth.decreaseShootingDelay(shipStatus.getSuootingInIn());
 		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay()); // Apply new shooting delay
 	}
 

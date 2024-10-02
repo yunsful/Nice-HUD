@@ -4,9 +4,9 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import Enemy.*;
 import HUDTeam.Achievement;
 import HUDTeam.DrawManagerImpl;
-import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameSettings;
@@ -17,11 +17,6 @@ import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
-import Enemy.PiercingBulletPool;
-import Enemy.Item;
-import Enemy.ItemManager;
-import inventory_develop.TemporaryShield;
-
 
 
 /**
@@ -83,8 +78,8 @@ public class GameScreen extends Screen {
 	private boolean bonusLife;
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
-	/** Shield item */
-	private TemporaryShield shield;
+//	/** Shield item */
+//	private TemporaryShield shield;
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */
@@ -125,7 +120,7 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.shield = new TemporaryShield();
+//		this.shield = new TemporaryShield();
 	}
 
 	/**
@@ -139,7 +134,7 @@ public class GameScreen extends Screen {
 		this.ship = new Ship(this.width / 2, this.height - 30);
 
 		/** initialize itemManager */
-		this.itemManager = new ItemManager(this.height, drawManager); //by Enemy team
+		this.itemManager = new ItemManager(this.height, drawManager, this); //by Enemy team
 		this.itemManager.initialize(); //by Enemy team
 
 		// Appears each 10-30 seconds.
@@ -224,7 +219,7 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
-			this.shield.update();
+//			this.shield.update();
 			this.ship.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
@@ -330,7 +325,7 @@ public class GameScreen extends Screen {
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
-					if (!this.ship.isDestroyed() && !this.shield.isActive()) {
+					if (!this.ship.isDestroyed()){// && !this.shield.isActive()) {
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
@@ -423,7 +418,7 @@ public class GameScreen extends Screen {
 
 		//Check item and ship collision
 		for(Item item : itemManager.items){
-			itemManager.addItemRecycle(checkCollision(item,ship)?item:null);
+			itemManager.OperateItem(checkCollision(item,ship)?item:null);
 		}
 		itemManager.removeAllReItems();
 	}
@@ -470,4 +465,7 @@ public class GameScreen extends Screen {
 	public void setLives(int lives) {
 		this.lives = lives;
 	}
+	public Ship getShip() {
+		return ship;
+	}	// Team Inventory(Item)
 }

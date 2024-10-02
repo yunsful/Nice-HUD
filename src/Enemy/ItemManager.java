@@ -3,12 +3,16 @@ package Enemy;
 import engine.Core;
 import entity.EnemyShip;
 import entity.Ship;
+import inventory_develop.Bomb;
 import screen.GameScreen;
 import engine.DrawManager;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
+
+//import inventory_develop.Bomb;
+import inventory_develop.ItemBarrierAndHeart;
 
 
 public class ItemManager {
@@ -19,11 +23,18 @@ public class ItemManager {
     private GameScreen gameScreen;
     protected Logger logger = Core.getLogger();
     private Set<Item> recyclableItems = new HashSet<>();
+//    private Bomb bomb = new Bomb();
+    private ItemBarrierAndHeart Item2 = new ItemBarrierAndHeart();
+    private Ship ship;
+    private PlayerGrowth growth;
 
-    public ItemManager(int screenHeight, DrawManager drawManager) {
+    public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
         this.items = new HashSet<>();
         this.screenHeight = screenHeight;
         this.drawManager = drawManager;
+        this.gameScreen = gameScreen;
+        this.ship = gameScreen.getShip();       // Team Inventory
+        this.growth = ship.getPlayerGrowth();
     }
 
     public void cleanItems() {
@@ -55,16 +66,35 @@ public class ItemManager {
         }
     }
 
-    public void addItemRecycle(Item item) {
-        if(item != null) {
-            recyclableItems.add(item);
-            String itemLog = item.getSpriteType().toString().substring(4);
-            this.logger.info("get " + itemLog + " item");   // Change log for each item
+    // team Inventory
+    public void OperateItem(Item item) {
+        if(item!= null) {
+
+            DrawManager.SpriteType whatItem = item.getSpriteType();
+
+            switch (whatItem) {     // Operates according to the SpriteType of the item.
+                case ItemBomb:
+                    break;
+                case ItemBarrier:
+                    break;
+                case ItemHeart:
+                    Item2.Operateheart(gameScreen, ship, growth);
+                    break;
+            }
+
+            addItemRecycle(item);
         }
+    }
+
+    public void addItemRecycle(Item item) {
+        recyclableItems.add(item);
+        String itemLog = item.getSpriteType().toString().substring(4);
+        this.logger.info("get " + itemLog + " item");   // Change log for each item
     }
 
     public void removeAllReItems(){
         this.items.removeAll(recyclableItems);
         ItemPool.recycle(recyclableItems);
     }
+
 }

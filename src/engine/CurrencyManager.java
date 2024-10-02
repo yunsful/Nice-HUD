@@ -80,4 +80,14 @@ public final class CurrencyManager {
     public int getCurrency() throws IOException {
         return fileManager.loadCurrency();
     }
+
+    /**
+     * Add an amount of gem to the current gem.
+     */
+    // Team-Ctrl-S(Currency)
+    public void addGem(int amount) throws IOException {
+        int current_gem = fileManager.loadGem();
+        amount += current_gem;
+        fileManager.saveGem(amount);
+    }
 }

@@ -4,6 +4,8 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import HUDTeam.Achievement;
+import HUDTeam.DrawManagerImpl;
 import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
@@ -18,6 +20,8 @@ import entity.Ship;
 import Enemy.PiercingBulletPool;
 import Enemy.Item;
 import Enemy.ItemManager;
+// Sound Operator
+import Sound_Operator.SoundManager;
 
 
 
@@ -81,6 +85,18 @@ public class GameScreen extends Screen {
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
 
+	// Soomin Lee / TeamHUD
+	/** Moment the user starts to play */
+	private long playStartTime;
+	/** Total time to play */
+	private int playTime = 0;
+	/** Play time on previous levels */
+	private int playTimePre = 0;
+
+	// Sound Operator
+	private static SoundManager sm;
+
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -111,7 +127,6 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -141,6 +156,10 @@ public class GameScreen extends Screen {
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
+
+		// Soomin Lee / TeamHUD
+		this.playStartTime = gameStartTime + INPUT_DELAY;
+		this.playTimePre = playTime;
 	}
 
 	/**
@@ -198,6 +217,9 @@ public class GameScreen extends Screen {
 					&& this.enemyShipSpecialCooldown.checkFinished()) {
 				this.enemyShipSpecial = new EnemyShip();
 				this.enemyShipSpecialCooldown.reset();
+				//Sound Operator
+				sm = SoundManager.getInstance();
+				sm.playES("UFO_come_up");
 				this.logger.info("A special ship appears");
 			}
 			if (this.enemyShipSpecial != null
@@ -233,6 +255,12 @@ public class GameScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
+		// Jo minseo / HUD team
+		if(Achievement.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
+			Achievement.addTimer();
+		}
+
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
 				this.ship.getPositionY());
 		if (this.enemyShipSpecial != null)
@@ -241,6 +269,8 @@ public class GameScreen extends Screen {
 					this.enemyShipSpecial.getPositionY());
 
 		enemyShipFormation.draw();
+
+		DrawManagerImpl.drawSpeed(this, ship.getSpeed());
 
 		for (PiercingBullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
@@ -252,6 +282,11 @@ public class GameScreen extends Screen {
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
+		DrawManagerImpl.drawLevel(this, this.level);
+		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
+//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
+		DrawManagerImpl.drawTime(this, this.playTime);
+		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {
@@ -264,6 +299,11 @@ public class GameScreen extends Screen {
 					/ 12);
 			drawManager.drawHorizontalLine(this, this.height / 2 + this.height
 					/ 12);
+		}
+
+		// Soomin Lee / TeamHUD
+		if (this.inputDelay.checkFinished()) {
+			playTime = (int) ((System.currentTimeMillis() - playStartTime) / 1000) + playTimePre;
 		}
 
 		drawManager.completeDrawing(this);
@@ -340,6 +380,20 @@ public class GameScreen extends Screen {
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
 								+ " lives remaining.");
+
+						// Sound Operator
+						if (this.lives == 0) {
+							sm = SoundManager.getInstance();
+							sm.playES("ally_airship_destroy_explosion");
+							new Thread(() -> {
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									throw new RuntimeException(e);
+								}
+								sm.playES("ally_airship_destroy_die");
+							}).start();
+						}
 					}
 				}
 			} else {
@@ -418,12 +472,13 @@ public class GameScreen extends Screen {
 	}
 
 	/**
+	 * Add playtime parameter - Soomin Lee / TeamHUD
 	 * Returns a GameState object representing the status of the game.
-	 * 
+	 *
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.currency); // Team-Ctrl-S(Currency)
+				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency); // Team-Ctrl-S(Currency)
 	}
 }

@@ -1,15 +1,20 @@
 package entity;
 
 import java.awt.Color;
+import java.io.File;
 import java.util.Set;
 
 import Enemy.PiercingBullet;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+
 import Enemy.PiercingBulletPool;
+// Sound Operator
+import Sound_Operator.SoundManager;
 // Import PlayerGrowth class
 import Enemy.PlayerGrowth;
+
 /**
  * Implements a ship, to be controlled by the player.
  * 
@@ -31,6 +36,8 @@ public class Ship extends Entity {
 	private Cooldown destructionCooldown;
 	/** PlayerGrowth 인스턴스 / PlayerGrowth instance */
 	private PlayerGrowth growth;
+	// Sound Operator
+	private static SoundManager sm;
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -42,7 +49,7 @@ public class Ship extends Entity {
 	 */
 	//Edit by Enemy
 	public Ship(final int positionX, final int positionY) {
-		super(positionX, positionY, 13 * 2, 8 * 2, Color.GREEN);
+		super(positionX, positionY - 50, 13 * 2, 8 * 2, Color.GREEN);
 
 		this.spriteType = SpriteType.Ship;
 
@@ -87,7 +94,9 @@ public class Ship extends Entity {
 		// Do not reset cooldown every time
 		if (this.shootingCooldown.checkFinished()) {
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
-
+			// Sound Operator, Apply a Shooting sound
+			sm = SoundManager.getInstance();
+			sm.playES("My_Gun_Shot");
 			// Add a piercing bullet fired by the player's ship.
 			bullets.add(PiercingBulletPool.getPiercingBullet(
 					positionX + this.width / 2,
@@ -95,6 +104,7 @@ public class Ship extends Entity {
 					growth.getBulletSpeed(), // Use PlayerGrowth for bullet speed
 					2 // Number of enemies the bullet can pierce
 			));
+
 			return true;
 		}
 		return false;
@@ -118,6 +128,9 @@ public class Ship extends Entity {
 	 */
 	public final void destroy() {
 		this.destructionCooldown.reset();
+		// Sound Operator
+		sm = SoundManager.getInstance();
+		sm.playES("ally_airship_damage");
 	}
 
 	/**
@@ -165,5 +178,14 @@ public class Ship extends Entity {
 	 */
 	public final int getSpeed() {
 		return SPEED;
+	}
+	
+	/**
+	 * Calculates and returns the attack speed in bullets per second.
+	 *
+	 * @return Attack speed (bullets per second).
+	 */
+	public final double getAttackSpeed() {
+		return 1000.0 / SHOOTING_INTERVAL;
 	}
 }

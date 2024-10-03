@@ -71,12 +71,26 @@ public final class CurrencyManager {
             currency += (int) (currency * 0.2); // 20% 보너스 지급
             Core.getLogger().info("hitRate bonus occurs (20%).");
         }
-        //
 
-        long timeBonus = (startTime - endTime) / 10;
-        if (timeBonus > 0) {
-            currency += timeBonus;
+        // Round clear time in seconds
+        long timeDifferenceInSeconds = (endTime - startTime) / 1000;
+        int timeBonus = 0;
+
+        /*
+          clear time   : 0 ~ 50    : +50
+                       : 51 ~ 80   : +30
+                       : 81 ~ 100  : +10
+                       : 101 ~     : 0
+         */
+        if (timeDifferenceInSeconds <= 50) {
+            timeBonus = 50;
+        } else if (timeDifferenceInSeconds <= 80) {
+            timeBonus = 30;
+        } else if (timeDifferenceInSeconds <= 100) {
+            timeBonus = 10;
         }
+        currency += timeBonus;
+
         return currency;
     }
 

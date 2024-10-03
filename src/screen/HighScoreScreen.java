@@ -8,6 +8,8 @@ import HUDTeam.Achievement;
 import HUDTeam.DrawManagerImpl;
 import engine.Core;
 import engine.Score;
+// Sound Operator
+import Sound_Operator.SoundManager;
 
 /**
  * Implements the high scores screen, it shows player records.
@@ -34,6 +36,9 @@ public class HighScoreScreen extends Screen {
 		super(width, height, fps);
 
 		this.returnCode = 1;
+
+		// Sound Operator
+		SoundManager.getInstance().playBGM("highScore_bgm");
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();

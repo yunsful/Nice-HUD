@@ -21,13 +21,18 @@ public class ItemBarrierAndHeart {
     }
 
     //barrier
-    public void updatebarrier(Ship ship) {
-        if (this.barrierActive) {
+    public void updateBarrierAndShip(Ship ship) {
+        if (this.barrierActive) {   // 베리어 활성화
+            ship.setSpriteType(DrawManager.SpriteType.ShipBarrierStatus);
 
             long currentTime = System.currentTimeMillis();
-            if (currentTime - this.barrierActivationTime >= barrier_DURATION) {
+
+            if (currentTime - this.barrierActivationTime >= barrier_DURATION) {     // 베리어 비활성화
+                ship.setSpriteType(DrawManager.SpriteType.Ship);
                 deactivatebarrier();
             }
+        } else {    // 베리어가 비활성화 되었을 때는 ship.update()호출
+            ship.update();
         }
     }
 

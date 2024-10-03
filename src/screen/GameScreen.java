@@ -230,8 +230,8 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
-			this.item.updatebarrier(this.ship);	// team Inventory
-			this.ship.update();
+			this.item.updateBarrierAndShip(this.ship);	// team Inventory
+//			this.ship.update();					// team Inventory
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
 		}

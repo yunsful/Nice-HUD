@@ -15,18 +15,17 @@ import Sound_Operator.SoundManager;
 // Import PlayerGrowth class
 import Enemy.PlayerGrowth;
 // Import NumberOfBullet class
-//import inventory_develop.NumberOfBullet;
+import inventory_develop.NumberOfBullet;
 // Import ShipStatus class
 import inventory_develop.ItemBarrierAndHeart;
 import inventory_develop.ShipStatus;
 /**
  * Implements a ship, to be controlled by the player.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public class Ship extends Entity {
-	
 	/** Minimum time between shots. */
 	private Cooldown shootingCooldown;
 	/** Time spent inactive between hits. */
@@ -40,11 +39,11 @@ public class Ship extends Entity {
 	// Sound Operator
 	private static SoundManager sm;
 	/** NumberOfBullet instance*/
-//	private NumberOfBullet NBPool = new NumberOfBullet();
+	private NumberOfBullet numberOfBullet;
 
 	/**
 	 * Constructor, establishes the ship's properties.
-	 * 
+	 *
 	 * @param positionX
 	 *            Initial position of the ship in the X axis.
 	 * @param positionY
@@ -66,6 +65,8 @@ public class Ship extends Entity {
 		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay());
 
 		this.destructionCooldown = Core.getCooldown(1000);
+
+		this.numberOfBullet = new NumberOfBullet();
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class Ship extends Entity {
 
 	/**
 	 * Shoots a bullet upwards.
-	 * 
+	 *
 	 * @param bullets
 	 *            List of bullets on screen, to add the new bullet.
 	 * @return Checks if the bullet was shot correctly.
@@ -113,19 +114,22 @@ public class Ship extends Entity {
 // 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
 // 					positionY, BULLET_SPEED));
 // 			Bomb.setCanShoot(false);
-      
-      
+
+
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
 			// Sound Operator, Apply a Shooting sound
 			sm = SoundManager.getInstance();
 			sm.playES("My_Gun_Shot");
-			// Add a piercing bullet fired by the player's ship.
-			bullets.add(PiercingBulletPool.getPiercingBullet(
+
+			// Use NumberOfBullet to generate bullets
+			Set<PiercingBullet> newBullets = numberOfBullet.addBullet(
 					positionX + this.width / 2,
 					positionY,
-					growth.getBulletSpeed(), // Use PlayerGrowth for bullet speed
-					2 // Number of enemies the bullet can pierce
-			));
+					growth.getBulletSpeed() // Use PlayerGrowth for bullet speed
+			);
+
+			// Add new bullets to the set
+			bullets.addAll(newBullets);
 
 			return true;
 		}
@@ -158,7 +162,7 @@ public class Ship extends Entity {
 
 	/**
 	 * Checks if the ship is destroyed.
-	 * 
+	 *
 	 * @return True if the ship is currently destroyed.
 	 */
 	public final boolean isDestroyed() {
@@ -197,13 +201,13 @@ public class Ship extends Entity {
 
 	/**
 	 * Getter for the ship's speed.
-	 * 
+	 *
 	 * @return Speed of the ship.
 	 */
 	public final int getSpeed() {
 		return growth.getMoveSpeed();
 	}
-	
+
 	/**
 	 * Calculates and returns the attack speed in bullets per second.
 	 *

@@ -26,13 +26,6 @@ import inventory_develop.ShipStatus;
  * 
  */
 public class Ship extends Entity {
-
-	/** Time between shots. */
-	private int SHOOTING_INTERVAL = 750;
-	/** Speed of the bullets shot by the ship. */
-	private int BULLET_SPEED = -6;
-	/** Movement of the ship for each unit of time. */
-	private int SPEED = 2;
 	
 	/** Minimum time between shots. */
 	private Cooldown shootingCooldown;
@@ -186,21 +179,19 @@ public class Ship extends Entity {
 	//Edit by Enemy
 	public void increaseMoveSpeed() {
 		growth.increaseMoveSpeed(shipStatus.getSpeedIn());
-		SPEED = growth.getMoveSpeed();
 	}
 
 	// Increases bullet speed
 	//Edit by Enemy
 	public void increaseBulletSpeed() {
 		growth.increaseBulletSpeed(shipStatus.getBulletSpeedIn());
-		BULLET_SPEED = growth.getBulletSpeed();
 	}
 
 	//  Decreases shooting delay
 	//Edit by Enemy
 	public void decreaseShootingDelay() {
 		growth.decreaseShootingDelay(shipStatus.getSuootingInIn());
-		SHOOTING_INTERVAL = growth.getShootingDelay();
+		System.out.println(growth.getShootingDelay());
 		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay()); // Apply new shooting delay
 	}
 
@@ -210,7 +201,7 @@ public class Ship extends Entity {
 	 * @return Speed of the ship.
 	 */
 	public final int getSpeed() {
-		return SPEED;
+		return growth.getMoveSpeed();
 	}
 	
 	/**
@@ -219,7 +210,7 @@ public class Ship extends Entity {
 	 * @return Attack speed (bullets per second).
 	 */
 	public final double getAttackSpeed() {
-		return 1000.0 / SHOOTING_INTERVAL;
+		return 1000.0 / growth.getShootingDelay();
 	}
 
 	public PlayerGrowth getPlayerGrowth() {

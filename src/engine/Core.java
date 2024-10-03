@@ -155,7 +155,6 @@ public final class Core {
 							+ " game screen at " + FPS + " fps.");
 					frame.setScreen(currentScreen);
 					LOGGER.info("Closing game screen.");
-					System.out.println("test");
 					gameState = ((GameScreen) currentScreen).getGameState();
 
 					// Add playtime parameter - Soomin Lee / TeamHUD

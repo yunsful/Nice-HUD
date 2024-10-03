@@ -47,9 +47,6 @@ public class ItemBarrierAndHeart {
 
     //heart
     public void activeheart(GameScreen gameScreen, Ship ship, PlayerGrowth growth) {
-//        if (growth.getHealth() < MAX_LIVES) {
-//            ship.increaseHealth(1);
-//        }
         if (gameScreen.getLives() < MAX_LIVES) {
             gameScreen.setLives(gameScreen.getLives() + 1);
         }

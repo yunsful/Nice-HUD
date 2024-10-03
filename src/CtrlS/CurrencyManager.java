@@ -2,6 +2,7 @@ package CtrlS;
 
 import engine.Core;
 import engine.FileManager;
+import engine.GameState;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -58,14 +59,19 @@ public final class CurrencyManager {
             return false;
         }
     }
-    // Written by Ctrl+S
-    public int calculateCurrency(int score, int level, float hitRate, long
-            startTime, long endTime) {
-        //
-        int baseCurrency = score / 10;
-        int levelBonus = baseCurrency * level;
+    // Team-Ctrl-S(Currency)
+    public int calculateCurrency(GameState prevState, GameState currState) {
+        // Score gained this round
+        int scoreDiff = currState.getScore() - prevState.getScore();
+
+        // hitRate of this round
+        int bulletsShotDiff = currState.getBulletsShot() - prevState.getBulletsShot();
+        int shipsDestroyedDiff = currState.getShipsDestroyed() - prevState.getShipsDestroyed();
+        float hitRate = bulletsShotDiff / (float) shipsDestroyedDiff;
+
+        int baseCurrency = scoreDiff / 10;
+        int levelBonus = baseCurrency * currState.getLevel();
         int currency = baseCurrency + levelBonus;
-        //
 
         if (hitRate > 0.9) {
             currency += (int) (currency * 0.3); // 30% 보너스 지급
@@ -76,7 +82,9 @@ public final class CurrencyManager {
         }
 
         // Round clear time in seconds
-        long timeDifferenceInSeconds = (endTime - startTime) / 1000;
+        // DEBUGGING NEEDED(playTime)
+        long timeDifferenceInSeconds = (currState.getTime() - prevState.getTime()) / 1000;
+
         int timeBonus = 0;
 
         /*
@@ -96,7 +104,6 @@ public final class CurrencyManager {
 
         return currency;
     }
-
 
     public int getCurrency() throws IOException {
         return fileManager.loadCurrency();

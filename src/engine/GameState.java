@@ -20,6 +20,9 @@ public class GameState {
 	private int shipsDestroyed;
 	/** Current currency **/
 	private int currency;
+	/** Current gem **/
+	// Team-Ctrl-S(Currency)
+	private int gem;
 
 	/**
 	 * Constructor.
@@ -34,16 +37,21 @@ public class GameState {
 	 *            Bullets shot until now.
 	 * @param shipsDestroyed
 	 *            Ships destroyed until now.
+	 * @param currency
+	 * 			  Current currency. // Team-Ctrl-S(Currency)
+	 * @param gem
+	 * 			  Current gem. // Team-Ctrl-S(Currency)
 	 */
 	public GameState(final int level, final int score,
 			final int livesRemaining, final int bulletsShot,
-			final int shipsDestroyed, final int currency) {
+			final int shipsDestroyed, final int currency, final int gem) {
 		this.level = level;
 		this.score = score;
 		this.livesRemaining = livesRemaining;
 		this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
 		this.currency = currency;
+		this.gem = gem; // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -88,4 +96,11 @@ public class GameState {
 		return currency;
 	}
 
+	/**
+	 * @return the gem
+	 */
+	// Team-Ctrl-S(Currency)
+	public final int getGem() {
+		return gem;
+	}
 }

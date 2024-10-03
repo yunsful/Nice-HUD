@@ -10,13 +10,14 @@ import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
 import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
 import Sound_Operator.SoundManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
 import screen.Screen;
 import screen.TitleScreen;
-import screen.ReceiptScreen;
+
 
 /**
  * Implements core game logic.
@@ -146,10 +147,6 @@ public final class Core {
 				sm.playBGM("inGame_bgm");
 
 				do {
-					// Record the start time
-					// Ctrl-S
-					long startTime = System.currentTimeMillis();
-
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
@@ -187,7 +184,7 @@ public final class Core {
 					// Ctrl-S
 					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
 						LOGGER.info("loading receiptScreen");
-						currentScreen = new ReceiptScreen(width, height, FPS, gameState);
+						currentScreen = new ReceiptScreen(width, height, FPS, roundState, gameState);
 
 						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " receipt screen at " + FPS + " fps.");

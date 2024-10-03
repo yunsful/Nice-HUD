@@ -186,18 +186,21 @@ public class Ship extends Entity {
 	//Edit by Enemy
 	public void increaseMoveSpeed() {
 		growth.increaseMoveSpeed(shipStatus.getSpeedIn());
+		SPEED = growth.getMoveSpeed();
 	}
 
 	// Increases bullet speed
 	//Edit by Enemy
 	public void increaseBulletSpeed() {
 		growth.increaseBulletSpeed(shipStatus.getBulletSpeedIn());
+		BULLET_SPEED = growth.getBulletSpeed();
 	}
 
 	//  Decreases shooting delay
 	//Edit by Enemy
 	public void decreaseShootingDelay() {
 		growth.decreaseShootingDelay(shipStatus.getSuootingInIn());
+		SHOOTING_INTERVAL = growth.getShootingDelay();
 		this.shootingCooldown = Core.getCooldown(growth.getShootingDelay()); // Apply new shooting delay
 	}
 

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
+import clove.AchievementManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
@@ -31,11 +32,11 @@ public final class Core {
 	private static final int FPS = 60;
 
 	/** Max lives. */
-	public static final int MAX_LIVES = 3; // CLOVER Dongjun Suh : Fixed MAX_LIVES from private to public for usage in achievement
+	public static final int MAX_LIVES = 3; // TEAM CLOVER: Fixed MAX_LIVES from private to public for usage in achievement
 	/** Levels between extra life. */
 	private static final int EXTRA_LIFE_FRECUENCY = 3;
 	/** Total number of levels. */
-	public static final int NUM_LEVELS = 7; // CLOVER Dongjun Suh : Fixed NUM_LEVELS from privated to public for usage in achievement
+	public static final int NUM_LEVELS = 7; // TEAM CLOVER : Fixed NUM_LEVELS from privated to public for usage in achievement
 	
 	/** Difficulty settings for level 1. */
 	private static final GameSettings SETTINGS_LEVEL_1 =
@@ -80,6 +81,9 @@ public final class Core {
 	 * @param args
 	 *            Program args, ignored.
 	 */
+
+	private static AchievementManager achievementManager; // Team CLOVER
+
 	public static void main(final String[] args) {
 		try {
 			LOGGER.setUseParentHandlers(false);
@@ -93,6 +97,11 @@ public final class Core {
 			LOGGER.addHandler(fileHandler);
 			LOGGER.addHandler(consoleHandler);
 			LOGGER.setLevel(Level.ALL);
+
+			// TEAM CLOVER : Added log to check if function is working
+			System.out.println("Initializing AchievementManager...");
+			achievementManager = new AchievementManager(DrawManager.getInstance());
+			System.out.println("AchievementManager initialized!");
 
 		} catch (Exception e) {
 			// TODO handle exception
@@ -144,6 +153,8 @@ public final class Core {
 					frame.setScreen(currentScreen);
 					LOGGER.info("Closing game screen.");
 
+					achievementManager.updateAchievements(currentScreen); // TEAM CLOVER : Achievement
+
 					gameState = ((GameScreen) currentScreen).getGameState();
 
 					gameState = new GameState(gameState.getLevel() + 1,
@@ -151,6 +162,10 @@ public final class Core {
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0));
+
+					if (achievementManager != null) { // TEAM CLOVER : Added code
+						achievementManager.updateAchievements(currentScreen);
+					}
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

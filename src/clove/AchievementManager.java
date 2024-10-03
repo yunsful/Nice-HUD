@@ -1,5 +1,8 @@
 package clove;
 
+import engine.DrawManager;
+import screen.Screen;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -13,6 +16,17 @@ public class AchievementManager {
     private HashMap<Achievement, Boolean> achievementMap; // Object -> Achievement
     private ArrayList<AchievementChangedCallback> achievementChangedCallbacks;
 
+    private AchievementConditions achievementConditions;
+
+    public AchievementManager(DrawManager drawManager) {
+        this.achievementConditions = new AchievementConditions(drawManager);
+    }
+
+    public void updateAchievements(Screen screen) {
+        System.out.println("Updating achievements...");
+
+        achievementConditions.checkAllAchievements();
+    }
     /*
         Callbacks
      */

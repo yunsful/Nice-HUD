@@ -87,9 +87,7 @@ public class DrawManager {
 		ItemBarrier,
 		ItemHeart,
 		ShipBarrierStatus,
-		ItemSpeed,
-		ItemCoinIncrease,
-		ItemNumberOfBullet,
+		ItemCoin
 	};
 
 	/**
@@ -124,8 +122,7 @@ public class DrawManager {
 			spriteMap.put(SpriteType.ItemBarrier, new boolean[9][10]);
 			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
 			spriteMap.put(SpriteType.ShipBarrierStatus, new boolean[13][8]);	// temporary
-
-			spriteMap.put(SpriteType.Item, new boolean[5][5]); //by Enemy team
+			spriteMap.put(SpriteType.ItemCoin, new boolean[7][7]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");

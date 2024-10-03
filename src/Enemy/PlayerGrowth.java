@@ -4,17 +4,12 @@ public class PlayerGrowth {
 
     //Player's base stats
     private int health;          //Health
-    private int moveSpeed;       //Movement speed
-    private int bulletSpeed;     // Bullet speed
-    private int shootingDelay;   // Shooting delay
+    private static int moveSpeed = 2;       //Movement speed
+    private static int bulletSpeed = -6;     // Bullet speed
+    private static int shootingDelay = 750;   // Shooting delay
 
     //Constructor to set initial values
-    public PlayerGrowth() {
-        //  Base stat values
-        this.health = 3;          //  Base health is 3
-        this.moveSpeed = 2;       // Base movement speed is 2
-        this.bulletSpeed = -8;    //  Base bullet speed is -6
-        this.shootingDelay = 750; //  Base shooting delay is 750ms
+    public PlayerGrowth() {//  Base shooting delay is 750ms
     }
 
     // Increases health

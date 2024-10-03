@@ -17,6 +17,7 @@ import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
+import inventory_develop.ItemBarrierAndHeart;
 
 
 /**
@@ -62,6 +63,8 @@ public class GameScreen extends Screen {
 	private Set<PiercingBullet> bullets; //by Enemy team
 	/** Add an itemManager Instance */
 	private ItemManager itemManager; //by Enemy team
+	/** Shield item */
+	private ItemBarrierAndHeart item;	// team Inventory
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -78,8 +81,6 @@ public class GameScreen extends Screen {
 	private boolean bonusLife;
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
-//	/** Shield item */
-//	private TemporaryShield shield;
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */
@@ -120,7 +121,7 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-//		this.shield = new TemporaryShield();
+		this.item = new ItemBarrierAndHeart();	// team Inventory
 	}
 
 	/**
@@ -219,7 +220,7 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
-//			this.shield.update();
+			this.item.updatebarrier(this.ship);	// team Inventory
 			this.ship.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
@@ -325,7 +326,7 @@ public class GameScreen extends Screen {
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()){// && !this.shield.isActive()) {
+					if (!this.ship.isDestroyed() && !this.item.isbarrierActive()) {	// team Inventory
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
@@ -367,7 +368,7 @@ public class GameScreen extends Screen {
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()) {
+					if (!this.ship.isDestroyed() && !this.item.isbarrierActive()) {	// team Inventory
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
@@ -467,5 +468,9 @@ public class GameScreen extends Screen {
 	}
 	public Ship getShip() {
 		return ship;
+	}	// Team Inventory(Item)
+
+	public ItemBarrierAndHeart getItem() {
+		return item;
 	}	// Team Inventory(Item)
 }

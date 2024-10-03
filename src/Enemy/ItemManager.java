@@ -24,7 +24,7 @@ public class ItemManager {
     protected Logger logger = Core.getLogger();
     private Set<Item> recyclableItems = new HashSet<>();
 //    private Bomb bomb = new Bomb();
-    private ItemBarrierAndHeart Item2 = new ItemBarrierAndHeart();
+    private ItemBarrierAndHeart Item2;
     private Ship ship;
     private PlayerGrowth growth;
 
@@ -35,6 +35,7 @@ public class ItemManager {
         this.gameScreen = gameScreen;
         this.ship = gameScreen.getShip();       // Team Inventory
         this.growth = ship.getPlayerGrowth();
+        this.Item2 = gameScreen.getItem();
     }
 
     public void cleanItems() {
@@ -76,9 +77,10 @@ public class ItemManager {
                 case ItemBomb:
                     break;
                 case ItemBarrier:
+                    Item2.activatebarrier();
                     break;
                 case ItemHeart:
-                    Item2.Operateheart(gameScreen, ship, growth);
+                    Item2.activeheart(gameScreen, ship, growth);
                     break;
             }
 
@@ -88,7 +90,7 @@ public class ItemManager {
 
     public void addItemRecycle(Item item) {
         recyclableItems.add(item);
-        String itemLog = item.getSpriteType().toString().substring(4);
+        String itemLog = item.getSpriteType().toString().toLowerCase().substring(4);
         this.logger.info("get " + itemLog + " item");   // Change log for each item
     }
 

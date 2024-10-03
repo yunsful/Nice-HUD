@@ -14,6 +14,7 @@ import Enemy.PlayerGrowth;
 // Import NumberOfBullet class
 //import inventory_develop.NumberOfBullet;
 // Import ShipStatus class
+import inventory_develop.ItemBarrierAndHeart;
 import inventory_develop.ShipStatus;
 /**
  * Implements a ship, to be controlled by the player.
@@ -38,6 +39,8 @@ public class Ship extends Entity {
 	private PlayerGrowth growth;
 	/** ShipStaus instance*/
 	private ShipStatus shipStatus;
+	/** Item */
+	private ItemBarrierAndHeart item;
 	/** NumberOfBullet instance*/
 //	private NumberOfBullet NBPool = new NumberOfBullet();
 

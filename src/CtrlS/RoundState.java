@@ -24,7 +24,7 @@ public class RoundState {
         this.roundCurrency = calculateCurrency();
     }
 
-    public int calculateCurrency() {
+    private int calculateCurrency() {
 
         int baseCurrency = roundScore / 10;
         int levelBonus = baseCurrency * currState.getLevel();

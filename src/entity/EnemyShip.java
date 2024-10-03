@@ -25,8 +25,6 @@ public class EnemyShip extends Entity {
 
 	/** EnemyShip's health point */
 	private int hp; // Edited by Enemy
-	/** EnemyShip's explosive type */
-	private boolean isExplosive; // Edited by Enemy
 	/** Cooldown between sprite changes. */
 	private Cooldown animationCooldown;
 	/** Checks if the ship has been hit by a bullet. */

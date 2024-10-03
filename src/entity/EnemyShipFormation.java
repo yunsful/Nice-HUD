@@ -138,7 +138,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		for (List<EnemyShip> column : this.enemyShips) {
 			for (int i = 0; i < this.nShipsHigh; i++) {
-				if (shipCount == nShipsHigh-2) //Edited by Enemy
+				if (shipCount == (nShipsHigh*2)-1 ||shipCount == (nShipsHigh*4)-1) //Edited by Enemy
 					spriteType = SpriteType.ExplosiveEnemyShip1;
 				else if (i / (float) this.nShipsHigh < PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;
@@ -451,14 +451,10 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 							HpEnemyShip.hit(destroyedShip);
                             for (List<EnemyShip> enemyShip : this.enemyShips)
                                 if (enemyShip.size() > i
-										&& !enemyShip.get(i).isDestroyed()
-										&& enemyShip.get(i).spriteType != SpriteType.ExplosiveEnemyShip1
-										&& enemyShip.get(i).spriteType != SpriteType.ExplosiveEnemyShip2)
+										&& !enemyShip.get(i).isDestroyed())
                                     this._destroy(enemyShip.get(i));
 						    for (int j = 0; j < column.size(); j++)
-							    if (!column.get(j).isDestroyed()
-									    && column.get(j).spriteType != SpriteType.ExplosiveEnemyShip1
-									    && column.get(j).spriteType != SpriteType.ExplosiveEnemyShip2)
+							    if (!column.get(j).isDestroyed())
 								    this._destroy(column.get(j));
 
 						   break;

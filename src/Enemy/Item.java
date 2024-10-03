@@ -29,9 +29,12 @@ public class Item extends Entity {
         } else if (rdItem < shipStatus.getShield_probability()) { // 50%
             this.spriteType = SpriteType.ItemBarrier;
             this.setColor(Color.green);
-        } else { // 50%
+        } else if (rdItem < shipStatus.getHearth_probability()) { // 50%
             this.spriteType = SpriteType.ItemHeart;
             this.setColor(Color.red);
+        } else {
+            this.spriteType = SpriteType.ItemCoin;
+            this.setColor(Color.yellow);
         }
     }
 

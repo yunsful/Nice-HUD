@@ -15,13 +15,11 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
-
 import engine.DrawManager.SpriteType;
+
+import clove.Statistics; //Team Clove
 
 /**
  * Manages files used in the application.
@@ -154,25 +152,12 @@ public final class FileManager {
 			Score highScore = null;
 			String name = reader.readLine();
 			String score = reader.readLine();
-			String bulletsShot = reader.readLine(); //Team Clove
-			String shipsDestroyed = reader.readLine(); //Team Clove
-			String level = reader.readLine(); //Team Clove
 
 			while ((name != null) && (score != null)) {
-				highScore = new Score(name, Integer.parseInt(score), Integer.parseInt(bulletsShot),
-						Integer.parseInt(shipsDestroyed), Integer.parseInt(level)); //Team Clove
+				highScore = new Score(name, Integer.parseInt(score));
 				highScores.add(highScore);
 				name = reader.readLine();
 				score = reader.readLine();
-
-				for(int i = 0; i < 3; i++){
-					reader.readLine();
-				}
-				/*
-				Team Clove
-				Repeat the loop for the number of variables you want to skip
-				Current Skipped Number of Variables = 3
-				*/
 			}
 		} finally {
 			if (inputStream != null)
@@ -216,25 +201,12 @@ public final class FileManager {
 			Score highScore = null;
 			String name = bufferedReader.readLine();
 			String score = bufferedReader.readLine();
-			String bulletsShot = bufferedReader.readLine();
-			String shipsDestroyed = bufferedReader.readLine();
-			String level = bufferedReader.readLine();
 
 			while ((name != null) && (score != null)) {
-				highScore = new Score(name, Integer.parseInt(score), Integer.parseInt(bulletsShot),
-						Integer.parseInt(shipsDestroyed), Integer.parseInt(level)); //Team Clove
+				highScore = new Score(name, Integer.parseInt(score)); //Team Clove
 				highScores.add(highScore);
 				name = bufferedReader.readLine();
 				score = bufferedReader.readLine();
-
-				for(int i = 0; i < 3; i++){
-					bufferedReader.readLine();
-				}
-				/*
-				Team Clove
-				Repeat the loop for the number of variables you want to skip
-				Current Skipped Number of Variables = 3
-				 */
 			}
 
 		} catch (FileNotFoundException e) {
@@ -292,12 +264,6 @@ public final class FileManager {
 				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getScore()));
 				bufferedWriter.newLine();
-				bufferedWriter.write(Integer.toString(score.getBulletsShot())); //Team Clove
-				bufferedWriter.newLine(); //Team Clove
-				bufferedWriter.write(Integer.toString(score.getShipsDestroyed())); //Team Clove
-				bufferedWriter.newLine(); //Team Clove
-				bufferedWriter.write(Integer.toString(score.getLevel())); //Team Clove
-				bufferedWriter.newLine(); //Team Clove
 				savedCount++;
 			}
 
@@ -305,6 +271,153 @@ public final class FileManager {
 			if (bufferedWriter != null)
 				bufferedWriter.close();
 		}
+	}
+
+	/**
+	 *  save userData(Statistics) to disk
+	 *
+	 * @param playerStatistics
+	 * 				Player's Statistics list to save.
+	 * @throws IOException
+	 * 				In case of saving problems.
+	 *
+	 */
+	//Team Clove
+    public void saveUserData(final List<Statistics> playerStatistics) throws IOException {
+		Properties properties = new Properties();
+		OutputStream outputStream = null;
+
+        try {
+            String jarPath = FileManager.class.getProtectionDomain()
+                    .getCodeSource().getLocation().getPath();
+            jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+            String staticsPath = new File(jarPath).getParent();
+            staticsPath += File.separator;
+			staticsPath += "Statistic.properties";
+
+            File staticsFile = new File(staticsPath);
+
+			logger.info("Saving Player Statistic.");
+
+            if (!staticsFile.exists())
+				staticsFile.createNewFile();
+
+			if(!playerStatistics.isEmpty()){
+				Statistics stat = playerStatistics.get(0);
+				properties.setProperty("highestLevel", String.valueOf(stat.getHighestLevel()));
+				properties.setProperty("totalBulletsShot", String.valueOf(stat.getTotalBulletsShot()));
+				properties.setProperty("totalShipsDestroyed", String.valueOf(stat.getTotalShipsDestroyed()));
+				properties.setProperty("shipsDestructionStreak", String.valueOf(stat.getShipsDestructionStreak()));
+				properties.setProperty("playedGameNumber", String.valueOf(stat.getPlayedGameNumber()));
+				properties.setProperty("clearAchievementNumber", String.valueOf(stat.getClearAchievementNumber()));
+				properties.setProperty("totalPlaytime", String.valueOf(stat.getTotalPlaytime()));
+			}
+			outputStream = new FileOutputStream(staticsFile);
+			properties.store(new OutputStreamWriter(outputStream, Charset.forName("UTF-8")),
+					"PlayerGameStatistics");
+
+
+        } finally {
+            if (outputStream != null)
+                outputStream.close();
+        }
+    }
+
+	/**
+	 *
+	 * load userData(Statistics) from file, and return userData(Statistics)
+	 *
+	 * @return Player's Statistics
+	 * @throws IOException
+	 * 				In case of loading problems.
+	 */
+	//Team Clove
+	public Statistics loadUserData() throws IOException {
+		Properties properties = new Properties();
+		InputStream inputStream = null;
+
+		Statistics stat;
+
+		try{
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String staticsPath = new File(jarPath).getParent();
+			staticsPath += File.separator;
+			staticsPath += "Statistic.properties";
+
+			File staticsFile = new File(staticsPath);
+
+			inputStream = new FileInputStream(staticsFile);
+			properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+
+			logger.info("Loading Player Statistic.");
+
+			int highestLevel = Integer.parseInt(properties.getProperty("highestLevel"));
+			int totalBulletsShot = Integer.parseInt(properties.getProperty("totalBulletsShot"));
+			int totalShipsDestroyed = Integer.parseInt(properties.getProperty("totalShipsDestroyed"));
+			int shipsDestructionStreak = Integer.parseInt(properties.getProperty("shipsDestructionStreak"));
+			int playedGameNumber = Integer.parseInt(properties.getProperty("playedGameNumber"));
+			int clearAchievementNumber = Integer.parseInt(properties.getProperty("clearAchievementNumber"));
+			long totalPlaytime = Integer.parseInt(properties.getProperty("totalPlaytime"));
+
+			stat = new Statistics(highestLevel, totalBulletsShot, totalShipsDestroyed, shipsDestructionStreak,
+					playedGameNumber, clearAchievementNumber, totalPlaytime);
+
+		} catch (FileNotFoundException e){
+			logger.info("Loading default user statistics.");
+			stat = loadDefaultUserData();
+		} finally {
+			if(inputStream != null){
+				inputStream.close();
+			}
+
+		}
+
+		return stat;
+	}
+
+	/**
+	 * Returns the application default userData(Statistics)
+	 * if there is no Statistic.properties file.
+	 *
+	 *
+	 * @return Default Player's Statistics
+	 * @throws IOException
+	 * 				In case of loading problems.
+	 */
+	//Team Clove
+	public Statistics loadDefaultUserData() throws IOException {
+		Properties properties = new Properties();
+		InputStream inputStream = null;
+
+		Statistics stat;
+
+		try{
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("Statistic.properties");
+
+			properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+
+			int highestLevel = Integer.parseInt(properties.getProperty("highestLevel"));
+			int totalBulletsShot = Integer.parseInt(properties.getProperty("totalBulletsShot"));
+			int totalShipsDestroyed = Integer.parseInt(properties.getProperty("totalShipsDestroyed"));
+			int shipsDestructionStreak = Integer.parseInt(properties.getProperty("shipsDestructionStreak"));
+			int playedGameNumber = Integer.parseInt(properties.getProperty("playedGameNumber"));
+			int clearAchievementNumber = Integer.parseInt(properties.getProperty("clearAchievementNumber"));
+			long totalPlaytime = Integer.parseInt(properties.getProperty("totalPlaytime"));
+
+			stat = new Statistics(highestLevel, totalBulletsShot, totalShipsDestroyed, shipsDestructionStreak,
+					playedGameNumber, clearAchievementNumber, totalPlaytime);
+
+		} finally {
+			if(inputStream != null){
+				inputStream.close();
+			}
+		}
+		return stat;
 	}
 
 	/**
@@ -424,3 +537,6 @@ public final class FileManager {
 		return currency;
 	}
 }
+
+
+

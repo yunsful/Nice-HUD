@@ -83,8 +83,6 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
-	/** Total currency **/
-	private int currency; // Team-Ctrl-S(Currency)
 	/** Shield item */
 	private TemporaryShield shield;
 
@@ -99,8 +97,10 @@ public class GameScreen extends Screen {
 	// Sound Operator
 	private static SoundManager sm;
 
-	/** Total gem **/
 	// Team-Ctrl-S(Currency)
+	/** Total currency **/
+	private int currency;
+	/** Total gem **/
 	private int gem;
 
 	/**
@@ -134,6 +134,7 @@ public class GameScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.shield = new TemporaryShield();
+		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 	}
 

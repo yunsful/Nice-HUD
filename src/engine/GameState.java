@@ -24,6 +24,9 @@ public class GameState {
 	/** Current currency **/
 	// Team-Ctrl-S(Currency)
 	private int currency;
+	/** Current gem **/
+	// Team-Ctrl-S(Currency)
+	private int gem;
 
 	/**
 	 * Constructor.
@@ -42,10 +45,14 @@ public class GameState {
 	 * Soomin Lee / TeamHUD
 	 * @param playTime
 	 * 	          Total time to play.
+	 * @param currency
+	 * 			  Current currency. // Team-Ctrl-S(Currency)
+	 * @param gem
+	 * 			  Current gem. // Team-Ctrl-S(Currency)
 	 */
 	public GameState(final int level, final int score,
 					 final int livesRemaining, final int bulletsShot,
-					 final int shipsDestroyed, final int playTime, final int currency) {
+					 final int shipsDestroyed, final int playTime, final int currency, final int gem) {
 		this.level = level;
 		this.score = score;
 		this.livesRemaining = livesRemaining;
@@ -53,6 +60,7 @@ public class GameState {
 		this.shipsDestroyed = shipsDestroyed;
 		this.playTime = playTime;
 		this.currency = currency; // Team-Ctrl-S(Currency)
+		this.gem = gem; // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -104,4 +112,11 @@ public class GameState {
 		return currency;
 	}
 
+	/**
+	 * @return the gem
+	 */
+	// Team-Ctrl-S(Currency)
+	public final int getGem() {
+		return gem;
+	}
 }

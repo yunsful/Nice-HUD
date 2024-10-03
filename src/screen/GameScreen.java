@@ -99,6 +99,9 @@ public class GameScreen extends Screen {
 	// Sound Operator
 	private static SoundManager sm;
 
+	/** Total gem **/
+	// Team-Ctrl-S(Currency)
+	private int gem;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -131,6 +134,7 @@ public class GameScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.shield = new TemporaryShield();
+		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -484,7 +488,7 @@ public class GameScreen extends Screen {
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency); // Team-Ctrl-S(Currency)
+				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency, this.gem); // Team-Ctrl-S(Currency)
 	}
 	public int getLives() {
 		return lives;

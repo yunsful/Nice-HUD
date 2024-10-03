@@ -83,4 +83,35 @@ public final class CurrencyManager {
     public int getCurrency() throws IOException {
         return fileManager.loadCurrency();
     }
+
+    /**
+     * Add an amount of gem to the current gem.
+     */
+    // Team-Ctrl-S(Currency)
+    public void addGem(int amount) throws IOException {
+        int current_gem = fileManager.loadGem();
+        amount += current_gem;
+        fileManager.saveGem(amount);
+    }
+
+    /**
+     * Consume as much gem as the amount you have (cannot spend more than you currently have).
+     */
+    // Team-Ctrl-S(Currency)
+    public boolean spendGem(int amount) throws IOException {
+        int current_gem = fileManager.loadGem();
+        if (amount <= current_gem) {
+            current_gem -= amount;
+            fileManager.saveGem(current_gem);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    // Team-Ctrl-S(Currency)
+    public int getGem() throws IOException {
+        return fileManager.loadGem();
+    }
 }

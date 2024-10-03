@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import HUDTeam.Achievement;
+import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
@@ -45,7 +47,8 @@ public class ScoreScreen extends Screen {
 	private int nameCharSelected;
 	/** Time between changes in user selection. */
 	private Cooldown selectionCooldown;
-	private int currency;
+	/** Total currency earned this game */
+	private int currency; // Team-Ctrl-S(Currency)
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -72,7 +75,7 @@ public class ScoreScreen extends Screen {
 		this.nameCharSelected = 0;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
-		this.currency = gameState.getCurrency();
+		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -112,7 +115,7 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
-				saveCurrency();
+				saveCurrency(); // Team-Ctrl-S(Currency)
 			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 				// Play again.
 				this.returnCode = 2;
@@ -120,7 +123,7 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
-				saveCurrency();
+				saveCurrency(); // Team-Ctrl-S(Currency)
 			}
 
 			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
@@ -169,6 +172,10 @@ public class ScoreScreen extends Screen {
 		}
 	}
 
+	/**
+	 * Saves the currency into currency file
+	 */
+	// Team-Ctrl-S(Currency)
 	private void saveCurrency() {
 		try {
 			Core.getCurrencyManager().addCurrency(currency);
@@ -183,6 +190,12 @@ public class ScoreScreen extends Screen {
 	 */
 	private void draw() {
 		drawManager.initDrawing(this);
+
+		// Jo minseo / HUD team
+		if(Achievement.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
+			Achievement.addTimer();
+		}
 
 		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
 				this.isNewRecord);

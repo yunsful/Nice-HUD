@@ -8,7 +8,14 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import screen.*;
+import CtrlS.CurrencyManager;
+import Sound_Operator.SoundManager;
+import screen.GameScreen;
+import screen.HighScoreScreen;
+import screen.ScoreScreen;
+import screen.Screen;
+import screen.TitleScreen;
+import screen.ReceiptScreen;
 
 /**
  * Implements core game logic.
@@ -19,9 +26,9 @@ import screen.*;
 public final class Core {
 
 	/** Width of current screen. */
-	private static final int WIDTH = 448;
+	private static final int WIDTH = 630;
 	/** Height of current screen. */
-	private static final int HEIGHT = 520;
+	private static final int HEIGHT = 720;
 	/** Max fps of current screen. */
 	private static final int FPS = 60;
 
@@ -53,7 +60,8 @@ public final class Core {
 	/** Difficulty settings for level 7. */
 	private static final GameSettings SETTINGS_LEVEL_7 =
 			new GameSettings(8, 7, 2, 500);
-	
+
+
 	/** Frame to draw the screen on. */
 	private static Frame frame;
 	/** Screen currently shown. */
@@ -67,6 +75,8 @@ public final class Core {
 	private static Handler fileHandler;
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
+	// Sound Operator
+	private static SoundManager sm;
 
 
 	/**
@@ -77,6 +87,7 @@ public final class Core {
 	 */
 	public static void main(final String[] args) {
 		try {
+
 			LOGGER.setUseParentHandlers(false);
 
 			fileHandler = new FileHandler("log");
@@ -84,6 +95,8 @@ public final class Core {
 
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new MinimalFormatter());
+			// Sound Operator
+			sm = SoundManager.getInstance();
 
 			LOGGER.addHandler(fileHandler);
 			LOGGER.addHandler(consoleHandler);
@@ -112,8 +125,8 @@ public final class Core {
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0);
-
+			// Add playtime parameter - Soomin Lee / TeamHUD
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0);
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -125,7 +138,16 @@ public final class Core {
 				break;
 			case 2:
 				// Game & score.
+				LOGGER.info("Starting inGameBGM");
+				// Sound Operator
+				sm.playES("start_button_ES");
+				sm.playBGM("inGame_bgm");
+
 				do {
+					// Record the start time
+					// Ctrl-S
+					long startTime = System.currentTimeMillis();
+
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
@@ -141,11 +163,18 @@ public final class Core {
 
 					gameState = ((GameScreen) currentScreen).getGameState();
 
+					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0), gameState.getGem());
+							gameState.getShipsDestroyed(),
+							// Ctrl-S
+							Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getLevel(),
+								gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(),
+								startTime,
+								System.currentTimeMillis()),
+							gameState.getTime(), gameState.getGem());
 
 					// Show receiptScreen
 					// If it is not the last round and the game is not over
@@ -162,6 +191,10 @@ public final class Core {
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
+
+				LOGGER.info("Stop InGameBGM");
+				// Sound Operator
+				sm.stopAllBGM();
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " score screen at " + FPS + " fps, with a score of "
@@ -260,6 +293,12 @@ public final class Core {
 		return new Cooldown(milliseconds, variance);
 	}
 
+	/**
+	 * Controls access to the currency manager.
+	 *
+	 * @return Application currency manager.
+	 */
+	// Team-Ctrl-S(Currency)
 	public static CurrencyManager getCurrencyManager() {
 		return CurrencyManager.getInstance();
 	}

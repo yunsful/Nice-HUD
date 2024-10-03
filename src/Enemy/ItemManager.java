@@ -3,12 +3,16 @@ package Enemy;
 import engine.Core;
 import entity.EnemyShip;
 import entity.Ship;
+import inventory_develop.Bomb;
 import screen.GameScreen;
 import engine.DrawManager;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
+
+//import inventory_develop.Bomb;
+import inventory_develop.ItemBarrierAndHeart;
 
 
 public class ItemManager {
@@ -19,11 +23,19 @@ public class ItemManager {
     private GameScreen gameScreen;
     protected Logger logger = Core.getLogger();
     private Set<Item> recyclableItems = new HashSet<>();
+//    private Bomb bomb = new Bomb();
+    private ItemBarrierAndHeart Item2;
+    private Ship ship;
+    private PlayerGrowth growth;
 
-    public ItemManager(int screenHeight, DrawManager drawManager) {
+    public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
         this.items = new HashSet<>();
         this.screenHeight = screenHeight;
         this.drawManager = drawManager;
+        this.gameScreen = gameScreen;
+        this.ship = gameScreen.getShip();       // Team Inventory
+        this.growth = ship.getPlayerGrowth();
+        this.Item2 = gameScreen.getItem();
     }
 
     public void cleanItems() {
@@ -50,18 +62,41 @@ public class ItemManager {
 
     public void dropItem(EnemyShip enemyShip, double probability, int enemyship_type) {
         if(Math.random() < probability) {
-            Item item = ItemPool.getBullet(enemyShip.getPositionX(), enemyShip.getPositionY(), 5, enemyship_type);
+            Item item = ItemPool.getItem(enemyShip.getPositionX(), enemyShip.getPositionY(), 3, enemyship_type);
             this.items.add(item);
         }
     }
-    public void addItemRecycle(Item item) {
-        if(item != null) {
-            recyclableItems.add(item);
-            this.logger.info("get item");
+
+    // team Inventory
+    public void OperateItem(Item item) {
+        if(item!= null) {
+
+            DrawManager.SpriteType whatItem = item.getSpriteType();
+
+            switch (whatItem) {     // Operates according to the SpriteType of the item.
+                case ItemBomb:
+                    break;
+                case ItemBarrier:
+                    Item2.activatebarrier();
+                    break;
+                case ItemHeart:
+                    Item2.activeheart(gameScreen, ship, growth);
+                    break;
+            }
+
+            addItemRecycle(item);
         }
     }
+
+    public void addItemRecycle(Item item) {
+        recyclableItems.add(item);
+        String itemLog = item.getSpriteType().toString().toLowerCase().substring(4);
+        this.logger.info("get " + itemLog + " item");   // Change log for each item
+    }
+
     public void removeAllReItems(){
         this.items.removeAll(recyclableItems);
         ItemPool.recycle(recyclableItems);
     }
+
 }

@@ -14,6 +14,7 @@ import Enemy.PlayerGrowth;
 // Import NumberOfBullet class
 //import inventory_develop.NumberOfBullet;
 // Import ShipStatus class
+import inventory_develop.ItemBarrierAndHeart;
 import inventory_develop.ShipStatus;
 /**
  * Implements a ship, to be controlled by the player.
@@ -38,6 +39,8 @@ public class Ship extends Entity {
 	private PlayerGrowth growth;
 	/** ShipStaus instance*/
 	private ShipStatus shipStatus;
+	/** Item */
+	private ItemBarrierAndHeart item;
 	/** NumberOfBullet instance*/
 //	private NumberOfBullet NBPool = new NumberOfBullet();
 
@@ -107,7 +110,7 @@ public class Ship extends Entity {
 //		return false;
 //	}
 		if (this.shootingCooldown.checkFinished()) {
-      
+
 // 			this.shootingCooldown.reset();
 // 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
 // 					positionY, BULLET_SPEED));
@@ -204,4 +207,8 @@ public class Ship extends Entity {
 	public final double getAttackSpeed() {
 		return 1000.0 / SHOOTING_INTERVAL;
 	}
+
+	public PlayerGrowth getPlayerGrowth() {
+		return growth;
+	}	// Team Inventory(Item)
 }

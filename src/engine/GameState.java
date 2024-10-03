@@ -11,13 +11,13 @@ public class GameState {
 	/** Current game level. */
 	private int level;
 	/** Current score. */
-	public static int score; // CLOVER Dongjun Suh : Changed score from private to public for usage in achievement
+	public static int score; // TEAM CLOVER : Changed score from private to public for usage in achievement
 	/** Lives currently remaining. */
-	public static int livesRemaining; // CLOVER Dongjun Suh : Changed livesRemaining from private to public for usage in achievement
+	public static int livesRemaining; // TEAM CLOVER : Changed livesRemaining from private to public for usage in achievement
 	/** Bullets shot until now. */
 	private int bulletsShot;
 	/** Ships destroyed until now. */
-	private int shipsDestroyed;
+	public static int shipsDestroyed; // TEAM CLOVER : Changed shipsDestroyed from private to public for usage in achievement
 	/** Current currency **/
 	// Team-Ctrl-S(Currency)
 	private int currency;
@@ -47,8 +47,12 @@ public class GameState {
 		this.currency = currency; // Team-Ctrl-S(Currency)
 	}
 
-	public static int livesRemaining() { // CLOVER DongjunSuh : Added public static for achievement
+	// TEAM CLOVER : Added two static below
+	public static int livesRemaining() {
 		return livesRemaining;
+	}
+	public static int shipsDestroyed() {
+		return shipsDestroyed;
 	}
 
 	/**

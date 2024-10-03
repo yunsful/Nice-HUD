@@ -16,14 +16,16 @@ public class Achievement {
     private int requiredKills;
     private int requiredScore;
     private int requiredStages;
+    private int requiredLives;
+    private int requiredFastKills;
     private boolean isCompleted;
-    private AchievementType type;
+    private AchievementType achievementType;
 
     public Achievement(String achievementName, String achievementDescription, int requiredValue, AchievementType type) {
         this.achievementName = achievementName;
         this.achievementDescription = achievementDescription;
         this.isCompleted = false;
-        this.type = type;
+        this.achievementType = type;
 
         // Assign values to appropriate fields based on type
         switch (type) {
@@ -38,13 +40,28 @@ public class Achievement {
             case TRIALS:
                 this.requiredStages = requiredValue;
                 break;
+            case FASTKILL:
+                this.requiredFastKills = requiredValue;
+                break;
+            case LIVES:
+                this.requiredLives = requiredValue;
+                break;
             default:
                 throw new IllegalArgumentException("Unsupported AchievementType: " + type);
         }
     }
 
+    public void logCompleteAchievement() {
+        this.isCompleted = true;
+        System.out.println("Achievement completed: " + achievementName);
+    }
+
+    public boolean isComplete() {
+        return isCompleted;
+    }
+
     public AchievementType getType() {
-        return type;
+        return achievementType;
     }
 
     public int getRequiredScore() {
@@ -71,23 +88,43 @@ public class Achievement {
         return isCompleted;
     }
 
-    public boolean checkKillConditions(int currentKills) {
-        if (this.type == AchievementType.KILLS || this.type == AchievementType.KILLSTREAKS) {
-            return currentKills >= requiredKills;
+    public boolean checkKillConditions(Achievement achievement, int currentKills) {
+        System.out.println("Checking kill conditions for achievement: " + achievement.getAchievementName());
+        if (achievement.getType() == Achievement.AchievementType.KILLS || achievement.getType() == Achievement.AchievementType.KILLSTREAKS) {
+            System.out.println("Current kills: " + currentKills + ", Required kills: " + achievement.getRequiredKills());
+            return currentKills >= achievement.getRequiredKills();
         }
         return false;
     }
 
-    public boolean checkStageConditions(int currentStages) {
-        if (this.type == AchievementType.STAGE || this.type == AchievementType.TRIALS) {
-            return currentStages >= requiredStages;
+    public boolean checkStageConditions(Achievement achievement, int currentStages) {
+        System.out.println("Checking stage conditions for achievement: " + achievement.getAchievementName());
+        if (achievement.getType() == Achievement.AchievementType.STAGE || achievement.getType() == Achievement.AchievementType.TRIALS) {
+            System.out.println("Current stages: " + currentStages + ", Required stages: " + achievement.getRequiredStages());
+            return currentStages >= achievement.getRequiredStages();
         }
         return false;
     }
 
-    public boolean checkScoreConditions(int currentScore) {
-        if (this.type == AchievementType.SCORE) {
-            return currentScore >= requiredScore;
+    public boolean checkScoreConditions(Achievement achievement, int currentScore) {
+        System.out.println("Checking score conditions for achievement: " + achievement.getAchievementName());
+        if (achievement.getType() == Achievement.AchievementType.SCORE) {
+            System.out.println("Current score: " + currentScore + ", Required score: " + achievement.getRequiredScore());
+            return currentScore >= achievement.getRequiredScore();
+        }
+        return false;
+    }
+
+    public boolean checkLivesCondition(int currentLives) {  // LIVES 업적을 위한 체크 함수 추가
+        if (this.achievementType == AchievementType.LIVES) {
+            return currentLives >= requiredLives;
+        }
+        return false;
+    }
+
+    public boolean checkFastKillConditions(int currentFastKills) {
+        if (this.achievementType == AchievementType.FASTKILL) {
+            return currentFastKills >= requiredFastKills;
         }
         return false;
     }

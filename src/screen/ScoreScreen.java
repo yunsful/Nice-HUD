@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import clove.Statistics; //Team Clove
 import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
@@ -50,6 +51,10 @@ public class ScoreScreen extends Screen {
 	/** User's Final Reached Level */ //Team Clove
 	private int level;
 
+	private Statistics statistics; //Team Clove
+
+	private long playTime; //Team Clove
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -77,6 +82,7 @@ public class ScoreScreen extends Screen {
 		this.selectionCooldown.reset();
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.level = gameState.getLevel(); //Team Clove
+		this.statistics = new Statistics(); //Team Clove
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -117,6 +123,7 @@ public class ScoreScreen extends Screen {
 					saveScore();
 				}
 				saveCurrency(); // Team-Ctrl-S(Currency)
+				saveStatistics(); //Team Clove
 			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 				// Play again.
 				this.returnCode = 2;
@@ -125,6 +132,7 @@ public class ScoreScreen extends Screen {
 					saveScore();
 				}
 				saveCurrency(); // Team-Ctrl-S(Currency)
+				saveStatistics(); //Team Clove
 			}
 
 			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
@@ -161,15 +169,32 @@ public class ScoreScreen extends Screen {
 	 * Saves the score as a high score.
 	 */
 	private void saveScore() {
-		highScores.add(new Score(new String(this.name), score, bulletsShot, shipsDestroyed, level)); //Team Clove Fixed
+		highScores.add(new Score(new String(this.name), score)); //Team Clove Fixed
 		Collections.sort(highScores);
 		if (highScores.size() > MAX_HIGH_SCORE_NUM)
 			highScores.remove(highScores.size() - 1);
-
 		try {
 			Core.getFileManager().saveHighScores(highScores);
 		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
+		}
+	}
+
+	/**
+	 *  Saves the Player's Statistics
+	 */
+
+	private void saveStatistics(){
+		try{
+			Score conScore = new Score(bulletsShot, shipsDestroyed, level); //for userdata save
+			statistics.comHighestLevel(conScore.getLevel());
+			statistics.addBulletShot(conScore.getBulletsShot());
+			statistics.addShipsDestroyed(conScore.getShipsDestroyed());
+			statistics.comShipsDestructionStreak(0);
+			statistics.addPlayedGameNumber(1);
+			statistics.comClearAchievementNumber(0);
+		} catch (IOException e) {
+			logger.warning("Couldn't load Statistics!");
 		}
 	}
 

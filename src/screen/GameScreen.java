@@ -1,10 +1,12 @@
 package screen;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import Enemy.PiercingBullet;
+import clove.Statistics;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameSettings;
@@ -86,6 +88,10 @@ public class GameScreen extends Screen {
 	/** Check end-time*/
 	private long endTime;    //clove
 
+	private Statistics statistics; //Team Clove
+
+	private long playTime;	//Team Clove
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -119,6 +125,7 @@ public class GameScreen extends Screen {
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.scoreManager = new ScoreManager(this.level, this);    //clove
 		this.scoreManager.startGame();    //clove
+		this.statistics = new Statistics(); //Team Clove
 	}
 		/**
          * Initializes basic screen properties, and adds necessary elements.
@@ -232,10 +239,15 @@ public class GameScreen extends Screen {
 
 		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
 			this.endTime = System.currentTimeMillis();    //clove
-			long playTime = (this.endTime - this.startTime) / 1000;    //clove
+			this.playTime = (this.endTime - this.startTime) / 1000;    //clove
 			//this.logger.info("Final Playtime: " + playTime + " seconds");    //clove
+            try { //Team Clove
+                statistics.addTotalPlayTime(playTime);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
-			this.isRunning = false;
+            this.isRunning = false;
 		}
 	}
 

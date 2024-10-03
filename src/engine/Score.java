@@ -29,22 +29,30 @@ public class Score implements Comparable<Score> {
 	 *            Player name, three letters.
 	 * @param score
 	 *            Player score.
-	 * @param bulletsShot
-	 * 			  Number of Bullets shot.
-	 * @param shipsDestroyed
-	 *			  Number of Ships destroyed.
-	 * @param level
-	 * 			  Level the player has achieved.
 	 */
-	/*
-		Team Clove Fixed Constructor for Save UserData Variable
-		Additional Parameters
-		+ score, bulletShot, shipsDestroyed, level
-	*/
-	public Score(final String name, final int score, final int bulletsShot, final int shipsDestroyed, final int level) {
-		GameState gameState = new GameState(bulletsShot, shipsDestroyed, level);
+	public Score(final String name, final int score) {
 		this.name = name;
 		this.score = score;
+	}
+
+
+	/**
+	 * Constructor for Save UserData
+	 *
+	 * @param bulletsShot
+	 * 				Number of Fired Bullets
+	 * @param shipsDestroyed
+	 * 				Number of Destroyed Ships
+	 * @param level
+	 * 				Player Reached Level
+	 */
+	/*
+		Team Clove Create Constructor for Save UserData Variable
+		Additional Parameters
+		+ bulletShot, shipsDestroyed, level
+	*/
+	public Score(int bulletsShot, int shipsDestroyed, int level) {
+		GameState gameState = new GameState(bulletsShot, shipsDestroyed, level);
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.level = gameState.getLevel();

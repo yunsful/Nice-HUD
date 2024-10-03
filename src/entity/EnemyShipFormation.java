@@ -31,8 +31,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private static final double PROPORTION_C = 0.2;
 	/** Proportion of B-type ships. */
 	private static final double PROPORTION_B = 0.4;
-	/** Proportion of B-type ships. */
-	private static final double PROPORTION_EX = 0.1; // Edited by Enemy
 	/** Lateral speed of the formation. */
 	private static final int X_SPEED = 8;
 	/** Downwards speed of the formation. */
@@ -140,7 +138,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		for (List<EnemyShip> column : this.enemyShips) {
 			for (int i = 0; i < this.nShipsHigh; i++) {
-				if (shipCount == 1) //Edited by Enemy
+				if (shipCount == nShipsHigh-2) //Edited by Enemy
 					spriteType = SpriteType.ExplosiveEnemyShip1;
 				else if (i / (float) this.nShipsHigh < PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;
@@ -447,7 +445,28 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		for (List<EnemyShip> column : this.enemyShips)
 			for (int i = 0; i < column.size(); i++) {
 				if (column.get(i).equals(destroyedShip)) {
-					HpEnemyShip.hit(destroyedShip);
+					switch (destroyedShip.spriteType){
+						case SpriteType.ExplosiveEnemyShip1:
+						case SpriteType.ExplosiveEnemyShip2:
+							HpEnemyShip.hit(destroyedShip);
+                            for (List<EnemyShip> enemyShip : this.enemyShips)
+                                if (enemyShip.size() > i
+										&& !enemyShip.get(i).isDestroyed()
+										&& enemyShip.get(i).spriteType != SpriteType.ExplosiveEnemyShip1
+										&& enemyShip.get(i).spriteType != SpriteType.ExplosiveEnemyShip2)
+                                    this._destroy(enemyShip.get(i));
+						    for (int j = 0; j < column.size(); j++)
+							    if (!column.get(j).isDestroyed()
+									    && column.get(j).spriteType != SpriteType.ExplosiveEnemyShip1
+									    && column.get(j).spriteType != SpriteType.ExplosiveEnemyShip2)
+								    this._destroy(column.get(j));
+
+						   break;
+						default:
+							if (!destroyedShip.isDestroyed())
+								HpEnemyShip.hit(destroyedShip);
+							break;
+					}
 					if (column.get(i).getHp() > 0) {
 						this.logger.info("Enemy ship lost 1 HP in ("
 								+ this.enemyShips.indexOf(column) + "," + i + ")");

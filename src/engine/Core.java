@@ -151,9 +151,8 @@ public final class Core {
 					// If it is not the last round and the game is not over
 					// Ctrl-S
 					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
-						boolean hitrateBonus = (gameState.getShipsDestroyed() / (float) gameState.getBulletsShot()) > 0.8; // hitrateBonus condition
 						LOGGER.info("loading receiptScreen");
-						currentScreen = new ReceiptScreen(width, height, FPS, gameState.getScore(), gameState.getCurrency(), hitrateBonus);
+						currentScreen = new ReceiptScreen(width, height, FPS, gameState.getScore(), gameState.getCurrency(), (gameState.getShipsDestroyed() / (float) gameState.getBulletsShot()));
 
 						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " receipt screen at " + FPS + " fps.");

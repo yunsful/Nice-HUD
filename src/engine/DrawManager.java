@@ -571,11 +571,11 @@ public final class DrawManager {
 	 * 			  currency that player earned
 	 */
 
-	public void drawReceipt(final Screen screen, final int score, final int currency, boolean hitrateBonus) {
+	public void drawReceipt(final Screen screen, final int score, final int currency, float hitrate) {
 		String stageScoreString = "Stage Score";
 		String stageCoinString = "Coins Obtained";
 		String instructionsString = "Press Space to Continue";
-		String hitrateBonusString = "Hitrate Bonus!! : 20%";
+		String hitrateBonusString = "Hitrate Bonus!! : +30%";
 		//draw Score part
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageScoreString, screen.getHeight() / 8);
@@ -588,7 +588,12 @@ public final class DrawManager {
 		drawCenteredBigString(screen, Integer.toString(currency), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
 
 		//draw hitrate Bonus part
-		if (hitrateBonus) {
+		if (hitrate > 0.9) {
+			backBufferGraphics.setColor(Color.LIGHT_GRAY);
+			drawCenteredRegularString(screen, hitrateBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 7);
+		}
+		else if (hitrate > 0.8) {
+			hitrateBonusString = "Hitrate Bonus!! : +20%";
 			backBufferGraphics.setColor(Color.LIGHT_GRAY);
 			drawCenteredRegularString(screen, hitrateBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 7);
 		}

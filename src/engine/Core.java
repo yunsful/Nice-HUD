@@ -152,7 +152,7 @@ public final class Core {
 					// Ctrl-S
 					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
 						LOGGER.info("loading receiptScreen");
-						currentScreen = new ReceiptScreen(width, height, FPS, gameState.getScore(), gameState.getCurrency(), (gameState.getShipsDestroyed() / (float) gameState.getBulletsShot()));
+						currentScreen = new ReceiptScreen(width, height, FPS, gameState);
 
 						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 								+ " receipt screen at " + FPS + " fps.");

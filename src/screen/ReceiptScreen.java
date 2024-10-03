@@ -1,5 +1,7 @@
 package screen;
 
+import engine.GameState;
+
 import java.awt.event.KeyEvent;
 
 /**
@@ -9,10 +11,8 @@ import java.awt.event.KeyEvent;
  * 
  */
 public class ReceiptScreen extends Screen {
-
-	private final int score;
-	private final int currency;
-	private final float hitrate;
+	
+	private final GameState gameState;
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 *
@@ -23,12 +23,10 @@ public class ReceiptScreen extends Screen {
 	 * @param fps
 	 *            Frames per second, frame rate at which the game is run.
 	 */
-	public ReceiptScreen(final int width, final int height, final int fps, final int score, final int currency, float hitrate) {
+	public ReceiptScreen(final int width, final int height, final int fps, final GameState gameState) {
 		super(width, height, fps);
 
-		this.score = score;
-		this.currency = currency;
-		this.hitrate = hitrate;
+		this.gameState = gameState;
 
 		this.returnCode = 2;
 	}
@@ -62,7 +60,7 @@ public class ReceiptScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		drawManager.drawReceipt(this, this.score, this.currency, this.hitrate);
+		drawManager.drawReceipt(this, this.gameState);
 
 		drawManager.completeDrawing(this);
 	}

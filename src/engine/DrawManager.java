@@ -571,31 +571,57 @@ public final class DrawManager {
 	 * 			  currency that player earned
 	 */
 
-	public void drawReceipt(final Screen screen, final int score, final int currency, float hitrate) {
+	public void drawReceipt(final Screen screen, final GameState gameState) {
 		String stageScoreString = "Stage Score";
 		String stageCoinString = "Coins Obtained";
-		String instructionsString = "Press Space to Continue";
+		String instructionsString = "Press Space to Continue to get more coin!";
 		String hitrateBonusString = "Hitrate Bonus!! : +30%";
+		String timeBonusString = "Time Bonus!!";
 		//draw Score part
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageScoreString, screen.getHeight() / 8);
 		backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredBigString(screen, Integer.toString(score), screen.getHeight() / 8 + fontBigMetrics.getHeight() / 2 * 3);
+		drawCenteredBigString(screen, Integer.toString(gameState.getScore()), screen.getHeight() / 8 + fontBigMetrics.getHeight() / 2 * 3);
 		//draw Coin part
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageCoinString, screen.getHeight() / 3);
 		backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredBigString(screen, Integer.toString(currency), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
+		drawCenteredBigString(screen, Integer.toString(gameState.getCurrency()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
 
-		//draw hitrate Bonus part
-		if (hitrate > 0.9) {
+		//draw HitRate Bonus part
+		float hitRate = (gameState.getShipsDestroyed() / (float) gameState.getBulletsShot()); // Calculate HitRate
+		if (hitRate > 0.9) {
 			backBufferGraphics.setColor(Color.LIGHT_GRAY);
 			drawCenteredRegularString(screen, hitrateBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 7);
 		}
-		else if (hitrate > 0.8) {
+		else if (hitRate > 0.8) {
 			hitrateBonusString = "Hitrate Bonus!! : +20%";
 			backBufferGraphics.setColor(Color.LIGHT_GRAY);
 			drawCenteredRegularString(screen, hitrateBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 7);
+		}
+		//draw Time Bonus part
+		int time = 20;
+		int num = (time <= 50) ? 0 : (time > 50 && time <= 80) ? 1 : (time > 80 && time <= 100) ? 2 : 3;
+		switch (num) {
+			case 0:
+				timeBonusString = "Time Bonus!! : +50";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
+				break;
+			case 1:
+				timeBonusString = "Time Bonus!! : +30";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
+				break;
+			case 2:
+				timeBonusString = "Time Bonus!! : +10";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
+				break;
+			case 3:
+				timeBonusString = "You missed TimeBonus! Try harder!";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
 		}
 
 		backBufferGraphics.setColor(Color.GRAY);

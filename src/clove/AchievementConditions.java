@@ -75,7 +75,8 @@ public class AchievementConditions {
         }
     }
 
-    public void onScoreAchievement(int currentScore) {
+    public void onScoreAchievement() {
+        int currentScore = GameState.score;
         for (Achievement achievement : scoreAchievements) {
             if (currentScore >= achievement.getRequiredScore() && !achievement.isCompleted()) {
                 completeAchievement(achievement);

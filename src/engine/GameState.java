@@ -11,9 +11,9 @@ public class GameState {
 	/** Current game level. */
 	private int level;
 	/** Current score. */
-	private int score;
+	public static int score; // CLOVER Dongjun Suh : Changed score from private to public for usage in achievement
 	/** Lives currently remaining. */
-	public static int livesRemaining; // CLOVER Dongjun Suh : Changed livesRemaining from public to private for usage in achievement
+	public static int livesRemaining; // CLOVER Dongjun Suh : Changed livesRemaining from private to public for usage in achievement
 	/** Bullets shot until now. */
 	private int bulletsShot;
 	/** Ships destroyed until now. */

@@ -85,7 +85,6 @@ public class GameScreen extends Screen {
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
 	/** Shield item */
-	private TemporaryShield shield;
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */

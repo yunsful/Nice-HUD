@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
+import CtrlS.RoundState;
 import Sound_Operator.SoundManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
@@ -121,6 +122,7 @@ public final class Core {
 		gameSettings.add(SETTINGS_LEVEL_7);
 		
 		GameState gameState;
+		RoundState roundState;
 
 		int returnCode = 1;
 		do {
@@ -143,15 +145,13 @@ public final class Core {
 				sm.playBGM("inGame_bgm");
 
 				do {
-					// Record the start time
-					// Ctrl-S
-					long startTime = System.currentTimeMillis();
-
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
 							&& gameState.getLivesRemaining() < MAX_LIVES;
-					
+
+					GameState prevState = gameState;
+
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
 							bonusLife, width, height, FPS);
@@ -162,18 +162,20 @@ public final class Core {
 
 					gameState = ((GameScreen) currentScreen).getGameState();
 
+					roundState = new RoundState(prevState, gameState);
+
 					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(),
-							// Ctrl-S
-							Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getLevel(),
-								gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(),
-								startTime,
-								System.currentTimeMillis()),
-							gameState.getTime(), gameState.getGem());
+							gameState.getTime(),
+							gameState.getCurrency() + roundState.getRoundCurrency(),
+							gameState.getGem());
+					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
+					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
+					LOGGER.info("Round Time: " + roundState.getRoundTime());
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

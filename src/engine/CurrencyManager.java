@@ -55,17 +55,21 @@ public final class CurrencyManager {
             return false;
         }
     }
-
-    public int calculateCurrency(int score, float hitRate, long
+    // Written by Ctrl+S
+    public int calculateCurrency(int score, int level, float hitRate, long
             startTime, long endTime) {
         //
-
-        int currency = score / 10;
+        int baseCurrency = score / 10;
+        int levelBonus = baseCurrency * level;
+        int currency = baseCurrency + levelBonus;
         //
 
-        if (hitRate > 0.8) {
+        if (hitRate > 0.9) {
+            currency += (int) (currency * 0.3); // 30% 보너스 지급
+            Core.getLogger().info("hitRate bonus occurs (30%).");
+        } else if (hitRate > 0.8) {
             currency += (int) (currency * 0.2); // 20% 보너스 지급
-            Core.getLogger().info("hitRate bonus occurs.");
+            Core.getLogger().info("hitRate bonus occurs (20%).");
         }
         //
 

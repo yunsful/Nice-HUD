@@ -155,7 +155,7 @@ public final class Core {
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(),
 							// Ctrl-S
-							Core.getCurrencyManager().calculateCurrency(gameState.getScore(),
+							Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getLevel(),
 								gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(),
 								startTime,
 								System.currentTimeMillis()));

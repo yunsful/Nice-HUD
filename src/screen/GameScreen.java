@@ -72,6 +72,9 @@ public class GameScreen extends Screen {
 	private boolean bonusLife;
 	/** Total currency **/
 	private int currency;
+	/** Total gem **/
+	// Team-Ctrl-S(Currency)
+	private int gem;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -104,6 +107,7 @@ public class GameScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.currency = gameState.getCurrency();
+		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -339,6 +343,6 @@ public class GameScreen extends Screen {
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.currency);
+				this.bulletsShot, this.shipsDestroyed, this.currency, this.gem);
 	}
 }

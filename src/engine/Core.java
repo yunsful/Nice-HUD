@@ -112,7 +112,7 @@ public final class Core {
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0);
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0);
 
 			switch (returnCode) {
 			case 1:
@@ -145,7 +145,7 @@ public final class Core {
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0));
+							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0), gameState.getGem());
 
 					// Show receiptScreen
 					// If it is not the last round and the game is not over

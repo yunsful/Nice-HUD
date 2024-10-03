@@ -17,6 +17,7 @@ public class Item extends Entity {
 
     public final void setSprite() {
         double rdItem = Math.random();
+        shipStatus.loadProbability();
 
         // Import odds from properties file for easy balance patches
         if (rdItem < shipStatus.getBomb_probability()) { // 0% - Fixing error

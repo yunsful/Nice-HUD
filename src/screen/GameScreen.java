@@ -17,7 +17,10 @@ import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
+// shield and heart recovery
 import inventory_develop.ItemBarrierAndHeart;
+// Sound Operator
+import Sound_Operator.SoundManager;
 
 
 /**
@@ -81,6 +84,8 @@ public class GameScreen extends Screen {
 	private boolean bonusLife;
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
+	/** Shield item */
+	private TemporaryShield shield;
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */
@@ -89,6 +94,9 @@ public class GameScreen extends Screen {
 	private int playTime = 0;
 	/** Play time on previous levels */
 	private int playTimePre = 0;
+
+	// Sound Operator
+	private static SoundManager sm;
 
 
 	/**
@@ -212,6 +220,9 @@ public class GameScreen extends Screen {
 					&& this.enemyShipSpecialCooldown.checkFinished()) {
 				this.enemyShipSpecial = new EnemyShip();
 				this.enemyShipSpecialCooldown.reset();
+				//Sound Operator
+				sm = SoundManager.getInstance();
+				sm.playES("UFO_come_up");
 				this.logger.info("A special ship appears");
 			}
 			if (this.enemyShipSpecial != null
@@ -373,6 +384,20 @@ public class GameScreen extends Screen {
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
 								+ " lives remaining.");
+
+						// Sound Operator
+						if (this.lives == 0) {
+							sm = SoundManager.getInstance();
+							sm.playES("ally_airship_destroy_explosion");
+							new Thread(() -> {
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									throw new RuntimeException(e);
+								}
+								sm.playES("ally_airship_destroy_die");
+							}).start();
+						}
 					}
 				}
 			} else {

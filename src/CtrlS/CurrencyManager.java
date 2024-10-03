@@ -59,51 +59,6 @@ public final class CurrencyManager {
             return false;
         }
     }
-    // Team-Ctrl-S(Currency)
-    public int calculateCurrency(GameState prevState, GameState currState) {
-        // Score gained this round
-        int scoreDiff = currState.getScore() - prevState.getScore();
-
-        // hitRate of this round
-        int bulletsShotDiff = currState.getBulletsShot() - prevState.getBulletsShot();
-        int shipsDestroyedDiff = currState.getShipsDestroyed() - prevState.getShipsDestroyed();
-        float hitRate = bulletsShotDiff / (float) shipsDestroyedDiff;
-
-        int baseCurrency = scoreDiff / 10;
-        int levelBonus = baseCurrency * currState.getLevel();
-        int currency = baseCurrency + levelBonus;
-
-        if (hitRate > 0.9) {
-            currency += (int) (currency * 0.3); // 30% 보너스 지급
-            Core.getLogger().info("hitRate bonus occurs (30%).");
-        } else if (hitRate > 0.8) {
-            currency += (int) (currency * 0.2); // 20% 보너스 지급
-            Core.getLogger().info("hitRate bonus occurs (20%).");
-        }
-
-        // Round clear time in seconds
-        // DEBUGGING NEEDED(playTime)
-        long timeDifferenceInSeconds = (currState.getTime() - prevState.getTime()) / 1000;
-
-        int timeBonus = 0;
-
-        /*
-          clear time   : 0 ~ 50    : +50
-                       : 51 ~ 80   : +30
-                       : 81 ~ 100  : +10
-                       : 101 ~     : 0
-         */
-        if (timeDifferenceInSeconds <= 50) {
-            timeBonus = 50;
-        } else if (timeDifferenceInSeconds <= 80) {
-            timeBonus = 30;
-        } else if (timeDifferenceInSeconds <= 100) {
-            timeBonus = 10;
-        }
-        currency += timeBonus;
-
-        return currency;
-    }
 
     public int getCurrency() throws IOException {
         return fileManager.loadCurrency();

@@ -18,7 +18,7 @@ public class NumberOfBullet{
     /** Bullet levels */
     private static int bulletLevel = 2;
     /** PiercingBullet levles */
-    private static int piercingbulletLevel = 2;
+    private static int piercingbulletLevel = 1;
 
     /**
      * Constructor

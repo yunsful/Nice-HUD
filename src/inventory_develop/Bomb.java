@@ -2,9 +2,12 @@ package inventory_develop;
 
 import engine.DrawManager;
 import entity.EnemyShip;
+import entity.EnemyShipFormation;
 import entity.Entity;
 import java.awt.Color;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 public class Bomb{
@@ -16,61 +19,111 @@ public class Bomb{
     // Bomb를 먹을 때 true로 전환할 예정
     private static boolean CanShoot = false;
 
+    private static Set<EnemyShip> DestroyedshipByBomb = new HashSet<>();    // for dicide next shooter
+
     public Bomb() {
     }
 
-    public static int destroyByBomb(List<List<EnemyShip>> enemyShips, EnemyShip destroyedShip, Logger logger) {
-        int cont = 0;   // number of destroyed enemy by Bomb
+    public static int[] destroyByBomb(List<List<EnemyShip>> enemyShips, EnemyShip destroyedShip, Logger logger) {
+        int count = 0;   // number of destroyed enemy by Bomb
+        int point = 0;  // point of destroyed enemy by Bomb
 
         for (List<EnemyShip> column : enemyShips)
             for (int i = 0; i < column.size(); i++) {
                 if (column.get(i).equals(destroyedShip)) {
+
+                    // middle
+                    DestroyedshipByBomb.add(column.get(i));
+                    point += column.get(i).getPointValue();
                     column.get(i).destroy();
+                    count++;
 
                     int columnIndex = enemyShips.indexOf(column);
 
-                    // 좌측 함선 파괴
+                    // left
                     if (columnIndex > 0) {
                         List<EnemyShip> leftColumn = enemyShips.get(columnIndex - 1);
                         if (i < leftColumn.size()) {
+                            DestroyedshipByBomb.add(leftColumn.get(i));
+                            point += leftColumn.get(i).getPointValue();
                             leftColumn.get(i).destroy();
-                            cont++;
+                            count++;
                             logger.info("Destroyed left ship at (" + (columnIndex - 1) + "," + i + ")");
                         }
                     }
 
-                    // 우측 함선 파괴
+                    // right
                     if (columnIndex < enemyShips.size() - 1) {
                         List<EnemyShip> rightColumn = enemyShips.get(columnIndex + 1);
                         if (i < rightColumn.size()) {
+                            DestroyedshipByBomb.add(rightColumn.get(i));
+                            point += rightColumn.get(i).getPointValue();
                             rightColumn.get(i).destroy();
-                            cont++;
+                            count++;
                             logger.info("Destroyed right ship at (" + (columnIndex + 1) + "," + i + ")");
                         }
                     }
 
-                    // 상단 함선 파괴
+                    // top
                     if (i > 0) {
                         List<EnemyShip> currentColumn = enemyShips.get(columnIndex);
                         if (i - 1 < currentColumn.size()) {
+                            DestroyedshipByBomb.add(currentColumn.get(i - 1));
+                            point += currentColumn.get(i - 1).getPointValue();
                             currentColumn.get(i - 1).destroy();
-                            cont++;
+                            count++;
                             logger.info("Destroyed top ship at (" + columnIndex + "," + (i - 1) + ")");
                         }
                     }
 
-                    // 하단 우주선 파괴
+                    // bottom
                     List<EnemyShip> currentColumn = enemyShips.get(columnIndex);
                     if (i + 1 < currentColumn.size()) {
+                        DestroyedshipByBomb.add(currentColumn.get(i + 1));
+                        point += currentColumn.get(i + 1).getPointValue();
                         currentColumn.get(i + 1).destroy();
-                        cont++;
+                        count++;
                         logger.info("Destroyed bottom ship at (" + columnIndex + "," + (i + 1) + ")");
                     }
                 }
             }
-        setIsbomb(false);
-        return cont;
+
+        Bomb.setIsbomb(false);
+        int[] returnValue = {count, point};
+
+        return returnValue;
     }
+
+    public static void nextShooterByBomb(List<List<EnemyShip>> enemyShips, List<EnemyShip> shooters,
+                                          EnemyShipFormation enemyShipFormation, Logger logger) {
+
+        for (EnemyShip destroyedByBomb : DestroyedshipByBomb)
+
+            if (destroyedByBomb.isDestroyed()) {
+                if (shooters.contains(destroyedByBomb)) {
+                    int destroyedShipIndex = shooters.indexOf(destroyedByBomb);
+                    int destroyedShipColumnIndex = -1;
+
+                    for (List<EnemyShip> column : enemyShips)
+                        if (column.contains(destroyedByBomb)) {
+                            destroyedShipColumnIndex = enemyShips.indexOf(column);
+                            break;
+                        }
+
+                    EnemyShip nextShooter = enemyShipFormation.getNextShooter(enemyShips
+                            .get(destroyedShipColumnIndex));
+
+                    if (nextShooter != null)
+                        shooters.set(destroyedShipIndex, nextShooter);
+                    else {
+                        shooters.remove(destroyedShipIndex);
+                        logger.info("Shooters list reduced to "
+                                + shooters.size() + " members.");
+                    }
+                }
+            }
+    }
+
 
     public static boolean getIsBomb() {
         return IsBomb;

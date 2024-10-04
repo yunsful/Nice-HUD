@@ -448,11 +448,14 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * @param destroyedShip
 	 *            Ship to be hit
 	 */
-	public final void _destroy(final EnemyShip destroyedShip) {// Edited by Enemy team
-		int cont = 0;	// number of destroyed enemy
+	public final int[] _destroy(final Bullet bullet, final EnemyShip destroyedShip) {// Edited by Enemy team and Inventory team
+		int count = 0;	// number of destroyed enemy
+		int point = 0;  // point of destroyed enemy
 
-		if (Bomb.getIsBomb()) {
-			cont = Bomb.destroyByBomb(enemyShips, destroyedShip, this.logger);
+		if (bullet.getSpriteType() == SpriteType.ItemBomb) {	// team Inventory
+			int[] temp = Bomb.destroyByBomb(enemyShips, destroyedShip, this.logger);
+			count = temp[0];
+			point = temp[1];
 		} else {
 			for (List<EnemyShip> column : this.enemyShips)
 				for (int i = 0; i < column.size(); i++) {
@@ -465,15 +468,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 						else{
 							this.logger.info("Destroyed ship in ("
 									+ this.enemyShips.indexOf(column) + "," + i + ")");
-
+							point = column.get(i).getPointValue();
+							count = 1;
 						}
 					}
 				}
-			cont = 1;	// only 1 enemy
 		}
 
 		// Updates the list of ships that can shoot the player.
-		if (destroyedShip.isDestroyed()) {
+		if (bullet.getSpriteType() == SpriteType.ItemBomb) {	// team Inventory
+			Bomb.nextShooterByBomb(enemyShips, shooters, this, logger);
+
+		} else if (destroyedShip.isDestroyed()) {
 			if (this.shooters.contains(destroyedShip)) {
 				int destroyedShipIndex = this.shooters.indexOf(destroyedShip);
 				int destroyedShipColumnIndex = -1;
@@ -494,10 +500,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 					this.logger.info("Shooters list reduced to "
 							+ this.shooters.size() + " members.");
 				}
+
 			}
-
-			this.shipCount--;
-
 		}
+		this.shipCount -= count;
+
+		int[] returnValue = {count, point};
+		return returnValue;
 	}
 }

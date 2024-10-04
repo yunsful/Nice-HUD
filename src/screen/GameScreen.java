@@ -7,10 +7,7 @@ import java.util.Set;
 import Enemy.*;
 import HUDTeam.Achievement;
 import HUDTeam.DrawManagerImpl;
-import engine.Cooldown;
-import engine.Core;
-import engine.GameSettings;
-import engine.GameState;
+import engine.*;
 import entity.Bullet;
 import entity.BulletPool;
 import entity.EnemyShip;
@@ -18,7 +15,7 @@ import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
 // shield and heart recovery
-import inventory_develop.ItemBarrierAndHeart;
+import inventory_develop.*;
 // Sound Operator
 import Sound_Operator.SoundManager;
 
@@ -236,7 +233,7 @@ public class GameScreen extends Screen {
 			this.enemyShipFormation.shoot(this.bullets);
 		}
 		//manageCollisions();
-		manageCollisions_add_tiem(); //by Enemy team
+		manageCollisions_add_item(); //by Enemy team
 		cleanBullets();
 		this.itemManager.cleanItems(); //by Enemy team
 		draw();
@@ -372,7 +369,7 @@ public class GameScreen extends Screen {
 	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
 	 */
 	//by Enemy team
-	private void manageCollisions_add_tiem() {
+	private void manageCollisions_add_item() {
 		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
 		for (PiercingBullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
@@ -403,11 +400,10 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						this.enemyShipFormation._destroy(enemyShip);
-						if(enemyShip.getHp() <= 0) {
-							this.score += enemyShip.getPointValue();
-							this.shipsDestroyed++;
-						}
+
+						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip);	// team Inventory
+						this.shipsDestroyed += CntAndPnt[0];
+						this.score += CntAndPnt[1];
 
 						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
 

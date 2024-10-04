@@ -7,26 +7,21 @@ import java.awt.Color;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Bomb extends Entity {
+public class Bomb{
 
     private int BombSpeed;
-    // Boob를 먹을 때 true로 전환할 예정
+
+    // Bomb를 먹을 때 true로 전환할 예정
     private static boolean IsBomb = false;
-    // Boob를 먹을 때 true로 전환할 예정
+    // Bomb를 먹을 때 true로 전환할 예정
+    private static boolean CanShoot = false;
 
-    private static boolean CanShoot = true;
-
-    public Bomb(final int positionX, final int positionY, final int speed) {
-         super(positionX, positionY, 9 * 2, 11 * 2, Color.BLACK);
-
-        this.BombSpeed = speed;
+    public Bomb() {
     }
 
-    public static boolean setBomb(){
-        return IsBomb;
-    }
+    public static int destroyByBomb(List<List<EnemyShip>> enemyShips, EnemyShip destroyedShip, Logger logger) {
+        int cont = 0;   // number of destroyed enemy by Bomb
 
-    public static void destroyByBomb(List<List<EnemyShip>> enemyShips, EnemyShip destroyedShip, Logger logger) {
         for (List<EnemyShip> column : enemyShips)
             for (int i = 0; i < column.size(); i++) {
                 if (column.get(i).equals(destroyedShip)) {
@@ -39,6 +34,7 @@ public class Bomb extends Entity {
                         List<EnemyShip> leftColumn = enemyShips.get(columnIndex - 1);
                         if (i < leftColumn.size()) {
                             leftColumn.get(i).destroy();
+                            cont++;
                             logger.info("Destroyed left ship at (" + (columnIndex - 1) + "," + i + ")");
                         }
                     }
@@ -48,6 +44,7 @@ public class Bomb extends Entity {
                         List<EnemyShip> rightColumn = enemyShips.get(columnIndex + 1);
                         if (i < rightColumn.size()) {
                             rightColumn.get(i).destroy();
+                            cont++;
                             logger.info("Destroyed right ship at (" + (columnIndex + 1) + "," + i + ")");
                         }
                     }
@@ -55,23 +52,24 @@ public class Bomb extends Entity {
                     // 상단 함선 파괴
                     if (i > 0) {
                         List<EnemyShip> currentColumn = enemyShips.get(columnIndex);
-                        currentColumn.get(i - 1).destroy();
-                        logger.info("Destroyed top ship at (" + columnIndex + "," + (i - 1) + ")");
+                        if (i - 1 < currentColumn.size()) {
+                            currentColumn.get(i - 1).destroy();
+                            cont++;
+                            logger.info("Destroyed top ship at (" + columnIndex + "," + (i - 1) + ")");
+                        }
                     }
 
                     // 하단 우주선 파괴
                     List<EnemyShip> currentColumn = enemyShips.get(columnIndex);
-                    if (i < currentColumn.size() - 1) {
+                    if (i + 1 < currentColumn.size()) {
                         currentColumn.get(i + 1).destroy();
+                        cont++;
                         logger.info("Destroyed bottom ship at (" + columnIndex + "," + (i + 1) + ")");
                     }
                 }
             }
-        removeBombItem();
-    }
-
-    public static void removeBombItem() {
-        IsBomb = false;
+        setIsbomb(false);
+        return cont;
     }
 
     public static boolean getIsBomb() {

@@ -361,9 +361,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 *            Ship to be destroyed.
 	 */
 	public final void destroy(final EnemyShip destroyedShip) {
-			if (Bomb.getIsBomb()) {
+			if (Bomb.getIsBomb()) {		// team Inventory
 				Bomb.destroyByBomb(enemyShips, destroyedShip, this.logger);
-			}else {
+			} else {
 				for (List<EnemyShip> column : this.enemyShips)
 					for (int i = 0; i < column.size(); i++)
 						if (column.get(i).equals(destroyedShip)) {
@@ -449,21 +449,28 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 *            Ship to be hit
 	 */
 	public final void _destroy(final EnemyShip destroyedShip) {// Edited by Enemy team
-		for (List<EnemyShip> column : this.enemyShips)
-			for (int i = 0; i < column.size(); i++) {
-				if (column.get(i).equals(destroyedShip)) {
-					HpEnemyShip.hit(destroyedShip);
-					if (column.get(i).getHp() > 0) {
-						this.logger.info("Enemy ship lost 1 HP in ("
-								+ this.enemyShips.indexOf(column) + "," + i + ")");
-					}
-					else{
-					this.logger.info("Destroyed ship in ("
-							+ this.enemyShips.indexOf(column) + "," + i + ")");
+		int cont = 0;	// number of destroyed enemy
 
+		if (Bomb.getIsBomb()) {
+			cont = Bomb.destroyByBomb(enemyShips, destroyedShip, this.logger);
+		} else {
+			for (List<EnemyShip> column : this.enemyShips)
+				for (int i = 0; i < column.size(); i++) {
+					if (column.get(i).equals(destroyedShip)) {
+						HpEnemyShip.hit(destroyedShip);
+						if (column.get(i).getHp() > 0) {
+							this.logger.info("Enemy ship lost 1 HP in ("
+									+ this.enemyShips.indexOf(column) + "," + i + ")");
+						}
+						else{
+							this.logger.info("Destroyed ship in ("
+									+ this.enemyShips.indexOf(column) + "," + i + ")");
+
+						}
 					}
 				}
-			}
+			cont = 1;	// only 1 enemy
+		}
 
 		// Updates the list of ships that can shoot the player.
 		if (destroyedShip.isDestroyed()) {

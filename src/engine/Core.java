@@ -10,12 +10,14 @@ import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
 import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
 import Sound_Operator.SoundManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
 import screen.Screen;
 import screen.TitleScreen;
+
 
 /**
  * Implements core game logic.
@@ -176,6 +178,19 @@ public final class Core {
 					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
 					LOGGER.info("Round Time: " + roundState.getRoundTime());
+
+					// Show receiptScreen
+					// If it is not the last round and the game is not over
+					// Ctrl-S
+					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
+						LOGGER.info("loading receiptScreen");
+						currentScreen = new ReceiptScreen(width, height, FPS, roundState, gameState);
+
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " receipt screen at " + FPS + " fps.");
+						frame.setScreen(currentScreen);
+						LOGGER.info("Closing receiptScreen.");
+					}
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

@@ -50,6 +50,8 @@ public class ScoreScreen extends Screen {
 	/** Total currency earned this game */
 	private int currency; // Team-Ctrl-S(Currency)
 
+	private GameState gameState; // Team-Ctrl-S(Currency)
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -76,6 +78,7 @@ public class ScoreScreen extends Screen {
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.gameState = gameState; // Team-Ctrl-S(Currency)
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -201,7 +204,7 @@ public class ScoreScreen extends Screen {
 				this.isNewRecord);
 		drawManager.drawResults(this, this.score, this.livesRemaining,
 				this.shipsDestroyed, (float) this.shipsDestroyed
-						/ this.bulletsShot, this.isNewRecord);
+						/ this.bulletsShot, this.isNewRecord, this.gameState);
 
 		if (this.isNewRecord)
 			drawManager.drawNameInput(this, this.name, this.nameCharSelected);

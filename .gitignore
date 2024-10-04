@@ -15,6 +15,9 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.idea/misc.xml
+.idea/vcs.xml
+
 
 # External tool builders
 .externalToolBuilders/
@@ -168,6 +171,8 @@ pip-log.txt
 
 log*
 .checkstyle
+Nice-HUD.iml
 
 # running files
 out/
+.idea/

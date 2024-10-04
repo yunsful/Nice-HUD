@@ -24,7 +24,7 @@ import entity.Ship;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  *
  */
-public final class DrawManager {
+public class DrawManager {
 
 	/** Singleton instance of the class. */
 	private static DrawManager instance;
@@ -37,13 +37,13 @@ public final class DrawManager {
 	/** Graphics context. */
 	private static Graphics graphics;
 	/** Buffer Graphics. */
-	private static Graphics backBufferGraphics;
+	public static Graphics backBufferGraphics;	// Modifying Access Restrictor to public - Lee Hyun Woo
 	/** Buffer image. */
 	private static BufferedImage backBuffer;
 	/** Normal sized font. */
-	private static Font fontRegular;
+	public static Font fontRegular;  // Modifying Access Restrictor to public - Lee Hyun Woo
 	/** Normal sized font properties. */
-	private static FontMetrics fontRegularMetrics;
+	public static FontMetrics fontRegularMetrics; // Modifying Access Restrictor to public - Lee Hyun Woo
 	/** Big sized font. */
 	private static Font fontBig;
 	/** Big sized font properties. */
@@ -78,6 +78,20 @@ public final class DrawManager {
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
 		Explosion,
+		/**HEART Graphics Produced by Nice HUD Team*/
+		Heart, //Please have the Nice HUD team fix it. - Enemy team
+		/**Item*/
+		Item, //by enemy team
+		/** Player Lives. */
+		/** Item */
+		ItemAttackSpeed,
+		ItemBomb,
+		ItemBarrier,
+		ItemRecovery,
+		ItemSpeed,
+		ItemCoinIncrease,
+		ItemNumberOfBullet,
+    //Produced by Starter Team
 		/** coin */
 		Coin,
 		/** add sign */
@@ -86,8 +100,11 @@ public final class DrawManager {
 
 	/**
 	 * Private constructor.
+	 *
+	 * Modifying Access Restrictor to public
+	 * - HUDTeam - LeeHyunWoo
 	 */
-	private DrawManager() {
+	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
 		logger.info("Started loading resources.");
@@ -107,8 +124,10 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
-			spriteMap.put(SpriteType.Coin, new boolean[5][5]);
-			spriteMap.put(SpriteType.AddSign, new boolean[5][5]);
+			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
+			spriteMap.put(SpriteType.Item, new boolean[5][5]); //by Enemy team
+			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
+			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
@@ -130,7 +149,7 @@ public final class DrawManager {
 	 *
 	 * @return Shared instance of DrawManager.
 	 */
-	protected static DrawManager getInstance() {
+	static DrawManager getInstance() {
 		if (instance == null)
 			instance = new DrawManager();
 		return instance;
@@ -262,10 +281,13 @@ public final class DrawManager {
 	public void drawLives(final Screen screen, final int lives) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
-		backBufferGraphics.drawString(Integer.toString(lives), 20, 25);
-		Ship dummyShip = new Ship(0, 0);
+//		backBufferGraphics.drawString(Integer.toString(lives), 20, 25);
+
+		Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.RED);
+		heart.setSpriteType(SpriteType.Heart);
+
 		for (int i = 0; i < lives; i++)
-			drawEntity(dummyShip, 40 + 35 * i, 10);
+			drawEntity(heart, 20 + 30 * i, 10);
 	}
 
 	/**

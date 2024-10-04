@@ -2,6 +2,7 @@ package screen;
 
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import engine.Cooldown;
@@ -13,6 +14,7 @@ import entity.BulletPool;
 import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
+import entity.Obstacle;
 import entity.Ship;
 
 /**
@@ -82,25 +84,31 @@ public class GameScreen extends Screen {
 	private boolean backgroundMoveLeft = false;
 	private boolean backgroundMoveRight = false;
 
+
+
+	// --- OBSTACLES
+	private Set<Obstacle> obstacles; // Store obstacles
+	private Cooldown obstacleSpawnCooldown; //control obstacle spawn speed
+
 	/**
-	 * Constructor, establishes the properties of the screen.
-	 * 
-	 * @param gameState
-	 *            Current game state.
-	 * @param gameSettings
-	 *            Current game settings.
-	 * @param bonusLife
-	 *            Checks if a bonus life is awarded this level.
-	 * @param width
-	 *            Screen width.
-	 * @param height
-	 *            Screen height.
-	 * @param fps
-	 *            Frames per second, frame rate at which the game is run.
-	 */
+	* Constructor, establishes the properties of the screen.
+	*
+	* @param gameState
+	*            Current game state.
+	* @param gameSettings
+	*            Current game settings.
+	* @param bonusLife
+	*            Checks if a bonus life is awarded this level.
+	* @param width
+	*            Screen width.
+	* @param height
+	*            Screen height.
+	* @param fps
+	*            Frames per second, frame rate at which the game is run.
+	*/
 	public GameScreen(final GameState gameState,
-			final GameSettings gameSettings, final boolean bonusLife,
-			final int width, final int height, final int fps) {
+	final GameSettings gameSettings, final boolean bonusLife,
+	final int width, final int height, final int fps) {
 		super(width, height, fps);
 
 		this.gameSettings = gameSettings;
@@ -109,7 +117,7 @@ public class GameScreen extends Screen {
 		this.score = gameState.getScore();
 		this.lives = gameState.getLivesRemaining();
 		if (this.bonusLife)
-			this.lives++;
+		    this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 
@@ -151,7 +159,12 @@ public class GameScreen extends Screen {
 			this.inputDelay.reset();
 		}
 
-	}
+        // 	// --- OBSTACLES - Initialize obstacles
+        this.obstacles = new HashSet<>();
+        this.obstacleSpawnCooldown = Core.getCooldown(4000); // change obstacle spawn time
+
+
+    }
 
 	/**
 	 * Starts the action.
@@ -174,6 +187,18 @@ public class GameScreen extends Screen {
 		super.update();
 
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
+			// --- OBSTACLES
+			if (this.obstacleSpawnCooldown.checkFinished()) {
+				// Spawn obstacle at a random position
+				int randomX = new Random().nextInt(this.width);
+				obstacles.add(new Obstacle(randomX, 50)); // Start at top of the screen
+				this.obstacleSpawnCooldown.reset();
+			}
+
+			// --- OBSTACLES
+			for (Obstacle obstacle : this.obstacles) {
+				obstacle.update(); // Make obstacles move or perform actions
+			}
 
 			if (!this.ship.isDestroyed()) {
 				boolean moveRight = inputManager.isKeyDown(KeyEvent.VK_RIGHT)
@@ -278,8 +303,13 @@ public class GameScreen extends Screen {
 		enemyShipFormation.draw();
 
 		for (Bullet bullet : this.bullets)
-			drawManager.drawEntity(bullet, bullet.getPositionX(),
-					bullet.getPositionY());
+		drawManager.drawEntity(bullet, bullet.getPositionX(),
+		bullet.getPositionY());
+
+	// --- OBSTACLES - Draw Obstaacles
+		for (Obstacle obstacle : this.obstacles) {
+			drawManager.drawEntity(obstacle, obstacle.getPositionX(), obstacle.getPositionY());
+		}
 
 		// Interface.
 		drawManager.drawScore(this, this.score);

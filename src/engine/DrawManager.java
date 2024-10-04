@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import entity.AddSign;
+import entity.Coin;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;
@@ -75,7 +77,11 @@ public final class DrawManager {
 		/** Bonus ship. */
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
-		Explosion
+		Explosion,
+		/** coin */
+		Coin,
+		/** add sign */
+		AddSign
 	};
 
 	/**
@@ -101,6 +107,8 @@ public final class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
+			spriteMap.put(SpriteType.Coin, new boolean[5][5]);
+			spriteMap.put(SpriteType.AddSign, new boolean[5][5]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
@@ -308,6 +316,9 @@ public final class DrawManager {
 		String playString = "Play";
 		String highScoresString = "High scores";
 		String exitString = "exit";
+		String merchant = "Merchant";
+		AddSign addSign = new AddSign();
+
 
 		// Play (starter)
 		if (option == 2)
@@ -341,13 +352,23 @@ public final class DrawManager {
 		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
 
+		if (option == 6)
+			backBufferGraphics.setColor(Color.GREEN);
+		else
+			backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, merchant, screen.getHeight()
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 8);
+		drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 8 - 12);
+
+
 		// Exit (starter)
 		if (option == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 8); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
 	}
 
 	/**
@@ -581,5 +602,23 @@ public final class DrawManager {
 		else
 			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
 					+ fontBigMetrics.getHeight() / 3);
+	}
+
+	/**
+	 * draw current coin.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param coin
+	 *            Current Coin.
+	 */
+	public void drawCurrentCoin(final Screen screen , final int coin) {
+		Coin coinImage = new Coin();
+		int coinX = screen.getWidth() - 60;
+		int coinY = 10;
+		drawEntity(coinImage, coinX, coinY);
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString(Integer.toString(coin), coinX + coinImage.getWidth() + 10, 20);
 	}
 }

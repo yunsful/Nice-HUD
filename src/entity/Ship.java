@@ -107,7 +107,5 @@ public class Ship extends Entity {
 	 * 
 	 * @return Speed of the ship.
 	 */
-	public final int getSpeed() {
-		return SPEED;
-	}
+	public final int getSpeed() { return SPEED; }
 }

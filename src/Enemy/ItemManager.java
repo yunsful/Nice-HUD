@@ -75,6 +75,8 @@ public class ItemManager {
 
             switch (whatItem) {     // Operates according to the SpriteType of the item.
                 case ItemBomb:
+                    Bomb.setIsbomb(true);
+                    Bomb.setCanShoot(true);
                     break;
                 case ItemBarrier:
                     Item2.activatebarrier();

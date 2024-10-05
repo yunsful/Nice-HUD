@@ -702,6 +702,7 @@ public class DrawManager {
 		backBufferGraphics.setColor(Color.GRAY);
 		drawCenteredRegularString(screen, instructionsString,
 				screen.getHeight() / 2 + fontRegularMetrics.getHeight() * 10);
+	}
 
 	/**
 	 * draw current coin.

@@ -96,4 +96,21 @@ public class DrawManagerImpl extends DrawManager {
             backBufferGraphics.drawString(achievementText.substring(13,26), screen.getWidth() - width, screen.getHeight() - 25);
         }
     }
+
+    /**
+     * Draws current score on screen.
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param positionY
+     *            Position to display separator line.
+     *
+     * by Ko jesung - TeamHUD
+     */
+    public static void drawSeparatorLine(final Screen screen, final int positionY) {
+        backBufferGraphics.setColor(Color.GREEN);
+        backBufferGraphics.drawLine(0, positionY, screen.getWidth(), positionY);
+        backBufferGraphics.drawLine(0, positionY + 1, screen.getWidth(),
+                positionY + 1);
+    }
 }

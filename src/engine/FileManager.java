@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
+import CtrlS.EncryptionSupport;
 import engine.DrawManager.SpriteType;
 
 /**
@@ -319,11 +319,11 @@ public final class FileManager {
 
 			// Modify the first line (currency)
 			if (!lines.isEmpty()) {
-				lines.set(0, Integer.toString(currency));
+				lines.set(0, EncryptionSupport.encrypt(Integer.toString(currency)));
 			} else {
 				// If the file was empty, add the new currency as the first line and the new gem as the second line
-				lines.add(Integer.toString(currency));
-				lines.add("0");
+				lines.add(EncryptionSupport.encrypt(Integer.toString(currency)));
+				lines.add(EncryptionSupport.encrypt("0"));
 			}
 
 			// Write back the modified content
@@ -372,7 +372,7 @@ public final class FileManager {
 			logger.info("Loading user's currency.");
 
 			String amount = bufferedReader.readLine();
-			currency = Integer.parseInt(amount);
+			currency = Integer.parseInt(EncryptionSupport.decrypt(amount));
 		} catch (FileNotFoundException e) {
 			// loads default if there's no user currency.
 			logger.info("Loading default currency.");
@@ -458,11 +458,11 @@ public final class FileManager {
 
 			// Modify the second line (gem)
 			if (!lines.isEmpty()) {
-				lines.set(1, Integer.toString(gem));
+				lines.set(1, EncryptionSupport.encrypt(Integer.toString(gem)));
 			} else {
 				// If the file was empty, add the new currency as the first line and the new gem as the second line
-				lines.add("0");
-				lines.add(Integer.toString(gem));
+				lines.add(EncryptionSupport.encrypt("0"));
+				lines.add(EncryptionSupport.encrypt(Integer.toString(gem)));
 			}
 
 			// Write back the modified content
@@ -513,7 +513,7 @@ public final class FileManager {
 
 			bufferedReader.readLine(); // Ignore first(currency) line
 			String amount = bufferedReader.readLine();
-			gem = Integer.parseInt(amount);
+			gem = Integer.parseInt(EncryptionSupport.decrypt(amount));
 		} catch (FileNotFoundException e) {
 			// loads default if there's no user gem.
 			logger.info("Loading default gem.");

@@ -34,7 +34,7 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setColor(Color.WHITE);
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.drawString(speedString, 85, screen.getHeight() - 25);
-    }
+    } // Ko jesung - display move speed
 
     public void drawLivesWithHeart(final Screen screen, final int lives) {
         backBufferGraphics.setFont(fontRegular);

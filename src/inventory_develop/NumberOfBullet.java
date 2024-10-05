@@ -16,9 +16,10 @@ public class NumberOfBullet{
     private static final int OFFSET_X_THREEBULLETS = 12;
 
     /** Bullet levels */
-    private static int bulletLevel = 2;
+    private static int bulletLevel = 1;
     /** PiercingBullet levles */
-    private static int piercingbulletLevel = 2;
+    private static int piercingbulletLevel = 1;
+    private final int PierceMax = 3;
 
     /**
      * Constructor
@@ -55,6 +56,18 @@ public class NumberOfBullet{
 
         return bullets;
 
+    }
+
+    public void bulletup(){
+        if (bulletLevel <= 3){
+            bulletLevel += 1;
+        }
+    }
+
+    public void pierceup() {
+        if (piercingbulletLevel < PierceMax){
+            piercingbulletLevel += 1;
+        }
     }
 
 }

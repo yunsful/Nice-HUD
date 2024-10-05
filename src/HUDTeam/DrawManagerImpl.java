@@ -96,4 +96,19 @@ public class DrawManagerImpl extends DrawManager {
             backBufferGraphics.drawString(achievementText.substring(13,26), screen.getWidth() - width, screen.getHeight() - 25);
         }
     }
+    
+    /**
+     * Draw remaining enemies
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param remainingEnemies
+     *            remaining enemies count.
+     */
+    public static void drawRemainingEnemies(final Screen screen, final int remainingEnemies) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        String remainingEnemiesString = "Enemies: " + remainingEnemies;
+        backBufferGraphics.drawString(remainingEnemiesString, 140, screen.getHeight() - 25);
+    } // by SeungYun
 }

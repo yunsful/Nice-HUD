@@ -9,12 +9,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
+import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
 import Sound_Operator.SoundManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
 import screen.Screen;
 import screen.TitleScreen;
+
 
 /**
  * Implements core game logic.
@@ -60,7 +63,7 @@ public final class Core {
 	private static final GameSettings SETTINGS_LEVEL_7 =
 			new GameSettings(8, 7, 2, 500);
 
-	
+
 	/** Frame to draw the screen on. */
 	private static Frame frame;
 	/** Screen currently shown. */
@@ -121,11 +124,12 @@ public final class Core {
 		gameSettings.add(SETTINGS_LEVEL_7);
 		
 		GameState gameState;
+		RoundState roundState;
 
 		int returnCode = 1;
 		do {
 			// Add playtime parameter - Soomin Lee / TeamHUD
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0);
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0);
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -147,7 +151,9 @@ public final class Core {
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
 							&& gameState.getLivesRemaining() < MAX_LIVES;
-					
+
+					GameState prevState = gameState;
+
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
 							bonusLife, width, height, FPS);
@@ -155,8 +161,10 @@ public final class Core {
 							+ " game screen at " + FPS + " fps.");
 					frame.setScreen(currentScreen);
 					LOGGER.info("Closing game screen.");
-					System.out.println("test");
+
 					gameState = ((GameScreen) currentScreen).getGameState();
+
+					roundState = new RoundState(prevState, gameState);
 
 					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
@@ -164,8 +172,25 @@ public final class Core {
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(),
-                            Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0),
-							gameState.getTime());
+							gameState.getTime(),
+							gameState.getCurrency() + roundState.getRoundCurrency(),
+							gameState.getGem());
+					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
+					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
+					LOGGER.info("Round Time: " + roundState.getRoundTime());
+
+					// Show receiptScreen
+					// If it is not the last round and the game is not over
+					// Ctrl-S
+					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
+						LOGGER.info("loading receiptScreen");
+						currentScreen = new ReceiptScreen(width, height, FPS, roundState, gameState);
+
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " receipt screen at " + FPS + " fps.");
+						frame.setScreen(currentScreen);
+						LOGGER.info("Closing receiptScreen.");
+					}
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

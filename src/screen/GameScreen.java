@@ -325,7 +325,7 @@ public class GameScreen extends Screen {
 		for (PiercingBullet bullet : this.bullets) { // Edited by Enemy
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
-					|| bullet.getPositionY() > this.height-70)
+					|| bullet.getPositionY() > this.height-70) // ko jesung / HUD team
 				recyclable.add(bullet);
 		}
 		this.bullets.removeAll(recyclable);

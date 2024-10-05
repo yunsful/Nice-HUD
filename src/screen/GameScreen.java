@@ -494,6 +494,12 @@ public class GameScreen extends Screen {
 		this.lives = lives;
 	}
 	
+	/**
+	 * Check remaining enemies
+	 *
+	 * @return remaining enemies count.
+	 *
+	 */
 	private int getRemainingEnemies() {
 		int remainingEnemies = 0;
 		for (EnemyShip enemyShip : this.enemyShipFormation) {

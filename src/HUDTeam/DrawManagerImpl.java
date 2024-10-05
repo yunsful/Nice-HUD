@@ -97,6 +97,14 @@ public class DrawManagerImpl extends DrawManager {
         }
     }
     
+    /**
+     * Draw remaining enemies
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param remainingEnemies
+     *            remaining enemies count.
+     */
     public static void drawRemainingEnemies(final Screen screen, final int remainingEnemies) {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);

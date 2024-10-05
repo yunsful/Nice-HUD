@@ -101,6 +101,6 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
         String remainingEnemiesString = "Enemies: " + remainingEnemies;
-        backBufferGraphics.drawString(remainingEnemiesString, 140, screen.getHeight() - 25); // 화면의 좌측 상단에 표시
-    }
+        backBufferGraphics.drawString(remainingEnemiesString, 140, screen.getHeight() - 25);
+    } // by SeungYun
 }

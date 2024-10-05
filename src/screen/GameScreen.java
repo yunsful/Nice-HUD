@@ -287,7 +287,7 @@ public class GameScreen extends Screen {
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
-		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies());
+		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
 		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
 //		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
@@ -497,10 +497,10 @@ public class GameScreen extends Screen {
 	private int getRemainingEnemies() {
 		int remainingEnemies = 0;
 		for (EnemyShip enemyShip : this.enemyShipFormation) {
-			if (!enemyShip.isDestroyed()) { // 파괴되지 않은 적만 카운트
+			if (!enemyShip.isDestroyed()) {
 				remainingEnemies++;
 			}
 		}
 		return remainingEnemies;
-	} // by HUD team
+	} // by HUD team SeungYun
 }

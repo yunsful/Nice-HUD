@@ -18,18 +18,22 @@ public class Item extends Entity {
     public final void setSprite() {
         double rdItem = Math.random();
         shipStatus.loadProbability();
+        double bombP = shipStatus.getBomb_probability();
+        double PierceP = shipStatus.getBomb_probability();
+        double ShieldP = shipStatus.getBomb_probability();
+        double HearthP = shipStatus.getBomb_probability();
 
         // Import odds from properties file for easy balance patches
-        if (rdItem < shipStatus.getBomb_probability()) { // 0% - Fixing error
+        if (rdItem < bombP) { // 30%
             this.spriteType = SpriteType.ItemBomb;
             this.setColor(Color.gray);
-        } else if (rdItem < shipStatus.getPierce_probability()) { // 0% - Fixing error
+        } else if (rdItem < bombP + PierceP) { // 0% - Fixing error
             this.spriteType = SpriteType.ItemBomb;
             this.setColor(Color.black);
-        } else if (rdItem < shipStatus.getShield_probability()) { // 50%
+        } else if (rdItem < bombP + PierceP + ShieldP) { // 20%
             this.spriteType = SpriteType.ItemBarrier;
             this.setColor(Color.green);
-        } else if (rdItem < shipStatus.getHearth_probability()) { // 50%
+        } else if (rdItem < bombP + PierceP + ShieldP + HearthP) { // 100%
             this.spriteType = SpriteType.ItemHeart;
             this.setColor(Color.red);
         } else {

@@ -5,6 +5,8 @@ import engine.FileManager;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+// item level Bonus
+import inventory_develop.ShipStatus;
 
 
 
@@ -16,12 +18,19 @@ public final class CurrencyManager {
     private static Logger logger;
     private static FileManager fileManager;
 
+    private ShipStatus shipStatus;
+    private static double levelBonus = 10;
+
     /**
      * private constructor.
      */
     private CurrencyManager() {
         fileManager = Core.getFileManager();
         logger = Core.getLogger();
+
+        //Coin Bonus increase
+        shipStatus = new ShipStatus();
+        shipStatus.loadStatus();
     }
 
     /**
@@ -76,11 +85,18 @@ public final class CurrencyManager {
         if (timeBonus > 0) {
             currency += timeBonus;
         }
+
+        currency = (int) (currency * levelBonus);
+
         return currency;
     }
 
 
     public int getCurrency() throws IOException {
         return fileManager.loadCurrency();
+    }
+
+    public void levelBonusIN(){
+        levelBonus += shipStatus.getCoinIn();
     }
 }

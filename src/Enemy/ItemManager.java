@@ -84,6 +84,9 @@ public class ItemManager {
                 case ItemHeart:
                     Item2.activeheart(gameScreen, ship, growth);
                     break;
+                case ItemPierce:
+
+                case ItemCoin:
             }
 
             addItemRecycle(item);

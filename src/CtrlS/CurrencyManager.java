@@ -2,6 +2,7 @@ package CtrlS;
 
 import engine.Core;
 import engine.FileManager;
+import engine.GameState;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -68,32 +69,43 @@ public final class CurrencyManager {
         }
     }
 
-    public int calculateCurrency(int score, float hitRate, int
-            clearTime, int maxTime) {
-        //
+    public int getCurrency() throws IOException {
+        return fileManager.loadCurrency();
+    }
 
-        int currency = score / 10;
-        //
+    /**
+     * Add an amount of gem to the current gem.
+     */
+    // Team-Ctrl-S(Currency)
+    public void addGem(int amount) throws IOException {
+        int current_gem = fileManager.loadGem();
+        amount += current_gem;
+        fileManager.saveGem(amount);
+    }
 
-        if (hitRate > 0.8) {
-            currency += (int) (currency * 0.2); // 20% 보너스 지급
-            Core.getLogger().info("hitRate bonus occurs.");
+    /**
+     * Consume as much gem as the amount you have (cannot spend more than you currently have).
+     */
+    // Team-Ctrl-S(Currency)
+    public boolean spendGem(int amount) throws IOException {
+        int current_gem = fileManager.loadGem();
+        if (amount <= current_gem) {
+            current_gem -= amount;
+            fileManager.saveGem(current_gem);
+            return true;
         }
-        //
-
-        int timeBonus = (maxTime - clearTime) / 10;
-        if (timeBonus > 0) {
-            currency += timeBonus;
+        else {
+            return false;
         }
-
+      
         currency = (int) (currency * levelBonus);
 
         return currency;
     }
 
-
-    public int getCurrency() throws IOException {
-        return fileManager.loadCurrency();
+    // Team-Ctrl-S(Currency)
+    public int getGem() throws IOException {
+        return fileManager.loadGem();
     }
 
     public void levelBonusIN(){

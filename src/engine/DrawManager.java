@@ -310,6 +310,7 @@ public final class DrawManager {
 	public void drawMenu(final Screen screen, final int option) {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
+		String RecentRecord = "Recent Records";
 		String playString = "Play";
 		String highScoresString = "High scores";
 		String exitString = "exit";
@@ -330,21 +331,29 @@ public final class DrawManager {
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 2); // adjusted Height
 
-		// 1 player mode (starter)
+		// Record scores (Team Clove)
 		if (option == 4)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, onePlayerModeString, screen.getHeight()
+		drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 4); // adjusted Height
 
-		// 2 player mode (starter)
+		// 1 player mode (starter)
 		if (option == 5)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
+		drawCenteredRegularString(screen, onePlayerModeString, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
+
+		// 2 player mode (starter)
+		if (option == 6)
+			backBufferGraphics.setColor(Color.GREEN);
+		else
+			backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 8); // adjusted Height
 
 		// Exit (starter)
 		if (option == 0)
@@ -352,7 +361,7 @@ public final class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 8); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
 	}
 
 	/**
@@ -493,6 +502,25 @@ public final class DrawManager {
 	}
 
 	/**
+	 * Draws recent score(record) screen title and instructions.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * Team Clove
+	 */
+	public void drawRecordMenu(final Screen screen) {
+		String recentScoreString = "Recent Records";
+		String instructionsString = "Press Space to return";
+
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, recentScoreString, screen.getHeight() / 8);
+
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 5);
+	}
+
+	/**
 	 * Draws high scores.
 	 *
 	 * @param screen
@@ -508,6 +536,30 @@ public final class DrawManager {
 
 		for (Score score : highScores) {
 			scoreString = String.format("%s        %04d", score.getName(),
+					score.getScore());
+			drawCenteredRegularString(screen, scoreString, screen.getHeight()
+					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+			i++;
+		}
+	}
+
+	/**
+	 * Draws recent scores.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param recentScores
+	 *            List of recent scores.
+	 * Team Clove
+	 */
+	public void drawRecentScores(final Screen screen,
+								 final List<Score> recentScores) {
+		backBufferGraphics.setColor(Color.WHITE);
+		int i = 0;
+		String scoreString = "";
+
+		for (Score score : recentScores) {
+			scoreString = String.format("%s        %04d", score.getDate(),
 					score.getScore());
 			drawCenteredRegularString(screen, scoreString, screen.getHeight()
 					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);

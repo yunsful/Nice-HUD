@@ -10,11 +10,7 @@ import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
 import clove.AchievementManager;
-import screen.GameScreen;
-import screen.HighScoreScreen;
-import screen.ScoreScreen;
-import screen.Screen;
-import screen.TitleScreen;
+import screen.*;
 
 /**
  * Implements core game logic.
@@ -25,9 +21,9 @@ import screen.TitleScreen;
 public final class Core {
 
 	/** Width of current screen. */
-	private static final int WIDTH = 448;
+	private static final int WIDTH = 630;
 	/** Height of current screen. */
-	private static final int HEIGHT = 520;
+	private static final int HEIGHT = 720;
 	/** Max fps of current screen. */
 	private static final int FPS = 60;
 
@@ -144,7 +140,7 @@ public final class Core {
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
 							&& gameState.getLivesRemaining() < MAX_LIVES;
-					
+
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
 							bonusLife, width, height, FPS);
@@ -188,6 +184,14 @@ public final class Core {
 				returnCode = frame.setScreen(currentScreen);
 				LOGGER.info("Closing high score screen.");
 				break;
+				case 4:
+					// Recent Records.
+					currentScreen = new RecordScreen(width, height, FPS);
+					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+							+ " recent record screen at " + FPS + " fps.");
+					returnCode = frame.setScreen(currentScreen);
+					LOGGER.info("Closing recent record screen.");
+					break;
 			default:
 				break;
 			}

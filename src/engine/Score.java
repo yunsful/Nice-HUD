@@ -1,6 +1,7 @@
 package engine;
 
 import java.util.logging.Level;
+import java.time.LocalDate;
 
 /**
  * Implements a high score record.
@@ -22,6 +23,14 @@ public class Score implements Comparable<Score> {
 	/** The level reached by the player. */
 	private int level;
 
+	private LocalDate currentDate;
+	/** Integers for describe present Date */
+	private int Year;
+	private int Month;
+	private int Day;
+	/** String for storage present Date */
+	private String Date;
+
 	/**
 	 * Constructor.
 	 * 
@@ -29,10 +38,34 @@ public class Score implements Comparable<Score> {
 	 *            Player name, three letters.
 	 * @param score
 	 *            Player score.
+	 * Added non-parameter elements for Date // Clove
 	 */
 	public Score(final String name, final int score) {
 		this.name = name;
 		this.score = score;
+
+		this.currentDate = LocalDate.now();
+		this.Year = currentDate.getYear();
+		this.Month = currentDate.getMonthValue();
+		this.Day = currentDate.getDayOfMonth();
+		this.Date = new String (Year+"-"+Month+"-"+Day);
+	}
+
+	/**
+	 * Constructor for read Record files
+	 *
+	 * @param name
+	 * 				Player name but non-value parameter, just for overload constructor
+	 * @param score
+	 * 				Player score
+	 * @param date
+	 * 				Date (especially Time Player played the game.
+	 */
+	public Score(final String name, final int score, final String date) {
+		this.name = name;
+		this.score = score;
+		this.Date = date;
+
 	}
 
 
@@ -78,6 +111,21 @@ public class Score implements Comparable<Score> {
 	public final int getBulletsShot() { return this.bulletsShot; }
 	public final int getShipsDestroyed() { return this.shipsDestroyed; }
 	public final int getLevel() { return this.level; }
+
+	/**
+	 * Getter for Date
+	 *
+	 * @return Object currentDate
+	 */
+	public final LocalDate getcurrentDate() { return this.currentDate; }
+
+	/**
+	 * Getter for String type Date
+	 *
+	 * @return Date
+	 */
+	public final String getDate() { return this.Date; }
+
 	/**
 	 * Orders the scores descending by score.
 	 * 

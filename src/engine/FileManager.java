@@ -35,6 +35,8 @@ public final class FileManager {
 	private static Logger logger;
 	/** Max number of high scores. */
 	private static final int MAX_SCORES = 7;
+	/** Max number of recent recorded scores / Team Clove */
+	private static final int MAX_RECORD = 10;
 
 	/**
 	 * private constructor.
@@ -261,6 +263,168 @@ public final class FileManager {
 				if (savedCount >= MAX_SCORES)
 					break;
 				bufferedWriter.write(score.getName());
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getScore()));
+				bufferedWriter.newLine();
+				savedCount++;
+			}
+
+		} finally {
+			if (bufferedWriter != null)
+				bufferedWriter.close();
+		}
+	}
+
+	/**
+	 * Returns the application default scores if there is no user recent scores
+	 * file.
+	 *
+	 * @return Default recent scores.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 * Method for implement Recent score
+	 * Team Clover
+	 */
+	private List<Score> loadDefaultRecentScores() throws IOException {
+		List<Score> recentScores = new ArrayList<Score>();
+		InputStream inputStream = null;
+		BufferedReader reader = null;
+
+		try {
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("recent");
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+
+			Score recentScore = null;
+			String date = reader.readLine();
+			String score = reader.readLine();
+			String name = "Tom";
+
+			System.out.println("date: " + date);
+			System.out.println("score: " + score);
+
+			while ((date != null) && (score != null)) {
+				recentScore = new Score(name, Integer.parseInt(score), date);
+				recentScores.add(recentScore);
+				date = reader.readLine();
+				score = reader.readLine();
+			}
+
+			for (int i=0; i<recentScores.size(); i++) {
+				System.out.println("스코어 :");
+				System.out.println("이름 :" + recentScores.get(i).getDate());
+				System.out.println("점수 :" + recentScores.get(i).getScore());
+			}
+
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return recentScores;
+	}
+	/**
+	 * Loads recent scores from file, and returns a sorted list of pairs score -
+	 * value.
+	 *
+	 * @return Sorted list of Recent scores - players.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 *
+	 * Method for implement Recent score
+	 * Team Clove
+	 */
+	public List<Score> loadRecentScores() throws IOException {
+
+		List<Score> recentScores = new ArrayList<Score>();
+		InputStream inputStream = null;
+		BufferedReader bufferedReader = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String scoresPath = new File(jarPath).getParent();
+			scoresPath += File.separator;
+			scoresPath += "recent";
+
+			System.out.print(scoresPath);
+
+			File scoresFile = new File(scoresPath);
+			inputStream = new FileInputStream(scoresFile);
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					inputStream, Charset.forName("UTF-8")));
+
+			logger.info("Loading user recent scores.");
+
+			Score recentScore = null;
+			String date = bufferedReader.readLine();
+			String score = bufferedReader.readLine();
+			String name = null;
+
+			while ((date != null) && (score != null)) {
+				recentScore = new Score(name, Integer.parseInt(score), date);
+				recentScores.add(recentScore);
+				date = bufferedReader.readLine();
+				score = bufferedReader.readLine();
+			}
+
+		} catch (FileNotFoundException e) {
+			// loads default if there's no user scores.
+			logger.info("Loading default high scores.");
+			recentScores = loadDefaultRecentScores();
+		} finally {
+			if (bufferedReader != null)
+				bufferedReader.close();
+		}
+
+		Collections.sort(recentScores);
+		return recentScores;
+	}
+
+	/**
+	 * Saves user recent scores to disk.
+	 *
+	 * @param recentScores
+	 *            High scores to save.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 * Method for implement Recent score
+	 * Team Clove
+	 */
+
+	public void saveRecentScores(final List<Score> recentScores)
+			throws IOException {
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String scoresPath = new File(jarPath).getParent();
+			scoresPath += File.separator;
+			scoresPath += "recent";
+
+			File scoresFile = new File(scoresPath);
+
+			if (!scoresFile.exists())
+				scoresFile.createNewFile();
+
+			outputStream = new FileOutputStream(scoresFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
+
+			logger.info("Saving user recent scores.");
+
+			// Saves 10 or less scores.
+			int savedCount = 0;
+			for (Score score : recentScores) {
+				if (savedCount >= MAX_RECORD)
+					break;
+				bufferedWriter.write(score.getDate());
 				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getScore()));
 				bufferedWriter.newLine();

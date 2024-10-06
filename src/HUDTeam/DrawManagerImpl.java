@@ -74,6 +74,8 @@ public class DrawManagerImpl extends DrawManager {
      *            Screen to draw on.
      * @param achievementText
      *            Accomplished achievement text.
+     *
+     * by Jo Minseo - HUD team
      */
     public static void drawAchievement(final Screen screen, String achievementText) {
         int width = screen.getWidth() / 4;
@@ -83,6 +85,7 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setColor(Color.white);
         backBufferGraphics.drawRect(screen.getWidth() - width - 3, screen.getHeight() - height - 18, width, height);
 
+        //Modify the location of the window and the text - Jo Minseo/HUD team
         backBufferGraphics.setColor(Color.white);
         backBufferGraphics.setFont(fontRegular);
         if(achievementText.length() < 14){

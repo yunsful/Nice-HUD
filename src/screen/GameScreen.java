@@ -275,7 +275,9 @@ public class GameScreen extends Screen {
 
 		enemyShipFormation.draw();
 
-		DrawManagerImpl.drawSpeed(this, ship.getSpeed());
+		DrawManagerImpl.drawSpeed(this, ship.getSpeed()); // Ko jesung / HUD team
+		DrawManagerImpl.drawSeparatorLine(this,  this.height-65); // Ko jesung / HUD team
+
 
 		for (PiercingBullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
@@ -323,7 +325,7 @@ public class GameScreen extends Screen {
 		for (PiercingBullet bullet : this.bullets) { // Edited by Enemy
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
-					|| bullet.getPositionY() > this.height)
+					|| bullet.getPositionY() > this.height-70) // ko jesung / HUD team
 				recyclable.add(bullet);
 		}
 		this.bullets.removeAll(recyclable);

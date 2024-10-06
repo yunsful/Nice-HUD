@@ -4,26 +4,20 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import Enemy.*;
 import HUDTeam.Achievement;
 import HUDTeam.DrawManagerImpl;
-import Enemy.PiercingBullet;
-import engine.Cooldown;
-import engine.Core;
-import engine.GameSettings;
-import engine.GameState;
+import engine.*;
 import entity.Bullet;
 import entity.BulletPool;
 import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
 import entity.Ship;
-import Enemy.PiercingBulletPool;
-import Enemy.Item;
-import Enemy.ItemManager;
+// shield and heart recovery
+import inventory_develop.*;
 // Sound Operator
 import Sound_Operator.SoundManager;
-import inventory_develop.TemporaryShield;
-
 
 
 /**
@@ -69,6 +63,8 @@ public class GameScreen extends Screen {
 	private Set<PiercingBullet> bullets; //by Enemy team
 	/** Add an itemManager Instance */
 	private ItemManager itemManager; //by Enemy team
+	/** Shield item */
+	private ItemBarrierAndHeart item;	// team Inventory
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -86,7 +82,6 @@ public class GameScreen extends Screen {
 	/** Total currency **/
 	private int currency; // Team-Ctrl-S(Currency)
 	/** Shield item */
-	private TemporaryShield shield;
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */
@@ -130,7 +125,7 @@ public class GameScreen extends Screen {
 			this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.shield = new TemporaryShield();
+		this.item = new ItemBarrierAndHeart();	// team Inventory
 	}
 
 	/**
@@ -144,7 +139,7 @@ public class GameScreen extends Screen {
 		this.ship = new Ship(this.width / 2, this.height - 30);
 
 		/** initialize itemManager */
-		this.itemManager = new ItemManager(this.height, drawManager); //by Enemy team
+		this.itemManager = new ItemManager(this.height, drawManager, this); //by Enemy team
 		this.itemManager.initialize(); //by Enemy team
 
 		// Appears each 10-30 seconds.
@@ -232,13 +227,13 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
-			this.shield.update();
-			this.ship.update();
+			this.item.updateBarrierAndShip(this.ship);	// team Inventory
+//			this.ship.update();					// team Inventory
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
 		}
 		//manageCollisions();
-		manageCollisions_add_tiem(); //by Enemy team
+		manageCollisions_add_item(); //by Enemy team
 		cleanBullets();
 		this.itemManager.cleanItems(); //by Enemy team
 		draw();
@@ -338,7 +333,7 @@ public class GameScreen extends Screen {
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
-					if (!this.ship.isDestroyed() && !this.shield.isActive()) {
+					if (!this.ship.isDestroyed() && !this.item.isbarrierActive()) {	// team Inventory
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
@@ -374,13 +369,13 @@ public class GameScreen extends Screen {
 	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
 	 */
 	//by Enemy team
-	private void manageCollisions_add_tiem() {
+	private void manageCollisions_add_item() {
 		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
 		for (PiercingBullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
 				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
 					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()) {
+					if (!this.ship.isDestroyed() && !this.item.isbarrierActive()) {	// team Inventory
 						this.ship.destroy();
 						this.lives--;
 						this.logger.info("Hit on player ship, " + this.lives
@@ -405,11 +400,10 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						this.enemyShipFormation._destroy(enemyShip);
-						if(enemyShip.getHp() <= 0) {
-							this.score += enemyShip.getPointValue();
-							this.shipsDestroyed++;
-						}
+
+						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip);	// team Inventory
+						this.shipsDestroyed += CntAndPnt[0];
+						this.score += CntAndPnt[1];
 
 						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
 
@@ -445,7 +439,7 @@ public class GameScreen extends Screen {
 
 		//Check item and ship collision
 		for(Item item : itemManager.items){
-			itemManager.addItemRecycle(checkCollision(item,ship)?item:null);
+			itemManager.OperateItem(checkCollision(item,ship)?item:null);
 		}
 		itemManager.removeAllReItems();
 	}
@@ -492,4 +486,11 @@ public class GameScreen extends Screen {
 	public void setLives(int lives) {
 		this.lives = lives;
 	}
+	public Ship getShip() {
+		return ship;
+	}	// Team Inventory(Item)
+
+	public ItemBarrierAndHeart getItem() {
+		return item;
+	}	// Team Inventory(Item)
 }

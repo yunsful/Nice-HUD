@@ -7,12 +7,16 @@ import inventory_develop.Bomb;
 import screen.GameScreen;
 import engine.DrawManager;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
 
 //import inventory_develop.Bomb;
 import inventory_develop.ItemBarrierAndHeart;
+import inventory_develop.NumberOfBullet;
+
+import CtrlS.CurrencyManager;
 
 
 public class ItemManager {
@@ -23,10 +27,11 @@ public class ItemManager {
     private GameScreen gameScreen;
     protected Logger logger = Core.getLogger();
     private Set<Item> recyclableItems = new HashSet<>();
-//    private Bomb bomb = new Bomb();
     private ItemBarrierAndHeart Item2;
+    private NumberOfBullet numberOfBullet;
     private Ship ship;
     private PlayerGrowth growth;
+    private CurrencyManager currencyManager;
 
     public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
         this.items = new HashSet<>();
@@ -36,6 +41,7 @@ public class ItemManager {
         this.ship = gameScreen.getShip();       // Team Inventory
         this.growth = ship.getPlayerGrowth();
         this.Item2 = gameScreen.getItem();
+        this.numberOfBullet = new NumberOfBullet();
     }
 
     public void cleanItems() {
@@ -84,6 +90,17 @@ public class ItemManager {
                 case ItemHeart:
                     Item2.activeheart(gameScreen, ship, growth);
                     break;
+                case ItemPierce:
+                    numberOfBullet.pierceup();
+                    ship.increaseBulletSpeed();
+                    break;
+                case ItemCoin:
+                    try {
+                        Core.getCurrencyManager().addCurrency(1);
+                        logger.info("You get coin");
+                    } catch (IOException e) {
+                        logger.warning("Couldn't load currency!");
+                    }
             }
 
             addItemRecycle(item);

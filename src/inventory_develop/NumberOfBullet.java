@@ -16,9 +16,10 @@ public class NumberOfBullet{
     private static final int OFFSET_X_THREEBULLETS = 12;
 
     /** Bullet levels */
-    private static int bulletLevel = 2;
+    private static int bulletLevel = 1;
     /** PiercingBullet levles */
     private static int piercingbulletLevel = 1;
+    private final int PierceMax = 3;
 
     /**
      * Constructor
@@ -43,8 +44,8 @@ public class NumberOfBullet{
                 bullets.add(PiercingBulletPool.getPiercingBullet(positionX, positionY, speed, piercingbulletLevel));
                 break;
             case 2:
-                bullets.add(PiercingBulletPool.getPiercingBullet(positionX - OFFSET_X_TWOBULLETS, positionY, speed, piercingbulletLevel));
-                bullets.add(PiercingBulletPool.getPiercingBullet(positionX + OFFSET_X_TWOBULLETS, positionY, speed, piercingbulletLevel));
+                bullets.add(PiercingBulletPool.getPiercingBullet(positionX - OFFSET_X_TWOBULLETS + 5, positionY, speed, piercingbulletLevel));
+                bullets.add(PiercingBulletPool.getPiercingBullet(positionX + OFFSET_X_TWOBULLETS - 5, positionY, speed, piercingbulletLevel));
                 break;
             case 3:
                 bullets.add(PiercingBulletPool.getPiercingBullet(positionX + OFFSET_X_THREEBULLETS, positionY, speed, piercingbulletLevel));
@@ -55,6 +56,18 @@ public class NumberOfBullet{
 
         return bullets;
 
+    }
+
+    public void bulletup(){
+        if (bulletLevel <= 3){
+            bulletLevel += 1;
+        }
+    }
+
+    public void pierceup() {
+        if (piercingbulletLevel < PierceMax){
+            piercingbulletLevel += 1;
+        }
     }
 
 }

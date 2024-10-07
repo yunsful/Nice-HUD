@@ -1,10 +1,6 @@
 package entity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 import screen.Screen;
@@ -14,6 +10,8 @@ import engine.DrawManager;
 import engine.DrawManager.SpriteType;
 import engine.GameSettings;
 
+import static java.lang.Math.*;
+
 /**
  * Groups enemy ships into a formation that moves together.
  * 
@@ -21,13 +19,21 @@ import engine.GameSettings;
  * 
  */
 public class EnemyShipFormation implements Iterable<EnemyShip> {
+	private boolean isCircle = false;
+	/** Number of iteration of movement */
+	private int iteration = 0;
 
 	/** Initial position in the x-axis. */
-	private static final int INIT_POS_X = 20;
+	private static final int INIT_POS_X = 60;
 	/** Initial position in the y-axis. */
 	private static final int INIT_POS_Y = 100;
 	/** Distance between ships. */
 	private static final int SEPARATION_DISTANCE = 40;
+	private static final int SEPARATION_DISTANCE_CIRCLE = 70;
+	/** Radius of circle */
+	private int RADIUS=0;
+	private int MINIRADIUS= 0;
+
 	/** Proportion of C-type ships. */
 	private static final double PROPORTION_C = 0.2;
 	/** Proportion of B-type ships. */
@@ -128,6 +134,16 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.positionY = INIT_POS_Y;
 		this.shooters = new ArrayList<EnemyShip>();
 		SpriteType spriteType;
+		Random rand= new Random();
+		int n = rand.nextInt(2);
+		if(n%2==1){ isCircle=true;
+			this.logger.info("cercle"+ 2);
+		}
+		else isCircle=false;
+
+		if(isCircle){
+			RADIUS=gameSettings.getFormationHeight()*6;
+			MINIRADIUS= gameSettings.getFormationHeight()*2;}
 
 		this.logger.info("Initializing " + nShipsWide + "x" + nShipsHigh
 				+ " ship formation in (" + positionX + "," + positionY + ")");
@@ -137,22 +153,29 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			this.enemyShips.add(new ArrayList<EnemyShip>());
 
 		for (List<EnemyShip> column : this.enemyShips) {
+			int x=0;
+			int y=0;
 			for (int i = 0; i < this.nShipsHigh; i++) {
+				double angle = 2* Math.PI * i / this.nShipsHigh;
+
 				if (i / (float) this.nShipsHigh < PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;
-				else if (i / (float) this.nShipsHigh < PROPORTION_B
-						+ PROPORTION_C)
+				else if (i / (float) this.nShipsHigh < PROPORTION_B + PROPORTION_C)
 					spriteType = SpriteType.EnemyShipB1;
 				else
 					spriteType = SpriteType.EnemyShipA1;
-
-				column.add(new EnemyShip((SEPARATION_DISTANCE 
-						* this.enemyShips.indexOf(column))
-								+ positionX, (SEPARATION_DISTANCE * i)
-								+ positionY, spriteType));
+				if(isCircle){
+				x = (int) Math.round(RADIUS * Math.cos(angle) + positionX + ( SEPARATION_DISTANCE_CIRCLE* this.enemyShips.indexOf(column)));
+				y = (int) (RADIUS * Math.sin(angle)) + positionY;}
+				else{
+					x = positionX + (SEPARATION_DISTANCE * this.enemyShips.indexOf(column));
+					y = positionY+ i*SEPARATION_DISTANCE;
+				}
+				column.add(new EnemyShip(x, y, spriteType));
 				this.shipCount++;
 			}
 		}
+
 
 		this.shipWidth = this.enemyShips.get(0).get(0).getWidth();
 		this.shipHeight = this.enemyShips.get(0).get(0).getHeight();
@@ -211,10 +234,10 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			movementInterval = 0;
 
 			boolean isAtBottom = positionY
-					+ this.height > screen.getHeight() - BOTTOM_MARGIN;
+					+ this.height + RADIUS > screen.getHeight() - BOTTOM_MARGIN;
 			boolean isAtRightSide = positionX
-					+ this.width >= screen.getWidth() - SIDE_MARGIN;
-			boolean isAtLeftSide = positionX <= SIDE_MARGIN;
+					+ this.width + RADIUS >= screen.getWidth() - SIDE_MARGIN;
+			boolean isAtLeftSide = positionX - RADIUS <= SIDE_MARGIN;
 			boolean isAtHorizontalAltitude = positionY % DESCENT_DISTANCE == 0;
 
 			if (currentDirection == Direction.DOWN) {
@@ -255,6 +278,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			else
 				movementY = Y_SPEED;
 
+
 			positionX += movementX;
 			positionY += movementY;
 
@@ -272,12 +296,21 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				}
 				column.removeAll(destroyed);
 			}
-
-			for (List<EnemyShip> column : this.enemyShips)
+			double angle = (Math.PI/this.nShipsHigh);
+			int temp=0;
+			iteration++;
+			for (List<EnemyShip> column : this.enemyShips){
+				temp=0;
 				for (EnemyShip enemyShip : column) {
-					enemyShip.move(movementX, movementY);
+					double currentAngle = angle * (temp+iteration);
+					enemyShip.move(
+							movementX+(int) (MINIRADIUS * Math.cos(currentAngle)),
+							movementY+(int) (MINIRADIUS * Math.sin(currentAngle))
+					);
 					enemyShip.update();
+					temp++;
 				}
+			}
 		}
 	}
 
@@ -425,5 +458,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 */
 	public final boolean isEmpty() {
 		return this.shipCount <= 0;
+	}
+	public final void BecomeCircle(boolean iscircle){
+		this.isCircle=iscircle;
 	}
 }

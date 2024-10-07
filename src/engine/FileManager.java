@@ -402,33 +402,6 @@ public final class FileManager {
 	}
 
 	/**
-	 * Returns the application default currency if there is no user currency files.
-	 *
-	 * @return Default currency.
-	 * @throws IOException
-	 *             In case of loading problems.
-	 */
-	private int loadDefaultCurrency() throws IOException {
-		int currency;
-		InputStream inputStream = null;
-		BufferedReader reader = null;
-
-		try {
-			inputStream = FileManager.class.getClassLoader()
-					.getResourceAsStream("currency");
-			reader = new BufferedReader(new InputStreamReader(inputStream));
-
-			String amount = reader.readLine();
-			currency = Integer.parseInt(amount);
-		} finally {
-			if (inputStream != null)
-				inputStream.close();
-		}
-
-		return currency;
-	}
-
-	/**
 	 * Saves user gem to disk.
 	 *
 	 * @param gem
@@ -553,35 +526,6 @@ public final class FileManager {
 
 			if (bufferedWriter != null)
 				bufferedWriter.close();
-		}
-
-		return gem;
-	}
-
-	/**
-	 * Returns the application default gem if there is no user gem files.
-	 *
-	 * @return Default gem.
-	 * @throws IOException
-	 * 			   In case of loading problems.
-	 */
-	// Team-Ctrl-S(Currency)
-	private int loadDefaultGem() throws IOException {
-		int gem;
-		InputStream inputStream = null;
-		BufferedReader reader = null;
-
-		try {
-			inputStream = FileManager.class.getClassLoader()
-					.getResourceAsStream("currency");
-			reader = new BufferedReader(new InputStreamReader(inputStream));
-
-			reader.readLine(); //Ignore first(currency) line
-			String amount = reader.readLine();
-			gem = Integer.parseInt(amount);
-		} finally {
-			if (inputStream != null)
-				inputStream.close();
 		}
 
 		return gem;

@@ -138,17 +138,20 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		for (List<EnemyShip> column : this.enemyShips) {
 			for (int i = 0; i < this.nShipsHigh; i++) {
-				if (i / (float) this.nShipsHigh < PROPORTION_C)
+				if (shipCount == (nShipsHigh*2)-1 ||shipCount == (nShipsHigh*4)-1) //Edited by Enemy
+					spriteType = SpriteType.ExplosiveEnemyShip1;
+				else if (i / (float) this.nShipsHigh < PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;
 				else if (i / (float) this.nShipsHigh < PROPORTION_B
 						+ PROPORTION_C)
 					spriteType = SpriteType.EnemyShipB1;
 				else
 					spriteType = SpriteType.EnemyShipA1;
+
 				if(shipCount == nShipsHigh*(nShipsWide/2))
 					hp = 2; // Edited by Enemy, It just example to insert EnmyShip that hp is 2.
 
-				column.add(new EnemyShip((SEPARATION_DISTANCE 
+				column.add(new EnemyShip((SEPARATION_DISTANCE
 						* this.enemyShips.indexOf(column))
 								+ positionX, (SEPARATION_DISTANCE * i)
 								+ positionY, spriteType,hp));// Edited by Enemy
@@ -442,7 +445,24 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		for (List<EnemyShip> column : this.enemyShips)
 			for (int i = 0; i < column.size(); i++) {
 				if (column.get(i).equals(destroyedShip)) {
-					HpEnemyShip.hit(destroyedShip);
+					switch (destroyedShip.spriteType){
+						case SpriteType.ExplosiveEnemyShip1:
+						case SpriteType.ExplosiveEnemyShip2:
+							HpEnemyShip.hit(destroyedShip);
+                            for (List<EnemyShip> enemyShip : this.enemyShips)
+                                if (enemyShip.size() > i
+										&& !enemyShip.get(i).isDestroyed())
+                                    this._destroy(enemyShip.get(i));
+						    for (int j = 0; j < column.size(); j++)
+							    if (!column.get(j).isDestroyed())
+								    this._destroy(column.get(j));
+
+						   break;
+						default:
+							if (!destroyedShip.isDestroyed())
+								HpEnemyShip.hit(destroyedShip);
+							break;
+					}
 					if (column.get(i).getHp() > 0) {
 						this.logger.info("Enemy ship lost 1 HP in ("
 								+ this.enemyShips.indexOf(column) + "," + i + ")");

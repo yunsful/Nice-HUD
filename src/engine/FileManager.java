@@ -274,15 +274,15 @@ public final class FileManager {
 	}
 
 	/**
-	 * Saves user currency to disk.
+	 * Saves user coin to disk.
 	 *
-	 * @param currency
-	 *            amount of user currency to save.
+	 * @param coin
+	 *            amount of user coin to save.
 	 * @throws IOException
 	 *             In case of saving problems.
 	 */
 
-	public void saveCurrency(final int currency) throws IOException {
+	public void saveCoin(final int coin) throws IOException {
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
 		BufferedWriter bufferedWriter = null;
@@ -317,12 +317,12 @@ public final class FileManager {
 				lines.add(line);
 			}
 
-			// Modify the first line (currency)
+			// Modify the first line (coin)
 			if (!lines.isEmpty()) {
-				lines.set(0, EncryptionSupport.encrypt(Integer.toString(currency)));
+				lines.set(0, EncryptionSupport.encrypt(Integer.toString(coin)));
 			} else {
-				// If the file was empty, add the new currency as the first line and the new gem as the second line
-				lines.add(EncryptionSupport.encrypt(Integer.toString(currency)));
+				// If the file was empty, add the new coin as the first line and the new gem as the second line
+				lines.add(EncryptionSupport.encrypt(Integer.toString(coin)));
 				lines.add(EncryptionSupport.encrypt("0"));
 			}
 
@@ -332,7 +332,7 @@ public final class FileManager {
 				bufferedWriter.newLine();
 			}
 
-			logger.info("Saving user's currency.");
+			logger.info("Saving user's coin.");
 
 		} finally {
 			if (bufferedReader != null)
@@ -344,14 +344,14 @@ public final class FileManager {
 	}
 
 	/**
-	 * Loads user currency from file, and returns current currency.
+	 * Loads user coin from file, and returns current coin.
 	 *
-	 * @return amount of current currency.
+	 * @return amount of current coin.
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
-	public int loadCurrency() throws IOException {
-		int currency;
+	public int loadCoin() throws IOException {
+		int coin;
 		InputStream inputStream = null;
 		OutputStream outputStream = null;
 		BufferedWriter bufferedWriter = null;
@@ -378,10 +378,10 @@ public final class FileManager {
 			bufferedReader = new BufferedReader(new InputStreamReader(
 					inputStream, Charset.forName("UTF-8")));
 
-			logger.info("Loading user's currency.");
+			logger.info("Loading user's coin.");
 
 			if (currencyFile.length() == 0) {
-				// If the file was empty, add the new currency as the first line and the new gem as the second line
+				// If the file was empty, add the new coin as the first line and the new gem as the second line
 				bufferedWriter.write(EncryptionSupport.encrypt("0"));
 				bufferedWriter.newLine();
 				bufferedWriter.write(EncryptionSupport.encrypt("0"));
@@ -389,7 +389,7 @@ public final class FileManager {
 			}
 
 			String amount = bufferedReader.readLine();
-			currency = Integer.parseInt(EncryptionSupport.decrypt(amount));
+			coin = Integer.parseInt(EncryptionSupport.decrypt(amount));
 		} finally {
 			if (bufferedReader != null)
 				bufferedReader.close();
@@ -398,7 +398,7 @@ public final class FileManager {
 				bufferedWriter.close();
 		}
 
-		return currency;
+		return coin;
 	}
 
 	/**
@@ -422,18 +422,18 @@ public final class FileManager {
 			jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
 			//Choose File root
-			String gemPath = new File(jarPath).getParent();
-			gemPath += File.separator;
-			gemPath += "currency";
+			String currencyPath = new File(jarPath).getParent();
+			currencyPath += File.separator;
+			currencyPath += "currency";
 
-			File gemFile = new File(gemPath);
-			//create File If there is no gemFile
-			if (!gemFile.exists())
-				gemFile.createNewFile();
+			File currencyFile = new File(currencyPath);
+			//create File If there is no currencyFile
+			if (!currencyFile.exists())
+				currencyFile.createNewFile();
 
 			List<String> lines = new ArrayList<>();
-			inputStream = new FileInputStream(gemFile);
-			outputStream = new FileOutputStream(gemFile);
+			inputStream = new FileInputStream(currencyFile);
+			outputStream = new FileOutputStream(currencyFile);
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
 					outputStream, Charset.forName("UTF-8")));
 			bufferedReader = new BufferedReader(new InputStreamReader(
@@ -449,7 +449,7 @@ public final class FileManager {
 			if (!lines.isEmpty()) {
 				lines.set(1, EncryptionSupport.encrypt(Integer.toString(gem)));
 			} else {
-				// If the file was empty, add the new currency as the first line and the new gem as the second line
+				// If the file was empty, add the new coin as the first line and the new gem as the second line
 				lines.add(EncryptionSupport.encrypt("0"));
 				lines.add(EncryptionSupport.encrypt(Integer.toString(gem)));
 			}
@@ -510,14 +510,14 @@ public final class FileManager {
 			logger.info("Loading user's gem.");
 
 			if (currencyFile.length() == 0) {
-				// If the file was empty, add the new currency as the first line and the new gem as the second line
+				// If the file was empty, add the new coin as the first line and the new gem as the second line
 				bufferedWriter.write(EncryptionSupport.encrypt("0"));
 				bufferedWriter.newLine();
 				bufferedWriter.write(EncryptionSupport.encrypt("0"));
 				bufferedWriter.newLine();
 			}
 
-			bufferedReader.readLine(); // Ignore first(currency) line
+			bufferedReader.readLine(); // Ignore first(coin) line
 			String amount = bufferedReader.readLine();
 			gem = Integer.parseInt(EncryptionSupport.decrypt(amount));
 		} finally {

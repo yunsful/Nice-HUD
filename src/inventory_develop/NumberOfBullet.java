@@ -16,9 +16,9 @@ public class NumberOfBullet{
     private static final int OFFSET_X_THREEBULLETS = 12;
 
     /** Bullet levels */
-    private static int bulletLevel = 1;
+    private static int bulletLevel = 2;
     /** PiercingBullet levles */
-    private static int piercingbulletLevel = 1;
+    private static int piercingbulletLevel = 2;
     private final int PierceMax = 3;
 
     /**

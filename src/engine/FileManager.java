@@ -509,6 +509,8 @@ public final class FileManager {
 	public int loadGem() throws IOException {
 		int gem;
 		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
 		BufferedReader bufferedReader = null;
 
 		try {
@@ -516,27 +518,41 @@ public final class FileManager {
 					.getCodeSource().getLocation().getPath();
 			jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-			String gemPath = new File(jarPath).getParent();
-			gemPath += File.separator;
-			gemPath += "currency";
+			String currencyPath = new File(jarPath).getParent();
+			currencyPath += File.separator;
+			currencyPath += "currency";
 
-			File gemFile = new File(gemPath);
-			inputStream = new FileInputStream(gemFile);
+			File currencyFile = new File(currencyPath);
+			//create File If there is no currencyFile
+			if (!currencyFile.exists())
+				currencyFile.createNewFile();
+
+			inputStream = new FileInputStream(currencyFile);
+			outputStream = new FileOutputStream(currencyFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
 			bufferedReader = new BufferedReader(new InputStreamReader(
 					inputStream, Charset.forName("UTF-8")));
 
 			logger.info("Loading user's gem.");
 
+			if (currencyFile.length() == 0) {
+				// If the file was empty, add the new currency as the first line and the new gem as the second line
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+			}
+
 			bufferedReader.readLine(); // Ignore first(currency) line
 			String amount = bufferedReader.readLine();
 			gem = Integer.parseInt(EncryptionSupport.decrypt(amount));
-		} catch (FileNotFoundException e) {
-			// loads default if there's no user gem.
-			logger.info("Loading default gem.");
-			gem = loadDefaultGem();
 		} finally {
 			if (bufferedReader != null)
 				bufferedReader.close();
+
+			if (bufferedWriter != null)
+				bufferedWriter.close();
 		}
 
 		return gem;

@@ -204,7 +204,7 @@ public class ScoreScreen extends Screen {
 	 *  Team Clove
 	 */
 	private void saveRecentScore() {
-		recentScore.add(new Score(new String(this.name), score));
+		recentScore.add(new Score(null, score));
 		if (recentScore.size() > MAX_RECENT_SCORE_NUM)
 			recentScore.remove(0);
 		try {

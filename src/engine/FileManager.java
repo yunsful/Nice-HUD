@@ -297,22 +297,13 @@ public final class FileManager {
 			Score recentScore = null;
 			String date = reader.readLine();
 			String score = reader.readLine();
-			String name = "Tom";
-
-			System.out.println("date: " + date);
-			System.out.println("score: " + score);
+			String name = null;
 
 			while ((date != null) && (score != null)) {
 				recentScore = new Score(name, Integer.parseInt(score), date);
 				recentScores.add(recentScore);
 				date = reader.readLine();
 				score = reader.readLine();
-			}
-
-			for (int i=0; i<recentScores.size(); i++) {
-				System.out.println("스코어 :");
-				System.out.println("이름 :" + recentScores.get(i).getDate());
-				System.out.println("점수 :" + recentScores.get(i).getScore());
 			}
 
 		} finally {

@@ -148,8 +148,7 @@ public class GameScreen extends Screen {
 		this.item = new ItemBarrierAndHeart();	// team Inventory
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
-		this.scoreManager = new ScoreManager(this.level, this);    //clove
-		this.scoreManager.startGame();    //clove
+		this.scoreManager = gameState.scoreManager; //Team Clove
 		this.statistics = new Statistics(); //Team Clove
 		this.achievementConditions = new AchievementConditions();
 	}

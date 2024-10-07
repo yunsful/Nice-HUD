@@ -283,63 +283,48 @@ public final class FileManager {
 	 */
 
 	public void saveCoin(final int coin) throws IOException {
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
-		BufferedWriter bufferedWriter = null;
-		BufferedReader bufferedReader = null;
+		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-		try {
-			String jarPath = FileManager.class.getProtectionDomain()
-					.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+		//Choose File root
+		String currencyPath = new File(jarPath).getParent();
+		currencyPath += File.separator;
+		currencyPath += "currency";
 
-			//Choose File root
-			String currencyPath = new File(jarPath).getParent();
-			currencyPath += File.separator;
-			currencyPath += "currency";
+		File currencyFile = new File(currencyPath);
 
-			File currencyFile = new File(currencyPath);
-			//create File If there is no currencyFile
-			if (!currencyFile.exists())
-				currencyFile.createNewFile();
+		//create File If there is no currencyFile
+		if (!currencyFile.exists())
+			currencyFile.createNewFile();
 
-			List<String> lines = new ArrayList<>();
-			inputStream = new FileInputStream(currencyFile);
-			outputStream = new FileOutputStream(currencyFile);
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
-					outputStream, Charset.forName("UTF-8")));
-			bufferedReader = new BufferedReader(new InputStreamReader(
-					inputStream, Charset.forName("UTF-8")));
+		List<String> lines = new ArrayList<>();
+		String line;
 
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(currencyFile), Charset.forName("UTF-8")))) {
 			// Read the file's current content
-			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				lines.add(line);
 			}
+		}
 
-			// Modify the first line (coin)
-			if (!lines.isEmpty()) {
-				lines.set(0, EncryptionSupport.encrypt(Integer.toString(coin)));
-			} else {
-				// If the file was empty, add the new coin as the first line and the new gem as the second line
-				lines.add(EncryptionSupport.encrypt(Integer.toString(coin)));
-				lines.add(EncryptionSupport.encrypt("0"));
-			}
+		// Modify the first line (coin)
+		if (!lines.isEmpty()) {
+			lines.set(0, EncryptionSupport.encrypt(Integer.toString(coin)));
+		} else {
+			// If the file was empty, add the new coin as the first line and the new gem as the second line
+			lines.add(EncryptionSupport.encrypt(Integer.toString(coin)));
+			lines.add(EncryptionSupport.encrypt("0"));
+		}
 
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(currencyFile), Charset.forName("UTF-8")))) {
 			// Write back the modified content
 			for (String l : lines) {
 				bufferedWriter.write(l);
 				bufferedWriter.newLine();
 			}
-
 			logger.info("Saving user's coin.");
-
-		} finally {
-			if (bufferedReader != null)
-				bufferedReader.close();
-
-			if (bufferedWriter != null)
-				bufferedWriter.close();
 		}
 	}
 
@@ -396,63 +381,48 @@ public final class FileManager {
 	 */
 	// Team-Ctrl-S(Currency)
 	public void saveGem(final int gem) throws IOException {
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
-		BufferedWriter bufferedWriter = null;
-		BufferedReader bufferedReader = null;
+		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-		try {
-			String jarPath = FileManager.class.getProtectionDomain()
-					.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+		//Choose File root
+		String currencyPath = new File(jarPath).getParent();
+		currencyPath += File.separator;
+		currencyPath += "currency";
 
-			//Choose File root
-			String currencyPath = new File(jarPath).getParent();
-			currencyPath += File.separator;
-			currencyPath += "currency";
+		File currencyFile = new File(currencyPath);
 
-			File currencyFile = new File(currencyPath);
-			//create File If there is no currencyFile
-			if (!currencyFile.exists())
-				currencyFile.createNewFile();
+		//create File If there is no currencyFile
+		if (!currencyFile.exists())
+			currencyFile.createNewFile();
 
-			List<String> lines = new ArrayList<>();
-			inputStream = new FileInputStream(currencyFile);
-			outputStream = new FileOutputStream(currencyFile);
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
-					outputStream, Charset.forName("UTF-8")));
-			bufferedReader = new BufferedReader(new InputStreamReader(
-					inputStream, Charset.forName("UTF-8")));
+		List<String> lines = new ArrayList<>();
+		String line;
 
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(currencyFile), Charset.forName("UTF-8")))) {
 			// Read the file's current content
-			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				lines.add(line);
 			}
+		}
 
-			// Modify the second line (gem)
-			if (!lines.isEmpty()) {
-				lines.set(1, EncryptionSupport.encrypt(Integer.toString(gem)));
-			} else {
-				// If the file was empty, add the new coin as the first line and the new gem as the second line
-				lines.add(EncryptionSupport.encrypt("0"));
-				lines.add(EncryptionSupport.encrypt(Integer.toString(gem)));
-			}
+		// Modify the second line (gem)
+		if (!lines.isEmpty()) {
+			lines.set(1, EncryptionSupport.encrypt(Integer.toString(gem)));
+		} else {
+			// If the file was empty, add the new coin as the first line and the new gem as the second line
+			lines.add(EncryptionSupport.encrypt("0"));
+			lines.add(EncryptionSupport.encrypt(Integer.toString(gem)));
+		}
 
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(currencyFile), Charset.forName("UTF-8")))) {
 			// Write back the modified content
 			for (String l : lines) {
 				bufferedWriter.write(l);
 				bufferedWriter.newLine();
 			}
-
 			logger.info("Saving user's gem.");
-
-		} finally {
-			if (bufferedReader != null)
-				bufferedReader.close();
-
-			if (bufferedWriter != null)
-				bufferedWriter.close();
 		}
 	}
 

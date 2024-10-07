@@ -188,16 +188,6 @@ public class GameScreen extends Screen {
 		this.bullets = new HashSet<PiercingBullet>(); // Edited by Enemy
 
 		// Special input delay / countdown.
-		/**
-		 * Added by the Level Design team
-		 *
-		 * Enables the cooldown only for the first wave
-		 * **/
-		if (this.waveCounter == 1) {
-			this.gameStartTime = System.currentTimeMillis();
-			this.inputDelay = Core.getCooldown(INPUT_DELAY);
-			this.inputDelay.reset();
-		}
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
@@ -314,8 +304,8 @@ public class GameScreen extends Screen {
 		if (this.enemyShipFormation.isEmpty() && waveCounter < this.gameSettings.getWavesNumber()) {
 
 			waveCounter++;
-
 			this.initialize();
+
 		}
 
 		/**
@@ -369,7 +359,7 @@ public class GameScreen extends Screen {
 
 		this.itemManager.drawItems(); //by Enemy team
 
-	// --- OBSTACLES - Draw Obstaacles
+		// --- OBSTACLES - Draw Obstaacles
 		for (Obstacle obstacle : this.obstacles) {
 			drawManager.drawEntity(obstacle, obstacle.getPositionX(), obstacle.getPositionY());
 		}
@@ -384,18 +374,25 @@ public class GameScreen extends Screen {
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
 
-		/**
-		 * Wave counter condition added by the Level Design team
-		 *
-		 * Removes the countdown for the next waves (after the first one)
-		 * **/
+
 		// Countdown to game start.
-		if (!this.inputDelay.checkFinished() && this.waveCounter == 1) {
+		if (!this.inputDelay.checkFinished()) {
 			int countdown = (int) ((INPUT_DELAY
 					- (System.currentTimeMillis()
 							- this.gameStartTime)) / 1000);
-			drawManager.drawCountDown(this, this.level, countdown,
-					this.bonusLife);
+
+			/**
+			 * Wave counter condition added by the Level Design team
+			 *
+			 * Display the wave number instead of the level number
+			 * **/
+			if (waveCounter != 1) {
+				drawManager.drawWave(this, waveCounter, countdown);
+			} else {
+				drawManager.drawCountDown(this, this.level, countdown,
+						this.bonusLife);
+			}
+
 			drawManager.drawHorizontalLine(this, this.height / 2 - this.height
 					/ 12);
 			drawManager.drawHorizontalLine(this, this.height / 2 + this.height

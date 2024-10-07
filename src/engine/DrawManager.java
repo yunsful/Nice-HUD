@@ -749,4 +749,31 @@ public class DrawManager {
 
         backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
     }
+
+	/**
+	 * ### TEAM INTERNATIONAL ###
+	 *
+	 * Wave draw method
+	 * **/
+	public void drawWave(final Screen screen, final int wave, final int number) {
+
+		int rectWidth = screen.getWidth();
+		int rectHeight = screen.getHeight() / 6;
+		backBufferGraphics.setColor(Color.BLACK);
+		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
+				rectWidth, rectHeight);
+		backBufferGraphics.setColor(Color.GREEN);
+		if (number >= 4)
+
+			drawCenteredBigString(screen, "Wave " + wave,
+					screen.getHeight() / 2
+							+ fontBigMetrics.getHeight() / 3);
+
+		else if (number != 0)
+			drawCenteredBigString(screen, Integer.toString(number),
+					screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+		else
+			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
+					+ fontBigMetrics.getHeight() / 3);
+	}
 }

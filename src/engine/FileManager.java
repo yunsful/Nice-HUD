@@ -352,50 +352,34 @@ public final class FileManager {
 	 */
 	public int loadCoin() throws IOException {
 		int coin;
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
-		BufferedWriter bufferedWriter = null;
-		BufferedReader bufferedReader = null;
+		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-		try {
-			String jarPath = FileManager.class.getProtectionDomain()
-					.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+		String currencyPath = new File(jarPath).getParent();
+		currencyPath += File.separator;
+		currencyPath += "currency";
 
-			String currencyPath = new File(jarPath).getParent();
-			currencyPath += File.separator;
-			currencyPath += "currency";
+		File currencyFile = new File(currencyPath);
 
-			File currencyFile = new File(currencyPath);
-			//create File If there is no currencyFile
-			if (!currencyFile.exists())
-				currencyFile.createNewFile();
+		// create File If there is no currencyFile
+		if (!currencyFile.exists())
+			currencyFile.createNewFile();
 
-			inputStream = new FileInputStream(currencyFile);
-			outputStream = new FileOutputStream(currencyFile);
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
-					outputStream, Charset.forName("UTF-8")));
-			bufferedReader = new BufferedReader(new InputStreamReader(
-					inputStream, Charset.forName("UTF-8")));
-
-			logger.info("Loading user's coin.");
-
-			if (currencyFile.length() == 0) {
-				// If the file was empty, add the new coin as the first line and the new gem as the second line
+		if (currencyFile.length() == 0) {
+			try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(currencyFile), Charset.forName("UTF-8")))) {
 				bufferedWriter.write(EncryptionSupport.encrypt("0"));
 				bufferedWriter.newLine();
 				bufferedWriter.write(EncryptionSupport.encrypt("0"));
 				bufferedWriter.newLine();
 			}
+		}
 
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(currencyFile), Charset.forName("UTF-8")))) {
+			logger.info("Loading user's coin.");
 			String amount = bufferedReader.readLine();
 			coin = Integer.parseInt(EncryptionSupport.decrypt(amount));
-		} finally {
-			if (bufferedReader != null)
-				bufferedReader.close();
-
-			if (bufferedWriter != null)
-				bufferedWriter.close();
 		}
 
 		return coin;

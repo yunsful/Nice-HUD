@@ -9,8 +9,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import CtrlS.CurrencyManager;
+import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
+import Sound_Operator.SoundManager;
 import clove.AchievementManager;
 import screen.*;
+
 
 /**
  * Implements core game logic.
@@ -55,7 +59,8 @@ public final class Core {
 	/** Difficulty settings for level 7. */
 	private static final GameSettings SETTINGS_LEVEL_7 =
 			new GameSettings(8, 7, 2, 500);
-	
+
+
 	/** Frame to draw the screen on. */
 	private static Frame frame;
 	/** Screen currently shown. */
@@ -69,7 +74,9 @@ public final class Core {
 	private static Handler fileHandler;
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
-
+	// Sound Operator
+	private static SoundManager sm;
+    private static AchievementManager achievementManager; // Team CLOVER
 
 	/**
 	 * Test implementation.
@@ -77,11 +84,9 @@ public final class Core {
 	 * @param args
 	 *            Program args, ignored.
 	 */
-
-	private static AchievementManager achievementManager; // Team CLOVER
-
 	public static void main(final String[] args) {
 		try {
+
 			LOGGER.setUseParentHandlers(false);
 
 			fileHandler = new FileHandler("log");
@@ -89,6 +94,8 @@ public final class Core {
 
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new MinimalFormatter());
+			// Sound Operator
+			sm = SoundManager.getInstance();
 
 			LOGGER.addHandler(fileHandler);
 			LOGGER.addHandler(consoleHandler);
@@ -119,11 +126,12 @@ public final class Core {
 		gameSettings.add(SETTINGS_LEVEL_7);
 		
 		GameState gameState;
+		RoundState roundState;
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0);
-
+			// Add playtime parameter - Soomin Lee / TeamHUD
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0);
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -135,11 +143,19 @@ public final class Core {
 				break;
 			case 2:
 				// Game & score.
+				LOGGER.info("Starting inGameBGM");
+				// Sound Operator
+				sm.playES("start_button_ES");
+				sm.playBGM("inGame_bgm");
+
 				do {
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
 							&& gameState.getLivesRemaining() < MAX_LIVES;
+
+					GameState prevState = gameState;
+
 
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
@@ -149,15 +165,38 @@ public final class Core {
 					frame.setScreen(currentScreen);
 					LOGGER.info("Closing game screen.");
 
+
 					achievementManager.updateAchievements(currentScreen); // TEAM CLOVER : Achievement
 
 					gameState = ((GameScreen) currentScreen).getGameState();
 
+					roundState = new RoundState(prevState, gameState);
+
+					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed(), Core.getCurrencyManager().calculateCurrency(gameState.getScore(), gameState.getShipsDestroyed() / (float) gameState.getBulletsShot(), 0, 0));
+							gameState.getShipsDestroyed(),
+							gameState.getTime(),
+							gameState.getCurrency() + roundState.getRoundCurrency(),
+							gameState.getGem());
+					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
+					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
+					LOGGER.info("Round Time: " + roundState.getRoundTime());
+
+					// Show receiptScreen
+					// If it is not the last round and the game is not over
+					// Ctrl-S
+					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
+						LOGGER.info("loading receiptScreen");
+						currentScreen = new ReceiptScreen(width, height, FPS, roundState, gameState);
+
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " receipt screen at " + FPS + " fps.");
+						frame.setScreen(currentScreen);
+						LOGGER.info("Closing receiptScreen.");
+					}
 
 					if (achievementManager != null) { // TEAM CLOVER : Added code
 						achievementManager.updateAchievements(currentScreen);
@@ -165,6 +204,10 @@ public final class Core {
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
+
+				LOGGER.info("Stop InGameBGM");
+				// Sound Operator
+				sm.stopAllBGM();
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " score screen at " + FPS + " fps, with a score of "
@@ -184,14 +227,14 @@ public final class Core {
 				returnCode = frame.setScreen(currentScreen);
 				LOGGER.info("Closing high score screen.");
 				break;
-				case 4:
-					// Recent Records.
-					currentScreen = new RecordScreen(width, height, FPS);
-					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
-							+ " recent record screen at " + FPS + " fps.");
-					returnCode = frame.setScreen(currentScreen);
-					LOGGER.info("Closing recent record screen.");
-					break;
+			case 4:
+				// Recent Records.
+				currentScreen = new RecordScreen(width, height, FPS);
+				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+						+ " recent record screen at " + FPS + " fps.");
+				returnCode = frame.setScreen(currentScreen);
+				LOGGER.info("Closing recent record screen.");
+				break;
 			default:
 				break;
 			}

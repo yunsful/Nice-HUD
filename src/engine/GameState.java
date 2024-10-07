@@ -11,20 +11,26 @@ public class GameState {
 	/** Current game level. */
 	private int level;
 	/** Current score. */
-	public static int score; // TEAM CLOVER : Changed score from private to public for usage in achievement
+	public int score; // TEAM CLOVER : Changed score from private to public for usage in achievement
 	/** Lives currently remaining. */
-	public static int livesRemaining; // TEAM CLOVER : Changed livesRemaining from private to public for usage in achievement
+	public int livesRemaining; // TEAM CLOVER : Changed livesRemaining from private to public for usage in achievement
 	/** Bullets shot until now. */
 	private int bulletsShot;
 	/** Ships destroyed until now. */
-	public static int shipsDestroyed; // TEAM CLOVER : Changed shipsDestroyed from private to public for usage in achievement
+	public int shipsDestroyed; // TEAM CLOVER : Changed shipsDestroyed from private to public for usage in achievement
+	// Soomin Lee / TeamHUD
+	/** Total time to play. */
+	private int playTime;
 	/** Current currency **/
 	// Team-Ctrl-S(Currency)
 	private int currency;
+	/** Current gem **/
+	// Team-Ctrl-S(Currency)
+	private int gem;
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param level
 	 *            Current game level.
 	 * @param score
@@ -35,23 +41,33 @@ public class GameState {
 	 *            Bullets shot until now.
 	 * @param shipsDestroyed
 	 *            Ships destroyed until now.
+	 *
+	 * Soomin Lee / TeamHUD
+	 * @param playTime
+	 * 	          Total time to play.
+	 * @param currency
+	 * 			  Current currency. // Team-Ctrl-S(Currency)
+	 * @param gem
+	 * 			  Current gem. // Team-Ctrl-S(Currency)
 	 */
 	public GameState(final int level, final int score,
-			final int livesRemaining, final int bulletsShot,
-			final int shipsDestroyed, final int currency) {
+					 final int livesRemaining, final int bulletsShot,
+					 final int shipsDestroyed, final int playTime, final int currency, final int gem) {
 		this.level = level;
 		this.score = score;
 		this.livesRemaining = livesRemaining;
 		this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
+		this.playTime = playTime;
 		this.currency = currency; // Team-Ctrl-S(Currency)
+		this.gem = gem; // Team-Ctrl-S(Currency)
 	}
 
 	// TEAM CLOVER : Added two static below
-	public static int livesRemaining() {
+	public int livesRemaining() {
 		return livesRemaining;
 	}
-	public static int shipsDestroyed() {
+	public int shipsDestroyed() {
 		return shipsDestroyed;
 	}
 
@@ -83,7 +99,9 @@ public class GameState {
 	/**
 	 * @return the score
 	 */
-	public final int getScore() { return score; }
+	public final int getScore() {
+		return score;
+	}
 
 	/**
 	 * @return the livesRemaining
@@ -107,6 +125,12 @@ public class GameState {
 	}
 
 	/**
+	 * Soomin Lee / TeamHUD
+	 * @return the playTime
+	 */
+	public final int getTime() { return playTime; }
+
+	/**
 	 * @return the currency
 	 */
 	// Team-Ctrl-S(Currency)
@@ -114,4 +138,11 @@ public class GameState {
 		return currency;
 	}
 
+	/**
+	 * @return the gem
+	 */
+	// Team-Ctrl-S(Currency)
+	public final int getGem() {
+		return gem;
+	}
 }

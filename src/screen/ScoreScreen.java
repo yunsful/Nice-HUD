@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import clove.Statistics; //Team Clove
+import HUDTeam.Achievement;
+import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
@@ -62,6 +64,8 @@ public class ScoreScreen extends Screen {
 
 	private long playTime; //Team Clove
 
+	private GameState gameState; // Team-Ctrl-S(Currency)
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -88,6 +92,7 @@ public class ScoreScreen extends Screen {
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.gameState = gameState; // Team-Ctrl-S(Currency)
 		this.level = gameState.getLevel(); //Team Clove
 		this.statistics = new Statistics(); //Team Clove
 
@@ -183,10 +188,11 @@ public class ScoreScreen extends Screen {
 	 * Saves the score as a high score.
 	 */
 	private void saveScore() {
-		highScores.add(new Score(new String(this.name), score)); //Team Clove Fixed
+		highScores.add(new Score(new String(this.name), score));
 		Collections.sort(highScores);
 		if (highScores.size() > MAX_HIGH_SCORE_NUM)
 			highScores.remove(highScores.size() - 1);
+
 		try {
 			Core.getFileManager().saveHighScores(highScores);
 		} catch (IOException e) {
@@ -245,11 +251,17 @@ public class ScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
+		// Jo minseo / HUD team
+		if(Achievement.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
+			Achievement.addTimer();
+		}
+
 		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
 				this.isNewRecord);
 		drawManager.drawResults(this, this.score, this.livesRemaining,
 				this.shipsDestroyed, (float) this.shipsDestroyed
-						/ this.bulletsShot, this.isNewRecord);
+						/ this.bulletsShot, this.isNewRecord, this.gameState);
 
 		if (this.isNewRecord)
 			drawManager.drawNameInput(this, this.name, this.nameCharSelected);

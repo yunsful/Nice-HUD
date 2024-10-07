@@ -46,6 +46,9 @@
 
   - [Space Invaders Regular (font)](http://www.fonts2u.com/space-invaders-regular.font) - &copy; kylemaoin 2010
   - [Pixelated Drive(bgm)](https://pixabay.com/ko/music/pixelated-drive-228439/) - &copy; Tim_Kulig 1980
+  - [Retro Gaming Groove(bgm)](https://freesound.org/people/zagi2/sounds/231579/) - &copy; zagi2 2014
+  - [Retro Techno(bgm)](https://freesound.org/people/zagi2/sounds/465902/) - &copy; zagi2 2019
+  - [Square Blip Non-Fade(es)](https://freesound.org/people/EtherAudio/sounds/752736/) - &copy; EtherAudio 2024
   - [Fast Collision(ES)](https://freesound.org/people/qubodup/sounds/332056/) - &copy; qubodup 2015
   - [Blast(es)](https://www.mewpot.com/sound-effects/1320) - &copy; Mike Koenig
   - [Hurt_C_08(ES)](https://freesound.org/people/cabled_mess/sounds/350925/) - &copy; cabled_mess 2016

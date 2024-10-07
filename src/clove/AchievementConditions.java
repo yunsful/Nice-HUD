@@ -89,7 +89,7 @@ public class AchievementConditions {
     }
 
     public void onScoreAchievement() {
-        int currentScore = GameState.score;
+        int currentScore = 0;//TODO : Get value from GameState.score;
         System.out.println("Checking score achievements. Current score: " + currentScore);
         for (Achievement achievement : scoreAchievements) {
             if (currentScore >= achievement.getRequiredScore() && !achievement.isCompleted()) {
@@ -108,7 +108,7 @@ public class AchievementConditions {
     }
 
     public void onKill() {
-        int currentKills = GameState.shipsDestroyed();
+        int currentKills = 0;//TODO : Get value from GameState.shipsDestroyed();
         System.out.println("Checking kill achievements. Current kills: " + currentKills);
         for (Achievement achievement : killAchievements) {
             System.out.println("Checking " + achievement.getAchievementName());
@@ -146,7 +146,7 @@ public class AchievementConditions {
     }
 
     public void checkNoDeathAchievements() {
-        int livesRemaining = GameState.livesRemaining();
+        int livesRemaining = 0;//TODO : Get value from GameState.livesRemaining();
         System.out.println("Checking kill achievements. Current kills: " + livesRemaining);
         if (livesRemaining == Core.MAX_LIVES) {
             for (Achievement achievement : noDeathAchievements) {

@@ -59,3 +59,4 @@
   - [Rocket Launch Game Futuristic Effect 4](https://www.storyblocks.com/audio/stock/rocket-launch-game-futuristic-effect-4-bwrzyfuxfw8k8p11ip2.html) - &copy; None
   - [Rocket Fly By.wav](https://freesound.org/s/276885/) -&copy; 18hiltc 2015
   - [Laser blast x3(ES)](https://freesound.org/people/peridactyloptrix/sounds/214990/) -&copy; peridactyloptrix 
+  - [coin recieved(ES)](https://pixabay.com/ko/sound-effects/coin-recieved-230517/) - &copy; RibhavAgrawal 2023

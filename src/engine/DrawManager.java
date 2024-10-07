@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import CtrlS.RoundState;
 import entity.AddSign;
 import entity.Coin;
 import screen.Screen;
@@ -409,14 +410,17 @@ public class DrawManager {
 	 * @param isNewRecord
 	 *            If the score is a new high score.
 	 */
+
+	//Ctrl S - add Currency String
 	public void drawResults(final Screen screen, final int score,
 							final int livesRemaining, final int shipsDestroyed,
-							final float accuracy, final boolean isNewRecord) {
+							final float accuracy, final boolean isNewRecord, final GameState gameState) {
 		String scoreString = String.format("score %04d", score);
 		String livesRemainingString = "lives remaining " + livesRemaining;
 		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
 		String accuracyString = String
 				.format("accuracy %.2f%%", accuracy * 100);
+		String currencyString = "Earned  $ " + gameState.getCurrency() + "  Coins!";
 
 		int height = isNewRecord ? 4 : 2;
 
@@ -431,6 +435,8 @@ public class DrawManager {
 						* 4);
 		drawCenteredRegularString(screen, accuracyString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight() * 6);
+		drawCenteredRegularString(screen, currencyString, screen.getHeight()
+				/ height + fontRegularMetrics.getHeight() * 8);
 	}
 
 	/**
@@ -443,6 +449,7 @@ public class DrawManager {
 	 * @param nameCharSelected
 	 *            Current character selected for modification.
 	 */
+	// Ctrl-S : move to lower position
 	public void drawNameInput(final Screen screen, final char[] name,
 							  final int nameCharSelected) {
 		String newRecordString = "New Record!";
@@ -450,10 +457,10 @@ public class DrawManager {
 
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredRegularString(screen, newRecordString, screen.getHeight()
-				/ 4 + fontRegularMetrics.getHeight() * 10);
+				/ 4 + fontRegularMetrics.getHeight() * 12);
 		backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, introduceNameString,
-				screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 12);
+				screen.getHeight() / 4 + fontRegularMetrics.getHeight() * 14);
 
 		// 3 letters name.
 		int positionX = screen.getWidth()
@@ -478,7 +485,7 @@ public class DrawManager {
 			backBufferGraphics.drawString(Character.toString(name[i]),
 					positionX,
 					screen.getHeight() / 4 + fontRegularMetrics.getHeight()
-							* 14);
+							* 16);
 		}
 	}
 
@@ -624,6 +631,77 @@ public class DrawManager {
 		else
 			drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
 					+ fontBigMetrics.getHeight() / 3);
+	}
+
+	//Ctrl-S
+	/**
+	 * Show ReceiptScreen
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param roundState
+	 *            State of one game round
+	 */
+
+	public void drawReceipt(final Screen screen, final RoundState roundState, final GameState gameState) {
+		String stageScoreString = "Stage Score";
+		String totalScoreString = "Total Score : ";
+		String stageCoinString = "Coins Obtained";
+		String instructionsString = "Press Space to Continue to get more coin!";
+		String hitrateBonusString = "Hitrate Bonus!! : +30%";
+		String timeBonusString = "Time Bonus!!";
+		//draw Score part
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, stageScoreString, screen.getHeight() / 8);
+		backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredBigString(screen, Integer.toString(roundState.getRoundScore()), screen.getHeight() / 8 + fontBigMetrics.getHeight() / 2 * 3);
+		backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredRegularString(screen, totalScoreString + gameState.getScore(), screen.getHeight() / 8 + fontRegularMetrics.getHeight() / 2 * 7);
+		//draw Coin part
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, stageCoinString, screen.getHeight() / 3);
+		backBufferGraphics.setColor(Color.WHITE);
+		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCurrency()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
+
+		//draw HitRate Bonus part
+		float hitRate = roundState.getRoundHitRate(); // Calculate HitRate
+		if (hitRate > 0.9) {
+			backBufferGraphics.setColor(Color.LIGHT_GRAY);
+			drawCenteredRegularString(screen, hitrateBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 7);
+		}
+		else if (hitRate > 0.8) {
+			hitrateBonusString = "Hitrate Bonus!! : +20%";
+			backBufferGraphics.setColor(Color.LIGHT_GRAY);
+			drawCenteredRegularString(screen, hitrateBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 7);
+		}
+		//draw Time Bonus part
+		long time = roundState.getRoundTime();
+		int num = (time <= 50) ? 0 : (time <= 80) ? 1 : (time <= 100) ? 2 : 3;
+		switch (num) {
+			case 0:
+				timeBonusString = "Time Bonus!! : +50";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
+				break;
+			case 1:
+				timeBonusString = "Time Bonus!! : +30";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
+				break;
+			case 2:
+				timeBonusString = "Time Bonus!! : +10";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
+				break;
+			case 3:
+				timeBonusString = "You missed TimeBonus! Try harder!";
+				backBufferGraphics.setColor(Color.LIGHT_GRAY);
+				drawCenteredRegularString(screen, timeBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 9);
+		}
+
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 2 + fontRegularMetrics.getHeight() * 10);
 	}
 
 	/**

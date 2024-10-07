@@ -273,7 +273,10 @@ public class GameScreen extends Screen {
 			//this.logger.info("Final Playtime: " + playTime + " seconds");    //clove
             try { //Team Clove
                 statistics.addTotalPlayTime(playTime);
-            } catch (IOException e) {
+				statistics.comHighestLevel(level);
+				statistics.addBulletShot(bulletsShot);
+				statistics.addShipsDestroyed(shipsDestroyed);
+			} catch (IOException e) {
                 throw new RuntimeException(e);
             }
 

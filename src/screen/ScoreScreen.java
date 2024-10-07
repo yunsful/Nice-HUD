@@ -220,10 +220,6 @@ public class ScoreScreen extends Screen {
 
 	private void saveStatistics(){
 		try{
-			Score conScore = new Score(bulletsShot, shipsDestroyed, level); //for userdata save
-			statistics.comHighestLevel(conScore.getLevel());
-			statistics.addBulletShot(conScore.getBulletsShot());
-			statistics.addShipsDestroyed(conScore.getShipsDestroyed());
 			statistics.comShipsDestructionStreak(0);
 			statistics.addPlayedGameNumber(1);
 			statistics.comClearAchievementNumber(0);

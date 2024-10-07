@@ -83,7 +83,7 @@ public class Statistics {
         int CurrentHighestLevel = stat.getHighestLevel();
         if(CurrentHighestLevel < Level){
             playerStatistics.clear();
-            playerStatistics.add(new Statistics(Level - 1, stat.totalBulletsShot, stat.totalShipsDestroyed, stat.shipsDestructionStreak,
+            playerStatistics.add(new Statistics(Level, stat.totalBulletsShot, stat.totalShipsDestroyed, stat.shipsDestructionStreak,
                     stat.playedGameNumber, stat.clearAchievementNumber, stat.totalPlaytime));
             fileManager.saveUserData(playerStatistics);
         }

@@ -136,6 +136,8 @@ public class GameScreen extends Screen {
 		this.shield = new TemporaryShield();
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
+		// Soomin Lee / TeamHUD
+		this.playTime = gameState.getTime();
 	}
 
 	/**

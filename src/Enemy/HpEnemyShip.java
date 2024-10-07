@@ -26,7 +26,7 @@ public class HpEnemyShip {
      *
      * @return current probability.
      */
-    public static double getMagentaProbability() {
+    public static double getItemEnemyProbability() {
         return magentaProbability;
     }
 
@@ -46,7 +46,9 @@ public class HpEnemyShip {
             return new Color(0xFFEB3B);
         else if (hp == 3)
             return new Color(0xFFA500);
-        return Math.random() < magentaProbability ? Color.MAGENTA : Color.WHITE;
+        else if (hp == 1)
+            return Math.random() < magentaProbability ? Color.MAGENTA : Color.WHITE;
+        return Color.WHITE;
     }
 
     /**

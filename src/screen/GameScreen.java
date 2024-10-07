@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import clove.AchievementConditions;
 import clove.Statistics;
 import Enemy.*;
 import HUDTeam.Achievement;
@@ -24,7 +25,7 @@ import Sound_Operator.SoundManager;
 import Enemy.PiercingBulletPool;
 import Enemy.Item;
 import Enemy.ItemManager;
-import clove.ScoreManager;    //clove
+import clove.ScoreManager;    // CLOVE
 
 /**
  * Implements the game screen, where the action happens.
@@ -111,6 +112,8 @@ public class GameScreen extends Screen {
 	private long endTime;    //clove
 
 	private Statistics statistics; //Team Clove
+	private AchievementConditions achievementConditions;
+	private int fastKill;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -148,6 +151,7 @@ public class GameScreen extends Screen {
 		this.scoreManager = new ScoreManager(this.level, this);    //clove
 		this.scoreManager.startGame();    //clove
 		this.statistics = new Statistics(); //Team Clove
+		this.achievementConditions = new AchievementConditions();
 	}
 
 	/**
@@ -272,8 +276,21 @@ public class GameScreen extends Screen {
 			this.endTime = System.currentTimeMillis();    //clove
 			long playTime = (this.endTime - this.startTime) / 1000;    //clove
 			//this.logger.info("Final Playtime: " + playTime + " seconds");    //clove
+			achievementConditions.checkNoDeathAchievements(lives);
+			achievementConditions.score(score);
             try { //Team Clove
+				statistics.comHighestLevel(level);
+				statistics.addBulletShot(bulletsShot);
+				statistics.addShipsDestroyed(shipsDestroyed);
                 statistics.addTotalPlayTime(playTime);
+
+				achievementConditions.onKill();
+				achievementConditions.onStage();
+				achievementConditions.trials();
+				achievementConditions.killStreak();
+				achievementConditions.fastKill(fastKill);
+				achievementConditions.score(score);
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

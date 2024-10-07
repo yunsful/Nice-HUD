@@ -203,7 +203,7 @@ public class ScoreScreen extends Screen {
 		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
 				this.isNewRecord);
 		drawManager.drawResults(this, this.score, this.livesRemaining,
-				this.shipsDestroyed, (float) this.shipsDestroyed
+				this.shipsDestroyed, (float) this.gameState.getHitCount()
 						/ this.bulletsShot, this.isNewRecord, this.gameState);
 
 		if (this.isNewRecord)

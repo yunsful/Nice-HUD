@@ -129,7 +129,8 @@ public final class Core {
 		int returnCode = 1;
 		do {
 			// Add playtime parameter - Soomin Lee / TeamHUD
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0);
+			// Add hitCount parameter - Ctrl S
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0, 0);
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -153,7 +154,6 @@ public final class Core {
 							&& gameState.getLivesRemaining() < MAX_LIVES;
 
 					GameState prevState = gameState;
-
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
 							bonusLife, width, height, FPS);
@@ -174,7 +174,8 @@ public final class Core {
 							gameState.getShipsDestroyed(),
 							gameState.getTime(),
 							gameState.getCurrency() + roundState.getRoundCurrency(),
-							gameState.getGem());
+							gameState.getGem(),
+							gameState.getHitCount());
 					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
 					LOGGER.info("Round Time: " + roundState.getRoundTime());

@@ -8,7 +8,7 @@ public class RoundState {
     private final GameState currState;
     private final int roundScore;
     private final int roundBulletsShot;
-    private final int roundShipsDestroyed;
+    private final int roundHitCount;
     private final int roundCurrency;
     private final float roundHitRate;
     private final long roundTime;
@@ -18,8 +18,8 @@ public class RoundState {
         this.currState = currState;
         this.roundScore = currState.getScore() - prevState.getScore();
         this.roundBulletsShot = currState.getBulletsShot() - prevState.getBulletsShot();
-        this.roundShipsDestroyed = currState.getShipsDestroyed() - prevState.getShipsDestroyed();
-        this.roundHitRate = roundShipsDestroyed / (float) roundBulletsShot;
+        this.roundHitCount = currState.getHitCount() - prevState.getHitCount();
+        this.roundHitRate = roundHitCount / (float) roundBulletsShot;
         this.roundTime = currState.getTime() - prevState.getTime();
         this.roundCurrency = calculateCurrency();
     }

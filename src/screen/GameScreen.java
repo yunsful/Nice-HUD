@@ -205,7 +205,7 @@ public class GameScreen extends Screen {
 		// Soomin Lee / TeamHUD
 		this.playStartTime = gameStartTime + INPUT_DELAY;
 		this.playTimePre = playTime;
-	}
+
 
         // 	// --- OBSTACLES - Initialize obstacles
         this.obstacles = new HashSet<>();

@@ -2,9 +2,12 @@ package entity;
 
 import java.awt.Color;
 
+import Enemy.HpEnemyShip;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+// Sound Operator
+import Sound_Operator.SoundManager;
 
 /**
  * Implements a enemy ship, to be destroyed by the player.
@@ -23,12 +26,17 @@ public class EnemyShip extends Entity {
 	/** Point value of a bonus enemy. */
 	private static final int BONUS_TYPE_POINTS = 100;
 
+	/** EnemyShip's health point */
+	private int hp; // Edited by Enemy
 	/** Cooldown between sprite changes. */
 	private Cooldown animationCooldown;
 	/** Checks if the ship has been hit by a bullet. */
 	private boolean isDestroyed;
 	/** Values of the ship, in points, when destroyed. */
 	private int pointValue;
+
+	// Sound Operator
+	private static SoundManager sm;
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -40,10 +48,13 @@ public class EnemyShip extends Entity {
 	 * @param spriteType
 	 *            Sprite type, image corresponding to the ship.
 	 */
-	public EnemyShip(final int positionX, final int positionY,
-			final SpriteType spriteType) {
-		super(positionX, positionY, 12 * 2, 8 * 2, Color.WHITE);
 
+
+	public EnemyShip(final int positionX, final int positionY,
+			final SpriteType spriteType,int hp) {// Edited by Enemy
+		super(positionX, positionY, 12 * 2, 8 * 2, HpEnemyShip.determineColor(hp));
+
+		this.hp = hp;// Edited by Enemy
 		this.spriteType = spriteType;
 		this.animationCooldown = Core.getCooldown(500);
 		this.isDestroyed = false;
@@ -74,10 +85,12 @@ public class EnemyShip extends Entity {
 	public EnemyShip() {
 		super(-32, 60, 16 * 2, 7 * 2, Color.RED);
 
+		this.hp = 1; // Edited by Enemy
 		this.spriteType = SpriteType.EnemyShipSpecial;
 		this.isDestroyed = false;
 		this.pointValue = BONUS_TYPE_POINTS;
 	}
+
 
 	/**
 	 * Getter for the score bonus if this ship is destroyed.
@@ -138,7 +151,15 @@ public class EnemyShip extends Entity {
 	 */
 	public final void destroy() {
 		this.isDestroyed = true;
+		// Sound Operator
+		sm = SoundManager.getInstance();
+		if(this.spriteType == SpriteType.EnemyShipSpecial){
+			sm.playES("special_enemy_die");
+		}else{
+			sm.playES("basic_enemy_die");
+		}
 		this.spriteType = SpriteType.Explosion;
+
 	}
 
 	/**
@@ -149,4 +170,33 @@ public class EnemyShip extends Entity {
 	public final boolean isDestroyed() {
 		return this.isDestroyed;
 	}
+
+
+	/** Constructor for original EnemyShip that did not have hp.
+	 * That enemyShip is moved to a constructor with the hp default of 1*/
+	public EnemyShip(final int positionX, final int positionY,
+					 final SpriteType spriteType){
+		this(positionX,positionY,spriteType,1);
+	}// Edited by Enemy
+
+	/**
+	 * Getter for the Hp of this Enemy ship.
+	 *
+	 * @return Hp of the ship.
+	 */
+	public final int getHp() {
+		return this.hp;
+	}// Edited by Enemy
+
+	/**
+	 * Setter for the Hp of the Enemy ship.
+	 *
+	 * @param hp
+	 * 			New hp of the Enemey ship.
+	 */
+	public void setHp(int hp) {
+		this.hp = hp;
+	}// Edited by Enemy
+
+
 }

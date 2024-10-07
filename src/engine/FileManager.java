@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
+import CtrlS.EncryptionSupport;
 import engine.DrawManager.SpriteType;
 
 /**
@@ -115,11 +115,15 @@ public final class FileManager {
 		Font font;
 
 		try {
-			// Font loading.
 			inputStream = FileManager.class.getClassLoader()
-					.getResourceAsStream("font.ttf"); // Dont forget to download the font and place it in the res folder
-			font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(
-					size);
+					.getResourceAsStream("font.ttf");
+			if (inputStream != null) {
+				font = Font.createFont(Font.TRUETYPE_FONT, inputStream).deriveFont(size);
+			} else {
+				// Set as default font, if inputStream is null
+				System.out.println("Custom font not found, applying default font.");
+				font = new Font("Serif", Font.PLAIN, (int) size); // Set as "Serif"
+			}
 		} finally {
 			if (inputStream != null)
 				inputStream.close();
@@ -226,7 +230,7 @@ public final class FileManager {
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
-	public void saveHighScores(final List<Score> highScores) 
+	public void saveHighScores(final List<Score> highScores)
 			throws IOException {
 		OutputStream outputStream = null;
 		BufferedWriter bufferedWriter = null;
@@ -267,5 +271,287 @@ public final class FileManager {
 			if (bufferedWriter != null)
 				bufferedWriter.close();
 		}
+	}
+
+	/**
+	 * Saves user currency to disk.
+	 *
+	 * @param currency
+	 *            amount of user currency to save.
+	 * @throws IOException
+	 *             In case of saving problems.
+	 */
+
+	public void saveCurrency(final int currency) throws IOException {
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
+		BufferedReader bufferedReader = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			//Choose File root
+			String currencyPath = new File(jarPath).getParent();
+			currencyPath += File.separator;
+			currencyPath += "currency";
+
+			File currencyFile = new File(currencyPath);
+			//create File If there is no currencyFile
+			if (!currencyFile.exists())
+				currencyFile.createNewFile();
+
+			List<String> lines = new ArrayList<>();
+			inputStream = new FileInputStream(currencyFile);
+			outputStream = new FileOutputStream(currencyFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					inputStream, Charset.forName("UTF-8")));
+
+			// Read the file's current content
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				lines.add(line);
+			}
+
+			// Modify the first line (currency)
+			if (!lines.isEmpty()) {
+				lines.set(0, EncryptionSupport.encrypt(Integer.toString(currency)));
+			} else {
+				// If the file was empty, add the new currency as the first line and the new gem as the second line
+				lines.add(EncryptionSupport.encrypt(Integer.toString(currency)));
+				lines.add(EncryptionSupport.encrypt("0"));
+			}
+
+			// Write back the modified content
+			for (String l : lines) {
+				bufferedWriter.write(l);
+				bufferedWriter.newLine();
+			}
+
+			logger.info("Saving user's currency.");
+
+		} finally {
+			if (bufferedReader != null)
+				bufferedReader.close();
+
+			if (bufferedWriter != null)
+				bufferedWriter.close();
+		}
+	}
+
+	/**
+	 * Loads user currency from file, and returns current currency.
+	 *
+	 * @return amount of current currency.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 */
+	public int loadCurrency() throws IOException {
+		int currency;
+		InputStream inputStream = null;
+		BufferedReader bufferedReader = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String currencyPath = new File(jarPath).getParent();
+			currencyPath += File.separator;
+			currencyPath += "currency";
+
+			File currencyFile = new File(currencyPath);
+			inputStream = new FileInputStream(currencyFile);
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					inputStream, Charset.forName("UTF-8")));
+
+			logger.info("Loading user's currency.");
+
+			String amount = bufferedReader.readLine();
+			currency = Integer.parseInt(EncryptionSupport.decrypt(amount));
+		} catch (FileNotFoundException e) {
+			// loads default if there's no user currency.
+			logger.info("Loading default currency.");
+			currency = loadDefaultCurrency();
+		} finally {
+			if (bufferedReader != null)
+				bufferedReader.close();
+		}
+
+		return currency;
+	}
+
+	/**
+	 * Returns the application default currency if there is no user currency files.
+	 *
+	 * @return Default currency.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 */
+	private int loadDefaultCurrency() throws IOException {
+		int currency;
+		InputStream inputStream = null;
+		BufferedReader reader = null;
+
+		try {
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("currency");
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+
+			String amount = reader.readLine();
+			currency = Integer.parseInt(amount);
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return currency;
+	}
+
+	/**
+	 * Saves user gem to disk.
+	 *
+	 * @param gem
+	 *            amount of user gem to save.
+	 * @throws IOException
+	 * 			   In case of saving problems.
+	 */
+	// Team-Ctrl-S(Currency)
+	public void saveGem(final int gem) throws IOException {
+		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
+		BufferedReader bufferedReader = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			//Choose File root
+			String gemPath = new File(jarPath).getParent();
+			gemPath += File.separator;
+			gemPath += "currency";
+
+			File gemFile = new File(gemPath);
+			//create File If there is no gemFile
+			if (!gemFile.exists())
+				gemFile.createNewFile();
+
+			List<String> lines = new ArrayList<>();
+			inputStream = new FileInputStream(gemFile);
+			outputStream = new FileOutputStream(gemFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					inputStream, Charset.forName("UTF-8")));
+
+			// Read the file's current content
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				lines.add(line);
+			}
+
+			// Modify the second line (gem)
+			if (!lines.isEmpty()) {
+				lines.set(1, EncryptionSupport.encrypt(Integer.toString(gem)));
+			} else {
+				// If the file was empty, add the new currency as the first line and the new gem as the second line
+				lines.add(EncryptionSupport.encrypt("0"));
+				lines.add(EncryptionSupport.encrypt(Integer.toString(gem)));
+			}
+
+			// Write back the modified content
+			for (String l : lines) {
+				bufferedWriter.write(l);
+				bufferedWriter.newLine();
+			}
+
+			logger.info("Saving user's gem.");
+
+		} finally {
+			if (bufferedReader != null)
+				bufferedReader.close();
+
+			if (bufferedWriter != null)
+				bufferedWriter.close();
+		}
+	}
+
+	/**
+	 * Loads user gem from file, and returns current gem.
+	 *
+	 * @return amount of current gem.
+	 * @throws IOException
+	 * 			   In case of loading problems.
+	 */
+	// Team-Ctrl-S(Currency)
+	public int loadGem() throws IOException {
+		int gem;
+		InputStream inputStream = null;
+		BufferedReader bufferedReader = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String gemPath = new File(jarPath).getParent();
+			gemPath += File.separator;
+			gemPath += "currency";
+
+			File gemFile = new File(gemPath);
+			inputStream = new FileInputStream(gemFile);
+			bufferedReader = new BufferedReader(new InputStreamReader(
+					inputStream, Charset.forName("UTF-8")));
+
+			logger.info("Loading user's gem.");
+
+			bufferedReader.readLine(); // Ignore first(currency) line
+			String amount = bufferedReader.readLine();
+			gem = Integer.parseInt(EncryptionSupport.decrypt(amount));
+		} catch (FileNotFoundException e) {
+			// loads default if there's no user gem.
+			logger.info("Loading default gem.");
+			gem = loadDefaultGem();
+		} finally {
+			if (bufferedReader != null)
+				bufferedReader.close();
+		}
+
+		return gem;
+	}
+
+	/**
+	 * Returns the application default gem if there is no user gem files.
+	 *
+	 * @return Default gem.
+	 * @throws IOException
+	 * 			   In case of loading problems.
+	 */
+	// Team-Ctrl-S(Currency)
+	private int loadDefaultGem() throws IOException {
+		int gem;
+		InputStream inputStream = null;
+		BufferedReader reader = null;
+
+		try {
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("currency");
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+
+			reader.readLine(); //Ignore first(currency) line
+			String amount = reader.readLine();
+			gem = Integer.parseInt(amount);
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return gem;
 	}
 }

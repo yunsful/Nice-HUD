@@ -19,6 +19,8 @@ import entity.Entity;
 import entity.Ship;
 // shield and heart recovery
 import inventory_develop.ItemBarrierAndHeart;
+//inventory_fevertime
+import inventory_develop.FeverTimeItem;
 // Sound Operator
 import Sound_Operator.SoundManager;
 
@@ -68,6 +70,7 @@ public class GameScreen extends Screen {
 	private ItemManager itemManager; //by Enemy team
 	/** Shield item */
 	private ItemBarrierAndHeart item;	// team Inventory
+	private FeverTimeItem feverTimeItem;
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -129,6 +132,7 @@ public class GameScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.item = new ItemBarrierAndHeart();	// team Inventory
+		this.feverTimeItem = new FeverTimeItem(); // team Inventory
 	}
 
 	/**
@@ -232,6 +236,7 @@ public class GameScreen extends Screen {
 
 			this.item.updateBarrierAndShip(this.ship);	// team Inventory
 //			this.ship.update();					// team Inventory
+			this.feverTimeItem.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
 		}
@@ -405,7 +410,13 @@ public class GameScreen extends Screen {
 							&& checkCollision(bullet, enemyShip)) {
 						this.enemyShipFormation._destroy(enemyShip);
 						if(enemyShip.getHp() <= 0) {
-							this.score += enemyShip.getPointValue();
+							//inventory_피버타임이 활성화되어 있으면 점수 2배로 처리
+							if(feverTimeItem.isActive()) {
+								this.score += enemyShip.getPointValue()*2;
+							}
+							else{
+								this.score += enemyShip.getPointValue();
+							}
 							this.shipsDestroyed++;
 						}
 
@@ -422,7 +433,12 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
+					if (feverTimeItem.isActive()) {
+						this.score += this.enemyShipSpecial.getPointValue() *2;
+					}
+					else{
+						this.score += this.enemyShipSpecial.getPointValue();
+					}
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
@@ -497,4 +513,8 @@ public class GameScreen extends Screen {
 	public ItemBarrierAndHeart getItem() {
 		return item;
 	}	// Team Inventory(Item)
+
+	public FeverTimeItem getFeverTimeItem() {
+		return feverTimeItem;
+	}
 }

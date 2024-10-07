@@ -87,7 +87,8 @@ public class DrawManager {
 		ItemBarrier,
 		ItemHeart,
 		ShipBarrierStatus,
-		ItemCoin
+		ItemCoin,
+		ItemFeverTime
 	};
 
 	/**
@@ -123,6 +124,7 @@ public class DrawManager {
 			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
 			spriteMap.put(SpriteType.ShipBarrierStatus, new boolean[13][8]);	// temporary
 			spriteMap.put(SpriteType.ItemCoin, new boolean[7][7]);
+			spriteMap.put(SpriteType.ItemFeverTime, new boolean[9][9]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");

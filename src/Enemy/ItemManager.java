@@ -4,6 +4,7 @@ import engine.Core;
 import entity.EnemyShip;
 import entity.Ship;
 import inventory_develop.Bomb;
+import inventory_develop.FeverTimeItem;
 import screen.GameScreen;
 import engine.DrawManager;
 
@@ -27,6 +28,7 @@ public class ItemManager {
     private ItemBarrierAndHeart Item2;
     private Ship ship;
     private PlayerGrowth growth;
+    private FeverTimeItem feverTimeItem;
 
     public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
         this.items = new HashSet<>();
@@ -36,6 +38,7 @@ public class ItemManager {
         this.ship = gameScreen.getShip();       // Team Inventory
         this.growth = ship.getPlayerGrowth();
         this.Item2 = gameScreen.getItem();
+        this.feverTimeItem = gameScreen.getFeverTimeItem();
     }
 
     public void cleanItems() {
@@ -82,6 +85,10 @@ public class ItemManager {
                 case ItemHeart:
                     Item2.activeheart(gameScreen, ship, growth);
                     break;
+                case ItemFeverTime: // 피버타임 아이템일 경우
+                    feverTimeItem.activate();
+                    break;
+
             }
 
             addItemRecycle(item);

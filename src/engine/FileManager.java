@@ -353,6 +353,8 @@ public final class FileManager {
 	public int loadCurrency() throws IOException {
 		int currency;
 		InputStream inputStream = null;
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
 		BufferedReader bufferedReader = null;
 
 		try {
@@ -365,21 +367,35 @@ public final class FileManager {
 			currencyPath += "currency";
 
 			File currencyFile = new File(currencyPath);
+			//create File If there is no currencyFile
+			if (!currencyFile.exists())
+				currencyFile.createNewFile();
+
 			inputStream = new FileInputStream(currencyFile);
+			outputStream = new FileOutputStream(currencyFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
 			bufferedReader = new BufferedReader(new InputStreamReader(
 					inputStream, Charset.forName("UTF-8")));
 
 			logger.info("Loading user's currency.");
 
+			if (currencyFile.length() == 0) {
+				// If the file was empty, add the new currency as the first line and the new gem as the second line
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+			}
+
 			String amount = bufferedReader.readLine();
 			currency = Integer.parseInt(EncryptionSupport.decrypt(amount));
-		} catch (FileNotFoundException e) {
-			// loads default if there's no user currency.
-			logger.info("Loading default currency.");
-			currency = loadDefaultCurrency();
 		} finally {
 			if (bufferedReader != null)
 				bufferedReader.close();
+
+			if (bufferedWriter != null)
+				bufferedWriter.close();
 		}
 
 		return currency;

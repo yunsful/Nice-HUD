@@ -8,11 +8,16 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import CtrlS.CurrencyManager;
+import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
+import Sound_Operator.SoundManager;
 import screen.GameScreen;
 import screen.HighScoreScreen;
 import screen.ScoreScreen;
 import screen.Screen;
 import screen.TitleScreen;
+
 
 /**
  * Implements core game logic.
@@ -23,9 +28,9 @@ import screen.TitleScreen;
 public final class Core {
 
 	/** Width of current screen. */
-	private static final int WIDTH = 448;
+	private static final int WIDTH = 630;
 	/** Height of current screen. */
-	private static final int HEIGHT = 520;
+	private static final int HEIGHT = 720;
 	/** Max fps of current screen. */
 	private static final int FPS = 60;
 
@@ -57,7 +62,8 @@ public final class Core {
 	/** Difficulty settings for level 7. */
 	private static final GameSettings SETTINGS_LEVEL_7 =
 			new GameSettings(8, 7, 2, 500);
-	
+
+
 	/** Frame to draw the screen on. */
 	private static Frame frame;
 	/** Screen currently shown. */
@@ -71,6 +77,8 @@ public final class Core {
 	private static Handler fileHandler;
 	/** Logger handler for printing to console. */
 	private static ConsoleHandler consoleHandler;
+	// Sound Operator
+	private static SoundManager sm;
 
 
 	/**
@@ -81,6 +89,7 @@ public final class Core {
 	 */
 	public static void main(final String[] args) {
 		try {
+
 			LOGGER.setUseParentHandlers(false);
 
 			fileHandler = new FileHandler("log");
@@ -88,6 +97,8 @@ public final class Core {
 
 			consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(new MinimalFormatter());
+			// Sound Operator
+			sm = SoundManager.getInstance();
 
 			LOGGER.addHandler(fileHandler);
 			LOGGER.addHandler(consoleHandler);
@@ -113,11 +124,12 @@ public final class Core {
 		gameSettings.add(SETTINGS_LEVEL_7);
 		
 		GameState gameState;
+		RoundState roundState;
 
 		int returnCode = 1;
 		do {
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0);
-
+			// Add playtime parameter - Soomin Lee / TeamHUD
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0);
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -129,12 +141,19 @@ public final class Core {
 				break;
 			case 2:
 				// Game & score.
+				LOGGER.info("Starting inGameBGM");
+				// Sound Operator
+				sm.playES("start_button_ES");
+				sm.playBGM("inGame_bgm");
+
 				do {
 					// One extra live every few levels.
 					boolean bonusLife = gameState.getLevel()
 							% EXTRA_LIFE_FRECUENCY == 0
 							&& gameState.getLivesRemaining() < MAX_LIVES;
-					
+
+					GameState prevState = gameState;
+
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
 							bonusLife, width, height, FPS);
@@ -145,14 +164,40 @@ public final class Core {
 
 					gameState = ((GameScreen) currentScreen).getGameState();
 
+					roundState = new RoundState(prevState, gameState);
+
+					// Add playtime parameter - Soomin Lee / TeamHUD
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
 							gameState.getBulletsShot(),
-							gameState.getShipsDestroyed());
+							gameState.getShipsDestroyed(),
+							gameState.getTime(),
+							gameState.getCurrency() + roundState.getRoundCurrency(),
+							gameState.getGem());
+					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
+					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
+					LOGGER.info("Round Time: " + roundState.getRoundTime());
+
+					// Show receiptScreen
+					// If it is not the last round and the game is not over
+					// Ctrl-S
+					if (gameState.getLevel() <= 7 && gameState.getLivesRemaining() > 0) {
+						LOGGER.info("loading receiptScreen");
+						currentScreen = new ReceiptScreen(width, height, FPS, roundState, gameState);
+
+						LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+								+ " receipt screen at " + FPS + " fps.");
+						frame.setScreen(currentScreen);
+						LOGGER.info("Closing receiptScreen.");
+					}
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
+
+				LOGGER.info("Stop InGameBGM");
+				// Sound Operator
+				sm.stopAllBGM();
 
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " score screen at " + FPS + " fps, with a score of "
@@ -249,5 +294,15 @@ public final class Core {
 	public static Cooldown getVariableCooldown(final int milliseconds,
 			final int variance) {
 		return new Cooldown(milliseconds, variance);
+	}
+
+	/**
+	 * Controls access to the currency manager.
+	 *
+	 * @return Application currency manager.
+	 */
+	// Team-Ctrl-S(Currency)
+	public static CurrencyManager getCurrencyManager() {
+		return CurrencyManager.getInstance();
 	}
 }

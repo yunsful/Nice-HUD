@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import HUDTeam.Achievement;
+import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
@@ -45,6 +47,10 @@ public class ScoreScreen extends Screen {
 	private int nameCharSelected;
 	/** Time between changes in user selection. */
 	private Cooldown selectionCooldown;
+	/** Total currency earned this game */
+	private int currency; // Team-Ctrl-S(Currency)
+
+	private GameState gameState; // Team-Ctrl-S(Currency)
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -71,6 +77,8 @@ public class ScoreScreen extends Screen {
 		this.nameCharSelected = 0;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
+		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.gameState = gameState; // Team-Ctrl-S(Currency)
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -107,14 +115,18 @@ public class ScoreScreen extends Screen {
 				// Return to main menu.
 				this.returnCode = 1;
 				this.isRunning = false;
-				if (this.isNewRecord)
+				if (this.isNewRecord) {
 					saveScore();
+				}
+				saveCurrency(); // Team-Ctrl-S(Currency)
 			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 				// Play again.
 				this.returnCode = 2;
 				this.isRunning = false;
-				if (this.isNewRecord)
+				if (this.isNewRecord) {
 					saveScore();
+				}
+				saveCurrency(); // Team-Ctrl-S(Currency)
 			}
 
 			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
@@ -164,16 +176,35 @@ public class ScoreScreen extends Screen {
 	}
 
 	/**
+	 * Saves the currency into currency file
+	 */
+	// Team-Ctrl-S(Currency)
+	private void saveCurrency() {
+		try {
+			Core.getCurrencyManager().addCurrency(currency);
+			logger.info("You eared $" + currency);
+		} catch (IOException e) {
+			logger.warning("Couldn't load currency!");
+        }
+    }
+
+	/**
 	 * Draws the elements associated with the screen.
 	 */
 	private void draw() {
 		drawManager.initDrawing(this);
 
+		// Jo minseo / HUD team
+		if(Achievement.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
+			Achievement.addTimer();
+		}
+
 		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
 				this.isNewRecord);
 		drawManager.drawResults(this, this.score, this.livesRemaining,
 				this.shipsDestroyed, (float) this.shipsDestroyed
-						/ this.bulletsShot, this.isNewRecord);
+						/ this.bulletsShot, this.isNewRecord, this.gameState);
 
 		if (this.isNewRecord)
 			drawManager.drawNameInput(this, this.name, this.nameCharSelected);

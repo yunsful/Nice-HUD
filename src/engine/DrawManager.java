@@ -411,7 +411,7 @@ public class DrawManager {
 	 *            If the score is a new high score.
 	 */
 
-	//Ctrl S - add Currency String
+	//Ctrl S - add Coin String
 	public void drawResults(final Screen screen, final int score,
 							final int livesRemaining, final int shipsDestroyed,
 							final float accuracy, final boolean isNewRecord, final GameState gameState) {
@@ -420,7 +420,7 @@ public class DrawManager {
 		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
 		String accuracyString = String
 				.format("accuracy %.2f%%", accuracy * 100);
-		String currencyString = "Earned  $ " + gameState.getCurrency() + "  Coins!";
+		String coinString = "Earned  $ " + gameState.getCoin() + "  Coins!";
 
 		int height = isNewRecord ? 4 : 2;
 
@@ -435,7 +435,7 @@ public class DrawManager {
 						* 4);
 		drawCenteredRegularString(screen, accuracyString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight() * 6);
-		drawCenteredRegularString(screen, currencyString, screen.getHeight()
+		drawCenteredRegularString(screen, coinString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight() * 8);
 	}
 
@@ -661,7 +661,7 @@ public class DrawManager {
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageCoinString, screen.getHeight() / 3);
 		backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCurrency()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
+		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCoin()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
 
 		//draw HitRate Bonus part
 		float hitRate = roundState.getRoundHitRate(); // Calculate HitRate

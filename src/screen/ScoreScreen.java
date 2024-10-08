@@ -47,8 +47,8 @@ public class ScoreScreen extends Screen {
 	private int nameCharSelected;
 	/** Time between changes in user selection. */
 	private Cooldown selectionCooldown;
-	/** Total currency earned this game */
-	private int currency; // Team-Ctrl-S(Currency)
+	/** Total coin earned this game */
+	private int coin; // Team-Ctrl-S(Currency)
 
 	private GameState gameState; // Team-Ctrl-S(Currency)
 
@@ -77,7 +77,7 @@ public class ScoreScreen extends Screen {
 		this.nameCharSelected = 0;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
-		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gameState = gameState; // Team-Ctrl-S(Currency)
 
 		try {
@@ -118,7 +118,7 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
-				saveCurrency(); // Team-Ctrl-S(Currency)
+				saveCoin(); // Team-Ctrl-S(Currency)
 			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 				// Play again.
 				this.returnCode = 2;
@@ -126,7 +126,7 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
-				saveCurrency(); // Team-Ctrl-S(Currency)
+				saveCoin(); // Team-Ctrl-S(Currency)
 			}
 
 			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
@@ -176,15 +176,15 @@ public class ScoreScreen extends Screen {
 	}
 
 	/**
-	 * Saves the currency into currency file
+	 * Saves the coin into currency file
 	 */
 	// Team-Ctrl-S(Currency)
-	private void saveCurrency() {
+	private void saveCoin() {
 		try {
-			Core.getCurrencyManager().addCurrency(currency);
-			logger.info("You eared $" + currency);
+			Core.getCurrencyManager().addCoin(coin);
+			logger.info("You eared $" + coin);
 		} catch (IOException e) {
-			logger.warning("Couldn't load currency!");
+			logger.warning("Couldn't load coin!");
         }
     }
 

@@ -173,9 +173,9 @@ public final class Core {
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(),
 							gameState.getTime(),
-							gameState.getCurrency() + roundState.getRoundCurrency(),
+							gameState.getCoin() + roundState.getRoundCoin(),
 							gameState.getGem());
-					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
+					LOGGER.info("Round Coin: " + roundState.getRoundCoin());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
 					LOGGER.info("Round Time: " + roundState.getRoundTime());
 

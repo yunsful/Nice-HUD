@@ -282,10 +282,8 @@ public class GameScreen extends Screen {
 				statistics.addBulletShot(bulletsShot);
 				statistics.addShipsDestroyed(shipsDestroyed);
                 statistics.addTotalPlayTime(playTime);
-				statistics.comHighestLevel(level);
-				statistics.addBulletShot(bulletsShot);
-				statistics.addShipsDestroyed(shipsDestroyed);
 
+				//achievementConditions.setStatistics();
 				achievementConditions.onKill();
 				achievementConditions.onStage();
 				achievementConditions.trials();

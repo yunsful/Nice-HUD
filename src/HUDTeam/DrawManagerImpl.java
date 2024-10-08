@@ -136,7 +136,12 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
         String remainingEnemiesString = "Enemies: " + remainingEnemies;
-        backBufferGraphics.drawString(remainingEnemiesString, 140, screen.getHeight() - 25);
+        int textWidth = fontRegularMetrics.stringWidth(remainingEnemiesString);
+
+        int x = (screen.getWidth() - textWidth) / 2;
+        int y = screen.getHeight() - 25;
+
+        backBufferGraphics.drawString(remainingEnemiesString, x, y);
     } // by SeungYun
 
     /**

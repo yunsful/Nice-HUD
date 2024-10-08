@@ -16,10 +16,10 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
 
-        int xPosition = screen.getWidth() - fontRegularMetrics.stringWidth(levelText) - 100;
+        int xPosition = screen.getWidth() / 2;
         int yPosition = 25;
 
-        backBufferGraphics.drawString(levelText, xPosition, yPosition);
+        backBufferGraphics.drawString(levelText, xPosition - fontRegularMetrics.stringWidth(levelText) / 2, yPosition);
     } // Lee Hyun Woo - level
     
     public static void drawAttackSpeed(final Screen screen, final double attackSpeed) {

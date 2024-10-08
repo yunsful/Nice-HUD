@@ -283,7 +283,6 @@ public class GameScreen extends Screen {
 				statistics.addShipsDestroyed(shipsDestroyed);
                 statistics.addTotalPlayTime(playTime);
 
-				//achievementConditions.setStatistics();
 				achievementConditions.onKill();
 				achievementConditions.onStage();
 				achievementConditions.trials();

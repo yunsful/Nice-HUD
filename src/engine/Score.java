@@ -1,5 +1,8 @@
 package engine;
 
+import clove.Statistics;
+
+import java.io.IOException;
 import java.util.logging.Level;
 import java.time.LocalDate;
 
@@ -16,13 +19,6 @@ public class Score implements Comparable<Score> {
 	/** Score points. */
 	private int score;
 
-	/** The number of bullets fired by the player. */
-	private int bulletsShot;
-	/** The number of ships destroyed by the player. */
-	private int shipsDestroyed;
-	/** The level reached by the player. */
-	private int level;
-
 	private LocalDate currentDate;
 	/** Integers for describe present Date */
 	private int Year;
@@ -30,6 +26,10 @@ public class Score implements Comparable<Score> {
 	private int Day;
 	/** String for storage present Date */
 	private String Date;
+
+    private int highestLevel;
+	private int totalShipDestroyed;
+	private int clearAchievementNumber;
 
 	/**
 	 * Constructor.
@@ -49,6 +49,17 @@ public class Score implements Comparable<Score> {
 		this.Month = currentDate.getMonthValue();
 		this.Day = currentDate.getDayOfMonth();
 		this.Date = new String (Year+"-"+Month+"-"+Day);
+
+		try{
+			Statistics stat = new Statistics();
+			stat = stat.loadUserData(stat);
+
+			this.highestLevel = stat.getHighestLevel();
+			this.totalShipDestroyed = stat.getTotalShipsDestroyed();
+			this.clearAchievementNumber = stat.getClearAchievementNumber();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
 	}
 
 	/**
@@ -61,34 +72,14 @@ public class Score implements Comparable<Score> {
 	 * @param date
 	 * 				Date (especially Time Player played the game.
 	 */
-	public Score(final String name, final int score, final String date) {
+	public Score(final String name, final int score, final String date, int highestLevel,
+				 final int totalShipDestroyed, final int clearAchievementNumber) {
 		this.name = name;
 		this.score = score;
 		this.Date = date;
-
-	}
-
-
-	/**
-	 * Constructor for Save UserData
-	 *
-	 * @param bulletsShot
-	 * 				Number of Fired Bullets
-	 * @param shipsDestroyed
-	 * 				Number of Destroyed Ships
-	 * @param level
-	 * 				Player Reached Level
-	 */
-	/*
-		Team Clove Create Constructor for Save UserData Variable
-		Additional Parameters
-		+ bulletShot, shipsDestroyed, level
-	*/
-	public Score(int bulletsShot, int shipsDestroyed, int level) {
-		GameState gameState = new GameState(bulletsShot, shipsDestroyed, level);
-		this.bulletsShot = gameState.getBulletsShot();
-		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.level = gameState.getLevel();
+		this.highestLevel = highestLevel;
+		this.totalShipDestroyed = totalShipDestroyed;
+		this.clearAchievementNumber = clearAchievementNumber;
 	}
 
 	/**
@@ -107,11 +98,6 @@ public class Score implements Comparable<Score> {
 	 */
 	public final int getScore() { return this.score; }
 
-	//Team Clove Create GetVariable Functions
-	public final int getBulletsShot() { return this.bulletsShot; }
-	public final int getShipsDestroyed() { return this.shipsDestroyed; }
-	public final int getLevel() { return this.level; }
-
 	/**
 	 * Getter for Date
 	 *
@@ -125,6 +111,12 @@ public class Score implements Comparable<Score> {
 	 * @return Date
 	 */
 	public final String getDate() { return this.Date; }
+
+	public final int getHighestLevel() { return this.highestLevel; }
+
+	public final int getShipDestroyed() { return this.totalShipDestroyed; }
+
+	public final int getClearAchievementNumber() { return this.clearAchievementNumber; }
 
 	/**
 	 * Orders the scores descending by score.

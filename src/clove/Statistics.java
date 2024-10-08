@@ -17,7 +17,6 @@ public class Statistics {
 
     private AchievementConditions achievementConditions;
     private ScheduledExecutorService scheduler;
-    // TODO: Achievement won't work well if not static
     /** Number of Player's Highest Reached Level */
     private int highestLevel;
     /** Number of Totally Fired Bullet */
@@ -240,6 +239,13 @@ public class Statistics {
     public Statistics getStatisticsData() throws IOException {
         Statistics StatisticsData = fileManager.loadUserData();
         return StatisticsData;
+    }
+
+    public void resetStatistics() throws IOException {
+        this.playerStatistics = new ArrayList<Statistics>();
+        playerStatistics.add(new Statistics(0, 0, 0, 0,
+                0, 0, 0));
+        fileManager.saveUserData(playerStatistics);
     }
 
     public void startAddingShipsDestroyed() {

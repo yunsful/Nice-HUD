@@ -333,9 +333,10 @@ public class DrawManager {
 	 * @param option
 	 *            Option selected.
 	 */
-	public void drawMenu(final Screen screen, final int option) {
+	public void drawMenu(final Screen screen, final int option, final int option2) {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
+		String mode = onePlayerModeString;
 		String playString = "Play";
 		String highScoresString = "High scores";
 		String exitString = "exit";
@@ -359,30 +360,25 @@ public class DrawManager {
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 2); // adjusted Height
 
-		// 1 player mode (starter)
-		if (option == 4)
-			backBufferGraphics.setColor(Color.GREEN);
+		if (option == 4 && option2 == 0)
+			backBufferGraphics.setColor(Color.CYAN);
+		else if (option == 4 && option2 == 1)
+			backBufferGraphics.setColor(Color.MAGENTA);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, onePlayerModeString, screen.getHeight()
+		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (starter), default: 1 player mode
+		if (option == 4) {mode = "<- " + mode + " ->";}
+		drawCenteredRegularString(screen, mode, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 4); // adjusted Height
 
-		// 2 player mode (starter)
 		if (option == 5)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
-
-		if (option == 6)
-			backBufferGraphics.setColor(Color.GREEN);
-		else
-			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, merchant, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 8);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 6);
 		drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 8 - 12);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 6 - 12);
 
 
 		// Exit (starter)
@@ -391,7 +387,7 @@ public class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 8); // adjusted Height
 	}
 
 	/**

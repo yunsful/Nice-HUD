@@ -26,6 +26,9 @@ public class TitleScreen extends Screen {
 
 	private int currentCoin = 500;
 
+	// select One player or Two player
+	private int pnumSelectionCode; //produced by Starter
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 *
@@ -40,6 +43,7 @@ public class TitleScreen extends Screen {
 		super(width, height, fps);
 
 		// Defaults to play.
+		this.pnumSelectionCode = 0;
 		this.returnCode = 2;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
@@ -91,13 +95,32 @@ public class TitleScreen extends Screen {
 				SoundManager.getInstance().playES("menuSelect_es");
 			}
 			if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-				if(returnCode == 6) {
+				if(returnCode == 5) {
 					testCoinDiscounter();
 					this.selectionCooldown.reset();
 				}
 				else this.isRunning = false;
+			// produced by Starter
+			if (returnCode == 4) {
+				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)
+						|| inputManager.isKeyDown(KeyEvent.VK_A)) {
+					moveMenuLeft();
+					this.selectionCooldown.reset();
+					// Sound Operator
+					SoundManager.getInstance().playES("menuSelect_es");
+				}
+				if (inputManager.isKeyDown(KeyEvent.VK_RIGHT)
+						|| inputManager.isKeyDown(KeyEvent.VK_D)) {
+					moveMenuRight();
+					this.selectionCooldown.reset();
+					// Sound Operator
+					SoundManager.getInstance().playES("menuSelect_es");
+				}
+			}
 		}
 	}
+	// Use later if needed. -Starter
+	// public int getPnumSelectionCode() {return this.pnumSelectionCode;}
 
 	/**
 	 * runs when player do buying things
@@ -119,7 +142,7 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item.
 	 */
 	private void nextMenuItem() {
-		if (this.returnCode == 6)
+		if (this.returnCode == 5)
 			this.returnCode = 0; // from 'merchant' to 'Exit' (starter)
 		else if (this.returnCode == 0)
 			this.returnCode = 2; // from 'Exit' to 'Play' (starter)
@@ -132,13 +155,31 @@ public class TitleScreen extends Screen {
 	 */
 	private void previousMenuItem() {
 		if (this.returnCode == 0)
-			this.returnCode = 6; // from 'Exit' to 'merchant' (starter)
+			this.returnCode = 5; // from 'Exit' to 'merchant' (starter)
 		else if (this.returnCode == 2)
 			this.returnCode = 0; // from 'Play' to 'Exit' (starter)
 		else
 			this.returnCode--; // go previous (starter)
 	}
 
+	// left and right move -- produced by Starter
+	private void moveMenuLeft() {
+		if (this.returnCode == 4) {
+			if (this.pnumSelectionCode == 0)
+				this.pnumSelectionCode++;
+			else
+				this.pnumSelectionCode--;
+		}
+	}
+
+	private void moveMenuRight() {
+		if (this.returnCode == 4) {
+			if (this.pnumSelectionCode == 0)
+				this.pnumSelectionCode++;
+			else
+				this.pnumSelectionCode--;
+		}
+	}
 
 	/**
 	 * Draws the elements associated with the screen.
@@ -155,7 +196,7 @@ public class TitleScreen extends Screen {
 		}
 
 		drawManager.drawTitle(this);
-		drawManager.drawMenu(this, this.returnCode);
+		drawManager.drawMenu(this, this.returnCode, this.pnumSelectionCode);
 		drawManager.drawCurrentCoin(this,coin);
 
 		drawManager.completeDrawing(this);

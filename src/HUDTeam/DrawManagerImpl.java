@@ -64,7 +64,8 @@ public class DrawManagerImpl extends DrawManager {
         int playTimeMinutes = playTime / 60;
         int playTimeSeconds = playTime % 60;
         String playTimeString = String.format("%d"+"m "+"%d"+"s", playTimeMinutes, playTimeSeconds);
-        backBufferGraphics.drawString(playTimeString, screen.getWidth() / 2 - 20, 25);
+        int xPosition = (screen.getWidth() * 4) / 6; // position 4/6
+        backBufferGraphics.drawString(playTimeString, xPosition - fontRegularMetrics.stringWidth(playTimeString) / 2, 25);
     }
 
     /**

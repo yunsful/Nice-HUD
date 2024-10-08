@@ -288,7 +288,8 @@ public class GameScreen extends Screen {
 		this.itemManager.drawItems(); //by Enemy team
 
 		// Interface.
-		drawManager.drawScore(this, this.score);
+//		drawManager.drawScore(this, this.score);
+		DrawManagerImpl.drawScore2(this,this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun

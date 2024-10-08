@@ -68,6 +68,13 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawString(playTimeString, xPosition - fontRegularMetrics.stringWidth(playTimeString) / 2, 25);
     }
 
+    public static void drawScore2(final Screen screen, final int score) {
+        String scoreString = "Score: " + score;
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        int xPosition = (screen.getWidth() * 2) / 6; // 2/6 지점
+        backBufferGraphics.drawString(scoreString, xPosition - fontRegularMetrics.stringWidth(scoreString) / 2, 25);
+    }
     /**
      * Show accomplished achievement
      *

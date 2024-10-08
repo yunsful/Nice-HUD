@@ -19,7 +19,7 @@ public class DrawManagerImpl extends DrawManager {
         int xPosition = screen.getWidth() / 2;
         int yPosition = 25;
 
-        backBufferGraphics.drawString(levelText, xPosition - fontRegularMetrics.stringWidth(levelText) / 2, yPosition);
+        backBufferGraphics.drawString(levelText, xPosition - fontRegularMetrics.stringWidth(levelText) / 2, yPosition); // edit by jesung ko - TeamHUD
     } // Lee Hyun Woo - level
     
     public static void drawAttackSpeed(final Screen screen, final double attackSpeed) {
@@ -65,9 +65,19 @@ public class DrawManagerImpl extends DrawManager {
         int playTimeSeconds = playTime % 60;
         String playTimeString = String.format("%d"+"m "+"%d"+"s", playTimeMinutes, playTimeSeconds);
         int xPosition = (screen.getWidth() * 4) / 6; // position 4/6
-        backBufferGraphics.drawString(playTimeString, xPosition - fontRegularMetrics.stringWidth(playTimeString) / 2, 25);
+        backBufferGraphics.drawString(playTimeString, xPosition - fontRegularMetrics.stringWidth(playTimeString) / 2, 25); // edit by jesung ko - TeamHUD
     }
 
+    /**
+     * Draws the player's score on the screen.
+     * The score is displayed at the 2/6 position of the screen width.
+     *
+     * @param screen
+     *          The screen to draw on.
+     * @param score
+     *          The current score to display.
+     * by jesung Ko - TeamHUD
+     */
     public static void drawScore2(final Screen screen, final int score) {
         String scoreString = "Score: " + score;
         backBufferGraphics.setFont(fontRegular);

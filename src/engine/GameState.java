@@ -69,9 +69,6 @@ public class GameState {
 	}
 
 	// TEAM CLOVER : Added two static below
-	public int livesRemaining() {
-		return livesRemaining;
-	}
 	public int shipsDestroyed() {
 		return shipsDestroyed;
 	}
@@ -92,6 +89,10 @@ public class GameState {
 		this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
 		this.level = level;
+	}
+
+	public GameState(int livesRemaining) { // TEAM CLOVER
+		this.livesRemaining = livesRemaining;
 	}
 
 	/**

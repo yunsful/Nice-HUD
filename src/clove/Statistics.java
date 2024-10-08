@@ -3,7 +3,11 @@ package clove;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+
 
 import CtrlS.CurrencyManager;
 import engine.Core;
@@ -11,22 +15,25 @@ import engine.FileManager;
 
 public class Statistics {
 
+    private AchievementConditions achievementConditions;
+    private ScheduledExecutorService scheduler;
+    // TODO: Achievement won't work well if not static
     /** Number of Player's Highest Reached Level */
-    private int highestLevel;
+    private static int highestLevel;
     /** Number of Totally Fired Bullet */
-    private int totalBulletsShot;
+    private static int totalBulletsShot;
     /** Number of Totally Destroyed Ships*/
-    private int totalShipsDestroyed;
+    private static int totalShipsDestroyed;
     /** Number of ships destroyed consecutively */
-    private int shipsDestructionStreak;
+    private static int shipsDestructionStreak;
     /** Number of games played */
-    private int playedGameNumber;
+    private static int playedGameNumber;
     /** Number of achievements cleared */
-    private int clearAchievementNumber;
+    private static int clearAchievementNumber;
     /** Total playtime */
-    private long totalPlaytime;
+    private static long totalPlaytime;
     /** Additional playtime */
-    private long playTime;
+    private static long playTime;
 
     private static FileManager fileManager;
     private static Logger logger;
@@ -58,6 +65,9 @@ public class Statistics {
         this.playedGameNumber = playedGameNumber;
         this.clearAchievementNumber = clearAchievementNumber;
         this.totalPlaytime = TotalPlaytime;
+
+        this.achievementConditions = new AchievementConditions();
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
     /**
@@ -68,6 +78,7 @@ public class Statistics {
         fileManager = Core.getFileManager();
         logger = Core.getLogger();
         this.playerStatistics = new ArrayList<Statistics>();
+
     }
 
     /**
@@ -116,10 +127,16 @@ public class Statistics {
      *              In case of saving problems.
      */
 
+
+
     public void addShipsDestroyed(int PlusShipsDestroyed) throws IOException{
         loadUserData();
         int CurrentShipsDestroyed = stat.getTotalShipsDestroyed();
         CurrentShipsDestroyed += PlusShipsDestroyed;
+
+        if (achievementConditions != null) {
+            achievementConditions.onKill();
+        }
 
         playerStatistics.clear();
         playerStatistics.add(new Statistics(stat.highestLevel, stat.totalBulletsShot, CurrentShipsDestroyed, stat.shipsDestructionStreak,
@@ -220,13 +237,28 @@ public class Statistics {
         this.stat = fileManager.loadUserData();
     }
 
+    public Statistics getStatisticsData() throws IOException {
+        Statistics StatisticsData = fileManager.loadUserData();
+        return StatisticsData;
+    }
+
+    public void startAddingShipsDestroyed() {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                addShipsDestroyed(1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
     public int getHighestLevel() { return highestLevel; }
 
     public int getTotalBulletsShot() { return totalBulletsShot; }
 
-    public int getTotalShipsDestroyed() { return totalShipsDestroyed; }
+    public static int getTotalShipsDestroyed() { return totalShipsDestroyed; }
 
-    public int getShipsDestructionStreak() { return shipsDestructionStreak; }
+    public static int getShipsDestructionStreak() { return shipsDestructionStreak; }
 
     public int getPlayedGameNumber() { return playedGameNumber; }
 

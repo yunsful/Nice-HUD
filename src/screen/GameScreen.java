@@ -98,8 +98,8 @@ public class GameScreen extends Screen {
 	private static SoundManager sm;
 
 	// Team-Ctrl-S(Currency)
-	/** Total currency **/
-	private int currency;
+	/** Total coin **/
+	private int coin;
 	/** Total gem **/
 	private int gem;
 	/** Total hitCount **/
@@ -136,7 +136,7 @@ public class GameScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.shield = new TemporaryShield();
-		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 		this.hitCount = gameState.getHitCount();
 	}
@@ -514,9 +514,9 @@ public class GameScreen extends Screen {
 	 *
 	 * @return Current game state.
 	 */
-	public final GameState getGameState() {
+	public final GameState getGameState() 	{
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency, this.gem, this.hitCount); // Team-Ctrl-S(Currency)
+				this.bulletsShot, this.shipsDestroyed, this.playTime, this.coin, this.gem, this.hitCount); // Team-Ctrl-S(Currency)
 	}
 	public int getLives() {
 		return lives;

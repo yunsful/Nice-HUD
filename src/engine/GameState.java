@@ -21,9 +21,9 @@ public class GameState {
 	// Soomin Lee / TeamHUD
 	/** Total time to play. */
 	private int playTime;
-	/** Current currency **/
+	/** Current coin **/
 	// Team-Ctrl-S(Currency)
-	private int currency;
+	private int coin;
 	/** Current gem **/
 	// Team-Ctrl-S(Currency)
 	private int gem;
@@ -47,8 +47,8 @@ public class GameState {
 	 * Soomin Lee / TeamHUD
 	 * @param playTime
 	 * 	          Total time to play.
-	 * @param currency
-	 * 			  Current currency. // Team-Ctrl-S(Currency)
+	 * @param coin
+	 * 			  Current coin. // Team-Ctrl-S(Currency)
 	 * @param gem
 	 * 			  Current gem. // Team-Ctrl-S(Currency)
 	 * @param hitCount
@@ -56,14 +56,14 @@ public class GameState {
 	 */
 	public GameState(final int level, final int score,
 					 final int livesRemaining, final int bulletsShot,
-					 final int shipsDestroyed, final int playTime, final int currency, final int gem, final int hitCount) {
+					 final int shipsDestroyed, final int playTime, final int coin, final int gem, final int hitCount) {
 		this.level = level;
 		this.score = score;
 		this.livesRemaining = livesRemaining;
 		this.bulletsShot = bulletsShot;
 		this.shipsDestroyed = shipsDestroyed;
 		this.playTime = playTime;
-		this.currency = currency; // Team-Ctrl-S(Currency)
+		this.coin = coin; // Team-Ctrl-S(Currency)
 		this.gem = gem; // Team-Ctrl-S(Currency)
 		this.hitCount = hitCount; // Ctrl-S
 	}
@@ -110,11 +110,11 @@ public class GameState {
 	public final int getTime() { return playTime; }
 
 	/**
-	 * @return the currency
+	 * @return the coin
 	 */
 	// Team-Ctrl-S(Currency)
-	public final int getCurrency() {
-		return currency;
+	public final int getCoin() {
+		return coin;
 	}
 
 	/**

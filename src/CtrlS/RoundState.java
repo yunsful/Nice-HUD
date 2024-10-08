@@ -9,7 +9,8 @@ public class RoundState {
     private final int roundScore;
     private final int roundBulletsShot;
     private final int roundHitCount;
-    private final int roundCurrency;
+    private final int roundCoin;
+
     private final float roundHitRate;
     private final long roundTime;
 
@@ -21,20 +22,20 @@ public class RoundState {
         this.roundHitCount = currState.getHitCount() - prevState.getHitCount();
         this.roundHitRate = roundHitCount / (float) roundBulletsShot;
         this.roundTime = currState.getTime() - prevState.getTime();
-        this.roundCurrency = calculateCurrency();
+        this.roundCoin = calculateCoin();
     }
 
-    private int calculateCurrency() {
+    private int calculateCoin() {
 
-        int baseCurrency = roundScore / 10;
-        int levelBonus = baseCurrency * currState.getLevel();
-        int currency = baseCurrency + levelBonus;
+        int baseCoin = roundScore / 10;
+        int levelBonus = baseCoin * currState.getLevel();
+        int coin = baseCoin + levelBonus;
 
         if (roundHitRate > 0.9) {
-            currency += (int) (currency * 0.3); // 30% 보너스 지급
+            coin += (int) (coin * 0.3); // 30% 보너스 지급
             Core.getLogger().info("hitRate bonus occurs (30%).");
         } else if (roundHitRate > 0.8) {
-            currency += (int) (currency * 0.2); // 20% 보너스 지급
+            coin += (int) (coin * 0.2); // 20% 보너스 지급
             Core.getLogger().info("hitRate bonus occurs (20%).");
         }
 
@@ -57,9 +58,9 @@ public class RoundState {
         } else if (timeDifferenceInSeconds <= 100) {
             timeBonus = 10;
         }
-        currency += timeBonus;
+        coin += timeBonus;
 
-        return currency;
+        return coin;
     }
 
     public int getRoundScore() {
@@ -74,7 +75,7 @@ public class RoundState {
         return roundTime;
     }
 
-    public int getRoundCurrency() {
-        return roundCurrency;
+    public int getRoundCoin() {
+        return roundCoin;
     }
 }

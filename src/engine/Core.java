@@ -174,7 +174,7 @@ public final class Core {
 							gameState.getShipsDestroyed(),
 							gameState.getTime(),
 							gameState.getCoin() + roundState.getRoundCoin(),
-							gameState.getGem());
+							gameState.getGem(),
 							gameState.getHitCount());
           LOGGER.info("Round Coin: " + roundState.getRoundCoin());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());

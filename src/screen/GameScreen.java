@@ -102,6 +102,8 @@ public class GameScreen extends Screen {
 	private int coin;
 	/** Total gem **/
 	private int gem;
+	/** Total hitCount **/
+	private int hitCount;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -136,6 +138,7 @@ public class GameScreen extends Screen {
 		this.shield = new TemporaryShield();
 		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
+		this.hitCount = gameState.getHitCount();
 	}
 
 	/**
@@ -327,8 +330,11 @@ public class GameScreen extends Screen {
 		for (PiercingBullet bullet : this.bullets) { // Edited by Enemy
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
-					|| bullet.getPositionY() > this.height)
+					|| bullet.getPositionY() > this.height) {
+				//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
+				bullet.setCheckCount(true);
 				recyclable.add(bullet);
+			}
 		}
 		this.bullets.removeAll(recyclable);
 		PiercingBulletPool.recycle(recyclable); // Edited by Enemy
@@ -356,6 +362,8 @@ public class GameScreen extends Screen {
 							&& checkCollision(bullet, enemyShip)) {
 						this.score += enemyShip.getPointValue();
 						this.shipsDestroyed++;
+						// CtrlS - increase the hitCount for 1 kill
+						this.hitCount++;
 						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
 					}
@@ -364,6 +372,8 @@ public class GameScreen extends Screen {
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
 					this.score += this.enemyShipSpecial.getPointValue();
 					this.shipsDestroyed++;
+					// CtrlS - increase the hitCount for 1 kill
+					this.hitCount++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
 					recyclable.add(bullet);
@@ -407,9 +417,16 @@ public class GameScreen extends Screen {
 					}
 				}
 			} else {
+				// CtrlS - Variable to increase hitCount just 1 when Piercing bullet hits enemy
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
+						// CtrlS - If collision occur then increase hitCount and checkCount
+						if (bullet.isCheckCount()) {
+							hitCount++;
+							bullet.setCheckCount(false);
+							this.logger.info("Hit count!");
+						}
 						this.enemyShipFormation._destroy(enemyShip);
 						if(enemyShip.getHp() <= 0) {
 							this.score += enemyShip.getPointValue();
@@ -420,6 +437,8 @@ public class GameScreen extends Screen {
 
 						// Check PiercingBullet piercing count and add to recyclable if necessary
 						if (bullet.getPiercingCount() <= 0) {
+							//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
+							bullet.setCheckCount(true);
 							recyclable.add(bullet);
 						}
 
@@ -429,6 +448,12 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
+					// CtrlS - If collision occur then increase hitCount and checkCount
+					if (bullet.isCheckCount()) {
+						hitCount++;
+						bullet.setCheckCount(false);
+						this.logger.info("Hit count!");
+					}
 					this.score += this.enemyShipSpecial.getPointValue();
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
@@ -438,6 +463,8 @@ public class GameScreen extends Screen {
 
 					// Check PiercingBullet piercing count for special enemy and add to recyclable if necessary
 					if (bullet.getPiercingCount() <= 0) {
+						//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
+						bullet.setCheckCount(true);
 						recyclable.add(bullet);
 					}
 
@@ -489,7 +516,7 @@ public class GameScreen extends Screen {
 	 */
 	public final GameState getGameState() 	{
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.playTime, this.coin, this.gem); // Team-Ctrl-S(Currency)
+				this.bulletsShot, this.shipsDestroyed, this.playTime, this.coin, this.gem, this.hitCount); // Team-Ctrl-S(Currency)
 	}
 	public int getLives() {
 		return lives;

@@ -62,10 +62,6 @@ public class Achievement {
         System.out.println("Achievement completed: " + achievementName);
     }
 
-    public boolean isComplete() {
-        return isCompleted;
-    }
-
     public AchievementType getType() {
         return achievementType;
     }
@@ -168,9 +164,9 @@ public class Achievement {
     public void completeAchievement() {
         if (!isCompleted) {
             isCompleted = true;
-            System.out.println("Achievement Unlocked: " + achievementName);
         }
     }
+
 
     @Override
     public boolean equals(Object o) {

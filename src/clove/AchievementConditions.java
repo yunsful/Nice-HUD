@@ -66,7 +66,7 @@ public class AchievementConditions {
     public void initializeAchievements() {
 
         // TODO Some of the codes below are non-operational.(fastKillAchievement,trialAchievement) Will be updated if related record fuctions are added.
-        noDeathAchievements.add(new Achievement("Aerobatics","Maintain Maximum Life",1, Achievement.AchievementType.LIVES));
+        noDeathAchievements.add(new Achievement("Aerobatics","Maintain Maximum Life",3, Achievement.AchievementType.LIVES));
 
         killAchievements.add(new Achievement("Rookie Pilot", "Destroy 25 enemies", 25, Achievement.AchievementType.KILLS));
         killAchievements.add(new Achievement("Space Hunter", "Destroy 50 enemies", 100, Achievement.AchievementType.KILLS));
@@ -111,6 +111,7 @@ public class AchievementConditions {
     int clearAchievementNumber = stats.getClearAchievementNumber();
     long TotalPlaytime = stats.getTotalPlaytime();
 
+    // Have to check if the code right below works
     public void checkAllAchievements() {
         boolean allCompleted = true;
 
@@ -164,7 +165,7 @@ public class AchievementConditions {
             enemiesKilledIn3Seconds = 0;
         }
     }
-
+    // TODO Not functioning well
     public void fastKill(int killCount) throws IOException {
         long currentTime = System.currentTimeMillis();
 
@@ -189,7 +190,6 @@ public class AchievementConditions {
     }
 
     public void checkNoDeathAchievements(int lives) {
-        //TODO : Get value from lives
         System.out.println("Checking No Death achievements. Current lives: " + lives);
         if (lives == Core.MAX_LIVES) {
             for (Achievement achievement : noDeathAchievements) {
@@ -209,12 +209,9 @@ public class AchievementConditions {
             }
     }
 
-    // TODO Have to check if this works
+    // TODO function getShipsDestructionStreak not added yet
     public void killStreak() throws IOException {
-        Statistics stat = new Statistics(highestLevel, totalBulletsShot, totalShipsDestroyed, shipsDestructionStreak,
-                playedGameNumber, clearAchievementNumber, TotalPlaytime);
-        stat = stat.getStatisticsData();
-        int shipsDestructionStreak = stat.getShipsDestructionStreak();
+        int shipsDestructionStreak = stats.getShipsDestructionStreak();
         System.out.println("Checking killstreak achievements. Current killstreaks: " + shipsDestructionStreak);
         System.out.println("Killstreak Achievements size: " + streakAchievements.size());
         for (Achievement achievement : streakAchievements) {
@@ -244,8 +241,10 @@ public class AchievementConditions {
             System.out.println("Achievement Unlocked: " + achievement.getAchievementName() + " - " + achievement.getAchievementDescription());
             unlockedAchievements.add(achievement.getAchievementName());
             achievement.completeAchievement();
+            getUnlockedAchievements();
+            System.out.println("Unlocked achievements list: " + unlockedAchievements);
         }
-        else {
+        else if (unlockedAchievements.contains(achievement.getAchievementName())) {
             System.out.println(achievement.getAchievementName() + " has already been unlocked.");
         }
     }

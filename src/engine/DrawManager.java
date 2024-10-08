@@ -607,13 +607,12 @@ public class DrawManager {
 		int i = 0;
 		boolean isFirstLine = true;
 		String scoreString = "";
-		int width = 10;
 
 		for (Score score : recentScores) {
-			if (isFirstLine) {
+			if (isFirstLine) { // Create Header
 				scoreString = String.format("           Date                           " +
 						" Score       Level       Destroy       Achievement");
-				drawRightRegularString(screen, scoreString, screen.getHeight()
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
 						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
 				isFirstLine = false;
 				i++;
@@ -622,14 +621,27 @@ public class DrawManager {
 								"             %04d",
 						score.getDate(), score.getScore(), score.getHighestLevel(),
 						score.getShipDestroyed(), score.getClearAchievementNumber());
-				drawRightRegularString(screen, scoreString, screen.getHeight()
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
 						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
 				i++;
 			}
 		}
 	}
 
-	public void drawRightRegularString(final Screen screen,
+
+	/**
+	 * Draws a righted string on regular font
+	 *
+	 * @param screen
+	 * 				Screen to draw on.
+	 * @param string
+	 * 				String to draw.
+	 * @param height
+	 * 				Height of the drawing.
+	 *
+	 * 		//Clove
+	 */
+	public void drawRightedRegularString(final Screen screen,
 										 final String string, final int height) {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.drawString(string, 0, height);

@@ -27,8 +27,11 @@ public class Score implements Comparable<Score> {
 	/** String for storage present Date */
 	private String Date;
 
+	/** highest level that player reached */
     private int highestLevel;
+	/** ship number that player destroyed */
 	private int totalShipDestroyed;
+	/** achievement number that player cleared */
 	private int clearAchievementNumber;
 
 	/**
@@ -39,6 +42,7 @@ public class Score implements Comparable<Score> {
 	 * @param score
 	 *            Player score.
 	 * Added non-parameter elements for Date // Clove
+	 * Added load statistics for save recent score // Clove
 	 */
 	public Score(final String name, final int score) {
 		this.name = name;
@@ -48,7 +52,7 @@ public class Score implements Comparable<Score> {
 		this.Year = currentDate.getYear();
 		this.Month = currentDate.getMonthValue();
 		this.Day = currentDate.getDayOfMonth();
-		this.Date = new String (Year+"-"+Month+"-"+Day);
+		this.Date = String.format("%d-%02d-%02d", Year, Month, Day);
 
 		try{
 			Statistics stat = new Statistics();
@@ -71,6 +75,12 @@ public class Score implements Comparable<Score> {
 	 * 				Player score
 	 * @param date
 	 * 				Date (especially Time Player played the game.
+	 * @param highestLevel
+	 * 				Player reached level.
+	 * @param totalShipDestroyed
+	 * 				Number of Destroyed Ship.
+	 * @param clearAchievementNumber
+	 * 				Number of Cleared Achievement.
 	 */
 	public Score(final String name, final int score, final String date, int highestLevel,
 				 final int totalShipDestroyed, final int clearAchievementNumber) {

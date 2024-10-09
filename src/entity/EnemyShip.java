@@ -11,18 +11,17 @@ import Sound_Operator.SoundManager;
 
 /**
  * Implements a enemy ship, to be destroyed by the player.
- * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
  */
 public class EnemyShip extends Entity {
-	
 	/** Point value of a type A enemy. */
 	private static final int A_TYPE_POINTS = 10;
 	/** Point value of a type B enemy. */
 	private static final int B_TYPE_POINTS = 20;
 	/** Point value of a type C enemy. */
 	private static final int C_TYPE_POINTS = 30;
+	/** Point value of a type Explosive enemy. */
+	private static final int EXPLOSIVE_TYPE_POINTS = 50; //Edited by Enemy
 	/** Point value of a bonus enemy. */
 	private static final int BONUS_TYPE_POINTS = 100;
 
@@ -40,7 +39,7 @@ public class EnemyShip extends Entity {
 
 	/**
 	 * Constructor, establishes the ship's properties.
-	 * 
+	 *
 	 * @param positionX
 	 *            Initial position of the ship in the X axis.
 	 * @param positionY
@@ -72,6 +71,11 @@ public class EnemyShip extends Entity {
 		case EnemyShipC2:
 			this.pointValue = C_TYPE_POINTS;
 			break;
+		case ExplosiveEnemyShip1: //Edited by Enemy
+		case ExplosiveEnemyShip2:
+			super.setColor(new Color(237, 28, 36)); //set ExplosiveEnemyShip Color
+			this.pointValue = EXPLOSIVE_TYPE_POINTS;
+			break;
 		default:
 			this.pointValue = 0;
 			break;
@@ -94,7 +98,7 @@ public class EnemyShip extends Entity {
 
 	/**
 	 * Getter for the score bonus if this ship is destroyed.
-	 * 
+	 *
 	 * @return Value of the ship.
 	 */
 	public final int getPointValue() {
@@ -103,7 +107,7 @@ public class EnemyShip extends Entity {
 
 	/**
 	 * Moves the ship the specified distance.
-	 * 
+	 *
 	 * @param distanceX
 	 *            Distance to move in the X axis.
 	 * @param distanceY
@@ -140,6 +144,12 @@ public class EnemyShip extends Entity {
 			case EnemyShipC2:
 				this.spriteType = SpriteType.EnemyShipC1;
 				break;
+			case ExplosiveEnemyShip1: //Edited by Enemy
+				this.spriteType = SpriteType.ExplosiveEnemyShip2;
+				break;
+			case ExplosiveEnemyShip2: //Edited by Enemy
+				this.spriteType = SpriteType.ExplosiveEnemyShip1;
+				break;
 			default:
 				break;
 			}
@@ -164,7 +174,7 @@ public class EnemyShip extends Entity {
 
 	/**
 	 * Checks if the ship has been destroyed.
-	 * 
+	 *
 	 * @return True if the ship has been destroyed.
 	 */
 	public final boolean isDestroyed() {

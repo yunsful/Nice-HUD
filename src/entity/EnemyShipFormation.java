@@ -142,7 +142,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		for (List<EnemyShip> column : this.enemyShips) {
 			for (int i = 0; i < this.nShipsHigh; i++) {
-				if (shipCount == (nShipsHigh*2)-1 ||shipCount == (nShipsHigh*4)-1) //Edited by Enemy
+				if (shipCount == (nShipsHigh*1)+1 ||shipCount == (nShipsHigh*3)+1) //Edited by Enemy
 					spriteType = SpriteType.ExplosiveEnemyShip1;
 				else if (i / (float) this.nShipsHigh < PROPORTION_C)
 					spriteType = SpriteType.EnemyShipC1;

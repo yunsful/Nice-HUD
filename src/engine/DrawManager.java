@@ -75,6 +75,10 @@ public class DrawManager {
 		EnemyShipC1,
 		/** Third enemy ship - second form. */
 		EnemyShipC2,
+		/** First explosive enemy ship - first form. */
+		ExplosiveEnemyShip1, //Edited by Enemy
+		/** First explosive enemy ship - second form. */
+		ExplosiveEnemyShip2, //Edited by Enemy
 		/** Bonus ship. */
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
@@ -83,9 +87,11 @@ public class DrawManager {
 		Heart, //Please have the Nice HUD team fix it. - Enemy team
 		/**Item*/
 		Item, //by enemy team
+		/**Boss*/
+		Boss, //by enemy team
 		/** Player Lives. */
 		/** Item */
-    ItemHeart,
+    	ItemHeart,
 		ShipBarrierStatus,
 		ItemCoin,
 		ItemPierce,
@@ -122,9 +128,12 @@ public class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipB2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
+			spriteMap.put(SpriteType.ExplosiveEnemyShip1, new boolean[12][8]); //Edited by Enemy
+			spriteMap.put(SpriteType.ExplosiveEnemyShip2, new boolean[12][8]); //Edited by Enemy
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
+			spriteMap.put(SpriteType.Boss, new boolean[24][16]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
 			//by Item team

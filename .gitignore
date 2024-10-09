@@ -15,7 +15,8 @@ local.properties
 .classpath
 .settings/
 .loadpath
-
+.idea/misc.xml
+.idea/vcs.xml
 
 
 # External tool builders
@@ -171,6 +172,8 @@ pip-log.txt
 log*
 .checkstyle
 Nice-HUD.iml
+Invader_Space_HUD.iml
 
 # running files
 out/
+.idea/

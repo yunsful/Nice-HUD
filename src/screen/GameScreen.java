@@ -132,6 +132,8 @@ public class GameScreen extends Screen {
 		this.item = new ItemBarrierAndHeart();	// team Inventory
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
+		// Soomin Lee / TeamHUD
+		this.playTime = gameState.getTime();
 	}
 
 	/**
@@ -276,7 +278,9 @@ public class GameScreen extends Screen {
 
 		enemyShipFormation.draw();
 
-		DrawManagerImpl.drawSpeed(this, ship.getSpeed());
+		DrawManagerImpl.drawSpeed(this, ship.getSpeed()); // Ko jesung / HUD team
+		DrawManagerImpl.drawSeparatorLine(this,  this.height-65); // Ko jesung / HUD team
+
 
 		for (PiercingBullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
@@ -288,6 +292,7 @@ public class GameScreen extends Screen {
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
+		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
 		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
 //		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
@@ -323,7 +328,7 @@ public class GameScreen extends Screen {
 		for (PiercingBullet bullet : this.bullets) { // Edited by Enemy
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
-					|| bullet.getPositionY() > this.height)
+					|| bullet.getPositionY() > this.height-70) // ko jesung / HUD team
 				recyclable.add(bullet);
 		}
 		this.bullets.removeAll(recyclable);
@@ -501,4 +506,20 @@ public class GameScreen extends Screen {
 	public ItemBarrierAndHeart getItem() {
 		return item;
 	}	// Team Inventory(Item)
+
+	/**
+	 * Check remaining enemies
+	 *
+	 * @return remaining enemies count.
+	 *
+	 */
+	private int getRemainingEnemies() {
+		int remainingEnemies = 0;
+		for (EnemyShip enemyShip : this.enemyShipFormation) {
+			if (!enemyShip.isDestroyed()) {
+				remainingEnemies++;
+			}
+		}
+		return remainingEnemies;
+	} // by HUD team SeungYun
 }

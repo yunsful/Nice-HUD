@@ -172,6 +172,7 @@ pip-log.txt
 log*
 .checkstyle
 Nice-HUD.iml
+Invader_Space_HUD.iml
 
 # running files
 out/

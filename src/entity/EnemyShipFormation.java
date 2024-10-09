@@ -464,8 +464,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				for (int i = 0; i < column.size(); i++) {
 					if (column.get(i).equals(destroyedShip)) {
 						switch (destroyedShip.spriteType){
-							case SpriteType.ExplosiveEnemyShip1:
-							case SpriteType.ExplosiveEnemyShip2:
+							case ExplosiveEnemyShip1:
+							case ExplosiveEnemyShip2:
 								HpEnemyShip.hit(destroyedShip);
 								for (List<EnemyShip> enemyShip : this.enemyShips)
 									if (enemyShip.size() > i
@@ -490,7 +490,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 									+ this.enemyShips.indexOf(column) + "," + i + ")");
 
 							point = column.get(i).getPointValue();
-							count = 1;
+							count += 1;
 						}
 					}
 				}

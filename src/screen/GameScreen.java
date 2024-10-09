@@ -409,7 +409,6 @@ public class GameScreen extends Screen {
 						//Drop item when MAGENTA color enemy destroyed
 						if(enemyShip.getColor() == Color.MAGENTA){
 							this.itemManager.dropItem(enemyShip,1,1);}
-						this.enemyShipFormation._destroy(bullet, enemyShip);
 						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip);	// team Inventory
 						this.shipsDestroyed += CntAndPnt[0];
 						this.score += CntAndPnt[1];

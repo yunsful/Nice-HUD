@@ -213,8 +213,8 @@ public class EnemyShip extends Entity {
 	/**
 	 * Destroys ship, causing a chain explode.
 	 */
-	public final void chainExplosion() { // Added by team Enemy
-		this.isChainExploded = true;
+	public final void chainExplode() { // Added by team Enemy
+		setChainExploded(true);
 		setHp(0);
 		destroy();
 	}
@@ -231,7 +231,7 @@ public class EnemyShip extends Entity {
 	/**
 	 * Setter for enemy ship's isChainExploded to false.
 	 */
-	public final void notChainExploded() {
-		this.isChainExploded = false;
+	public final void setChainExploded(boolean isChainExploded) {
+		this.isChainExploded = isChainExploded;
 	} // Added by team Enemy
 }

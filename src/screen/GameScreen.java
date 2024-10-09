@@ -431,7 +431,7 @@ public class GameScreen extends Screen {
 						}
 						this.score += enemyShip.getPointValue();
 						this.shipsDestroyed++;
-						enemyShip.notChainExploded(); // resets enemy's chain explosion state.
+						enemyShip.setChainExploded(false); // resets enemy's chain explosion state.
 					}
 				}
 				if (this.enemyShipSpecial != null

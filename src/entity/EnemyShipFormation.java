@@ -463,7 +463,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		if (isChainExploded
 				&& !destroyedShip.spriteType.equals(SpriteType.ExplosiveEnemyShip1)
 				&& !destroyedShip.spriteType.equals(SpriteType.ExplosiveEnemyShip2))
-			destroyedShip.chainExplosion();
+			destroyedShip.chainExplode();
 
 		if (bullet.getSpriteType() == SpriteType.ItemBomb) { // team Inventory
 			int[] temp = Bomb.destroyByBomb(enemyShips, destroyedShip, this.logger);
@@ -477,7 +477,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 							case ExplosiveEnemyShip1:
 							case ExplosiveEnemyShip2:
 								// HpEnemyShip.hit(destroyedShip);
-								destroyedShip.chainExplosion(); // Edited by team Enemy
+								destroyedShip.chainExplode(); // Edited by team Enemy
 								for (List<EnemyShip> enemyShip : this.enemyShips)
 									if (enemyShip.size() > i
 											&& !enemyShip.get(i).isDestroyed())

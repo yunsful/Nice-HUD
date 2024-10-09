@@ -18,7 +18,6 @@ import entity.AddSign;
 import entity.Coin;
 import screen.Screen;
 import entity.Entity;
-import entity.Ship;
 
 import level_design.Background;
 
@@ -54,6 +53,10 @@ public class DrawManager {
 	private static Font fontBig;
 	/** Big sized font properties. */
 	private static FontMetrics fontBigMetrics;
+
+	/** ###TEAM INTERNATIONAL ### */
+	private Background background;
+	private BufferedImage backgroundImage;
 
 	/** Sprite types mapped to their images. */
 	private static Map<SpriteType, boolean[][]> spriteMap;
@@ -729,23 +732,24 @@ public class DrawManager {
 
     /**
 	 * ### TEAM INTERNATIONAL ###
-     * Background draw and update method
+     * Background load, draw and update method
      */
-	Background background = new Background();
 
-	public void drawBackground(final Screen screen, int levelNumber, boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+	public void loadBackground(int levelNumber) {
+		background = Background.getInstance();
 		// I still have no clue how relative pathing or class pathing works
 		InputStream imageStream = Background.getBackgroundImageStream(levelNumber);
-		BufferedImage backgroundImage;
 		try {
-            assert imageStream != null;
-            backgroundImage = ImageIO.read(imageStream);
+			assert imageStream != null;
+			backgroundImage = ImageIO.read(imageStream);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
 
-		int verticalOffset = background.getVerticalOffset(frame);
-		int horizontalOffset = background.getHorizontalOffset(frame, backgroundMoveRight, backgroundMoveLeft);
+	public void drawBackground(boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+		int verticalOffset = background.getVerticalOffset();
+		int horizontalOffset = background.getHorizontalOffset(backgroundMoveRight, backgroundMoveLeft);
 
         backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
     }

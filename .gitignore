@@ -15,8 +15,7 @@ local.properties
 .classpath
 .settings/
 .loadpath
-.idea/misc.xml
-.idea/vcs.xml
+
 
 
 # External tool builders
@@ -175,4 +174,3 @@ Nice-HUD.iml
 
 # running files
 out/
-.idea/

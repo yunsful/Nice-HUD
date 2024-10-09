@@ -6,6 +6,8 @@ import Enemy.HpEnemyShip;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager.SpriteType;
+// Sound Operator
+import Sound_Operator.SoundManager;
 
 /**
  * Implements a enemy ship, to be destroyed by the player.
@@ -31,6 +33,9 @@ public class EnemyShip extends Entity {
 	private boolean isDestroyed;
 	/** Values of the ship, in points, when destroyed. */
 	private int pointValue;
+
+	// Sound Operator
+	private static SoundManager sm;
 
 	/**
 	 * Constructor, establishes the ship's properties.
@@ -156,7 +161,15 @@ public class EnemyShip extends Entity {
 	 */
 	public final void destroy() {
 		this.isDestroyed = true;
+		// Sound Operator
+		sm = SoundManager.getInstance();
+		if(this.spriteType == SpriteType.EnemyShipSpecial){
+			sm.playES("special_enemy_die");
+		}else{
+			sm.playES("basic_enemy_die");
+		}
 		this.spriteType = SpriteType.Explosion;
+
 	}
 
 	/**

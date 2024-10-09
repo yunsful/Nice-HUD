@@ -4,6 +4,7 @@ import java.awt.Insets;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import HUDTeam.Achievement;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
@@ -64,6 +65,8 @@ public class Screen {
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
 		this.returnCode = 0;
+
+		new Achievement();
 	}
 
 	/**

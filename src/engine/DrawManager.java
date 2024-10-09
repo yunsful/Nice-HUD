@@ -56,6 +56,10 @@ public class DrawManager {
 	/** Big sized font properties. */
 	private static FontMetrics fontBigMetrics;
 
+	/** ###TEAM INTERNATIONAL ### */
+	private Background background;
+	private BufferedImage backgroundImage;
+
 	/** Sprite types mapped to their images. */
 	private static Map<SpriteType, boolean[][]> spriteMap;
 
@@ -826,25 +830,26 @@ public class DrawManager {
 		backBufferGraphics.drawString(Integer.toString(coin), coinX + coinImage.getWidth() + 10, 20);
 	}
 
-	/**
-	* ### TEAM INTERNATIONAL ###
-	* Background draw and update method
-	*/
-	Background background = new Background();
+    /**
+	 * ### TEAM INTERNATIONAL ###
+     * Background load, draw and update method
+     */
 
-	public void drawBackground(final Screen screen, int levelNumber, boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+	public void loadBackground(int levelNumber) {
+		background = Background.getInstance();
 		// I still have no clue how relative pathing or class pathing works
 		InputStream imageStream = Background.getBackgroundImageStream(levelNumber);
-		BufferedImage backgroundImage;
 		try {
 			assert imageStream != null;
 			backgroundImage = ImageIO.read(imageStream);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
 
-		int verticalOffset = background.getVerticalOffset(frame);
-		int horizontalOffset = background.getHorizontalOffset(frame, backgroundMoveRight, backgroundMoveLeft);
+	public void drawBackground(boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+		int verticalOffset = background.getVerticalOffset();
+		int horizontalOffset = background.getHorizontalOffset(backgroundMoveRight, backgroundMoveLeft);
 
 		backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
 	}
@@ -875,7 +880,6 @@ public class DrawManager {
 		drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
 		+ fontBigMetrics.getHeight() / 3);
 	}
-
 
 	/**
 	 * Draw the item that player got

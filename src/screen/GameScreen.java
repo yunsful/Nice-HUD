@@ -186,6 +186,8 @@ public class GameScreen extends Screen {
 	 */
 	public final void initialize() {
 		super.initialize();
+		/** initialize background **/
+		drawManager.loadBackground(this.level);
 
 		enemyShipFormation = new EnemyShipFormation(this.gameSettings);
 		enemyShipFormation.attach(this);
@@ -384,7 +386,7 @@ public class GameScreen extends Screen {
 		}
 
 		/** ### TEAM INTERNATIONAL ### */
-		drawManager.drawBackground(this, this.level, backgroundMoveRight, backgroundMoveLeft);
+		drawManager.drawBackground(backgroundMoveRight, backgroundMoveLeft);
 		this.backgroundMoveRight = false;
 		this.backgroundMoveLeft = false;
 

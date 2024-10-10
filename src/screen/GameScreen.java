@@ -299,6 +299,7 @@ public class GameScreen extends Screen {
 //		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
+		drawManager.drawItem(this); // HUD team - Jo Minseo
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {

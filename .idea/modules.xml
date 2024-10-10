@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Invader_Space_HUD.iml" filepath="$PROJECT_DIR$/Invader_Space_HUD.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Nice-HUD.iml" filepath="$PROJECT_DIR$/Nice-HUD.iml" />
     </modules>
   </component>
 </project>

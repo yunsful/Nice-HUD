@@ -214,9 +214,9 @@ public class EnemyShip extends Entity {
 	 * Destroys ship, causing a chain explode.
 	 */
 	public final void chainExplode() { // Added by team Enemy
+		destroy();
 		setChainExploded(true);
 		setHp(0);
-		destroy();
 	}
 
 	/**

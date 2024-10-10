@@ -104,6 +104,11 @@ public class GameScreen extends Screen {
 	private int gem;
 	/** Total hitCount **/		//CtrlS
 	private int hitCount;
+	/** Unique id for shot of bullets **/ //CtrlS
+	private int fire_id;
+	/** Set of fire_id **/
+	private Set<Integer> processedFireBullet;
+
 	/** Score calculation. */
 	private ScoreManager scoreManager;    //clove
 	/** Check start-time*/
@@ -149,6 +154,8 @@ public class GameScreen extends Screen {
 		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 		this.hitCount = gameState.getHitCount(); //CtrlS
+		this.fire_id = 0; //CtrlS - fire_id means the id of bullet that shoot already. It starts from 0.
+		this.processedFireBullet = new HashSet<>(); //CtrlS - initialized the processedFireBullet
 		// Soomin Lee / TeamHUD
 		this.playTime = gameState.getTime();
 		this.scoreManager = gameState.scoreManager; //Team Clove
@@ -231,8 +238,11 @@ public class GameScreen extends Screen {
 					this.ship.moveLeft();
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-					if (this.ship.shoot(this.bullets))
+					if (this.ship.shoot(this.bullets)) {
 						this.bulletsShot++;
+						this.fire_id++;
+						this.logger.info("Bullet's fire_id is " + fire_id);
+					}
 			}
 
 			if (this.enemyShipSpecial != null) {
@@ -460,7 +470,8 @@ public class GameScreen extends Screen {
 					}
 				}
 			} else {
-				// CtrlS - Variable to increase hitCount just 1 when Piercing bullet hits enemy
+				// CtrlS - set fire_id of bullet.
+				bullet.setFire_id(fire_id);
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
@@ -472,11 +483,15 @@ public class GameScreen extends Screen {
                         this.scoreManager.addScore(enemyShip.getPointValue()); //clove
                         this.score += CntAndPnt[1];
 
-						// CtrlS - If collision occur then increase hitCount and checkCount
-						if (bullet.isCheckCount()) {
-							hitCount++;
-							bullet.setCheckCount(false);
-							this.logger.info("Hit count!");
+						// CtrlS - If collision occur then check the bullet can process
+						if (!processedFireBullet.contains(bullet.getFire_id())) {
+							// CtrlS - increase hitCount if the bullet can count
+							if (bullet.isCheckCount()) {
+								hitCount++;
+								bullet.setCheckCount(false);
+								this.logger.info("Hit count!");
+								processedFireBullet.add(bullet.getFire_id()); // mark this bullet_id is processed.
+							}
 						}
 
 						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
@@ -493,11 +508,14 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					// CtrlS - If collision occur then increase hitCount and checkCount
-					if (bullet.isCheckCount()) {
-						hitCount++;
-						bullet.setCheckCount(false);
-						this.logger.info("Hit count!");
+					// CtrlS - If collision occur then check the bullet can process
+					if (!processedFireBullet.contains(bullet.getFire_id())) {
+						// CtrlS - If collision occur then increase hitCount and checkCount
+						if (bullet.isCheckCount()) {
+							hitCount++;
+							bullet.setCheckCount(false);
+							this.logger.info("Hit count!");
+						}
 					}
 					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue()); //clove
 					this.shipsDestroyed++;

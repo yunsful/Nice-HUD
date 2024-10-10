@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import CtrlS.RoundState;
 import entity.AddSign;
 import entity.Coin;
+import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;
@@ -734,5 +735,24 @@ public class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(coin), coinX + coinImage.getWidth() + 10, 20);
+	}
+
+
+	/**
+	 * Draw the item that player got
+	 *
+	 * @param screen
+	 *			  Screen to draw on.
+	 *
+	 * HUD Team - Jo Minseo
+	 */
+	public void drawItem(final Screen screen){
+		//Bomb
+		Entity itemBomb = new Entity(0, 0, 13 * 2, 8 * 2, Color.gray);
+		itemBomb.setSpriteType(DrawManager.SpriteType.ItemBomb);
+
+		if(Bomb.getIsBomb() && Bomb.getCanShoot()){
+			drawEntity(itemBomb, 140, screen.getHeight() - 50);
+		}
 	}
 }

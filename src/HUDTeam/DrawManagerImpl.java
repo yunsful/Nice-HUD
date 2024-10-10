@@ -25,15 +25,15 @@ public class DrawManagerImpl extends DrawManager {
     public static void drawAttackSpeed(final Screen screen, final double attackSpeed) {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
-        String attackSpeedText = String.format("AS: %.2f ", attackSpeed);
-        backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 25);
+        String attackSpeedText = String.format("AS : %.2f ", attackSpeed);
+        backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 15);
     }
 
     public static void drawSpeed(final Screen screen, final int speed) {
         String speedString = "MS : " + speed;
         backBufferGraphics.setColor(Color.WHITE);
         backBufferGraphics.setFont(fontRegular);
-        backBufferGraphics.drawString(speedString, 85, screen.getHeight() - 25);
+        backBufferGraphics.drawString(speedString, 10, screen.getHeight() - 35);
     }
 
     public void drawLivesWithHeart(final Screen screen, final int lives) {

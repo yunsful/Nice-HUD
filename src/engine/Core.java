@@ -12,6 +12,9 @@ import CtrlS.CurrencyManager;
 import CtrlS.RoundState;
 import CtrlS.ReceiptScreen;
 import Sound_Operator.SoundManager;
+import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
+import Sound_Operator.SoundManager;
 import clove.AchievementManager;
 import screen.*;
 
@@ -156,7 +159,6 @@ public final class Core {
 
 					GameState prevState = gameState;
 
-
 					currentScreen = new GameScreen(gameState,
 							gameSettings.get(gameState.getLevel() - 1),
 							bonusLife, width, height, FPS);
@@ -198,9 +200,9 @@ public final class Core {
 						LOGGER.info("Closing receiptScreen.");
 					}
 
-					if (achievementManager != null) { // TEAM CLOVER : Added code
-						achievementManager.updateAchievements(currentScreen);
-					}
+                    if (achievementManager != null) { // TEAM CLOVER : Added code
+                        achievementManager.updateAchievements(currentScreen);
+                    }
 
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);

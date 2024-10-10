@@ -1,8 +1,8 @@
 ---
-name: Hotfix
-about: Template for critical issues requiring immediate attention
-title: '[HOTFIX] '
-labels: hotfix
+name: Feature Request
+about: Suggest a new feature for this project
+title: '[FEATURE] '
+labels: enhancement
 assignees: ''
 ---
 
@@ -15,6 +15,9 @@ assignees: ''
 -   [ ] Todo 1
 -   [ ] Todo 2
 -   [ ] Todo 3
+
+## Feature Description
+[Provide a clear and concise description of the new feature you are proposing.]
 
 ## Additional Information
 

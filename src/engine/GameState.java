@@ -65,6 +65,7 @@ public class GameState {
 		this.playTime = playTime;
 		this.currency = currency; // Team-Ctrl-S(Currency)
 		this.gem = gem; // Team-Ctrl-S(Currency)
+		this.gem = gem; // Team-Ctrl-S(Currency)
 		this.scoreManager = new ScoreManager(level, score);
 	}
 

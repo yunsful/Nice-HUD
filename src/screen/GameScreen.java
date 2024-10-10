@@ -1,7 +1,7 @@
 package screen;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,11 +21,8 @@ import entity.Ship;
 import inventory_develop.*;
 // Sound Operator
 import Sound_Operator.SoundManager;
-
-import Enemy.PiercingBulletPool;
-import Enemy.Item;
-import Enemy.ItemManager;
 import clove.ScoreManager;    // CLOVE
+
 
 /**
  * Implements the game screen, where the action happens.
@@ -148,6 +145,8 @@ public class GameScreen extends Screen {
 		this.item = new ItemBarrierAndHeart();	// team Inventory
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
+		// Soomin Lee / TeamHUD
+		this.playTime = gameState.getTime();
 		this.scoreManager = gameState.scoreManager; //Team Clove
 		this.statistics = new Statistics(); //Team Clove
 		this.achievementConditions = new AchievementConditions();
@@ -197,7 +196,7 @@ public class GameScreen extends Screen {
 		super.run();
 
 		this.score += LIFE_SCORE * (this.lives - 1);
-		this.logger.info("Screen cleared with a score of " + this.scoreManager.getAccumulatedScore());    //clove
+		this.logger.info("Screen cleared with a score of " + this.scoreManager.getAccumulatedScore());
 
 		return this.returnCode;
 	}
@@ -322,7 +321,9 @@ public class GameScreen extends Screen {
 
 		enemyShipFormation.draw();
 
-		DrawManagerImpl.drawSpeed(this, ship.getSpeed());
+		DrawManagerImpl.drawSpeed(this, ship.getSpeed()); // Ko jesung / HUD team
+		DrawManagerImpl.drawSeparatorLine(this,  this.height-65); // Ko jesung / HUD team
+
 
 		for (PiercingBullet bullet : this.bullets)
 			drawManager.drawEntity(bullet, bullet.getPositionX(),
@@ -334,6 +335,7 @@ public class GameScreen extends Screen {
 		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
+		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
 		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
 //		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
@@ -369,7 +371,7 @@ public class GameScreen extends Screen {
 		for (PiercingBullet bullet : this.bullets) { // Edited by Enemy
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
-					|| bullet.getPositionY() > this.height)
+					|| bullet.getPositionY() > this.height-70) // ko jesung / HUD team
 				recyclable.add(bullet);
 		}
 		this.bullets.removeAll(recyclable);
@@ -452,11 +454,14 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-
+						//Drop item when MAGENTA color enemy destroyed
+						if(enemyShip.getColor() == Color.MAGENTA){
+							this.itemManager.dropItem(enemyShip,1,1);}
 						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip);	// team Inventory
-                        this.scoreManager.addScore(enemyShip.getPointValue()); //clove
 						this.shipsDestroyed += CntAndPnt[0];
-						this.score += CntAndPnt[1];
+                        this.scoreManager.addScore(enemyShip.getPointValue()); //clove
+                        this.score += CntAndPnt[1];
+
 
 						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
 
@@ -465,8 +470,7 @@ public class GameScreen extends Screen {
 							recyclable.add(bullet);
 						}
 
-						// Drop item to 30%
-						this.itemManager.dropItem(enemyShip,0.3,1);
+
 					}
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
@@ -550,4 +554,20 @@ public class GameScreen extends Screen {
 	public ItemBarrierAndHeart getItem() {
 		return item;
 	}	// Team Inventory(Item)
+
+	/**
+	 * Check remaining enemies
+	 *
+	 * @return remaining enemies count.
+	 *
+	 */
+	private int getRemainingEnemies() {
+		int remainingEnemies = 0;
+		for (EnemyShip enemyShip : this.enemyShipFormation) {
+			if (!enemyShip.isDestroyed()) {
+				remainingEnemies++;
+			}
+		}
+		return remainingEnemies;
+	} // by HUD team SeungYun
 }

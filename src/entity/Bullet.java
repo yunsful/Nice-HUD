@@ -19,6 +19,12 @@ public class Bullet extends Entity {
 	 * positive is down.
 	 */
 	private int speed;
+	//Ctrl S
+	/**
+	 * Check if there is count on the bullet.
+	 * if hit occur then checkCount will be false
+	 */
+	protected boolean checkCount;
 
 	/**
 	 * Constructor, establishes the bullet's properties.
@@ -33,7 +39,7 @@ public class Bullet extends Entity {
 	 */
 	public Bullet(final int positionX, final int positionY, final int speed) {
 		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
-
+		this.checkCount = true;
 		this.speed = speed;
 		setSprite();
 	}
@@ -79,4 +85,19 @@ public class Bullet extends Entity {
 	public final int getSpeed() {
 		return this.speed;
 	}
+
+	/**
+	 * Getter for the checkCount of the bullet.
+	 *
+	 * @return checkCount of the bullet.
+	 */
+	public final boolean isCheckCount() { return this.checkCount; }
+
+	/**
+	 * Setter for the checkCount of the bullet.
+	 *
+	 *  @param checkCount
+	 * 	          New checkCount of the bullet.
+	 */
+	public final void setCheckCount(final boolean checkCount) { this.checkCount = checkCount; }
 }

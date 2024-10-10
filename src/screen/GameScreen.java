@@ -97,10 +97,12 @@ public class GameScreen extends Screen {
 	private static SoundManager sm;
 
 	// Team-Ctrl-S(Currency)
-	/** Total currency **/
-	private int currency;
+	/** Total coin **/
+	private int coin;
 	/** Total gem **/
 	private int gem;
+	/** Total hitCount **/		//CtrlS
+	private int hitCount;
 	/** Score calculation. */
 	private ScoreManager scoreManager;    //clove
 	/** Check start-time*/
@@ -143,8 +145,9 @@ public class GameScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.item = new ItemBarrierAndHeart();	// team Inventory
-		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
+		this.hitCount = gameState.getHitCount(); //CtrlS
 		// Soomin Lee / TeamHUD
 		this.playTime = gameState.getTime();
 		this.scoreManager = gameState.scoreManager; //Team Clove
@@ -369,7 +372,11 @@ public class GameScreen extends Screen {
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
 					|| bullet.getPositionY() > this.height-70) // ko jesung / HUD team
+                {
+				//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
+				bullet.setCheckCount(true);
 				recyclable.add(bullet);
+			}
 		}
 		this.bullets.removeAll(recyclable);
 		PiercingBulletPool.recycle(recyclable); // Edited by Enemy
@@ -397,6 +404,8 @@ public class GameScreen extends Screen {
 							&& checkCollision(bullet, enemyShip)) {
 						this.scoreManager.addScore(enemyShip.getPointValue());    //clove
 						this.shipsDestroyed++;
+						// CtrlS - increase the hitCount for 1 kill
+						this.hitCount++;
 						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
 					}
@@ -405,6 +414,8 @@ public class GameScreen extends Screen {
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
 					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue());    //clove
 					this.shipsDestroyed++;
+					// CtrlS - increase the hitCount for 1 kill
+					this.hitCount++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
 					recyclable.add(bullet);
@@ -448,6 +459,7 @@ public class GameScreen extends Screen {
 					}
 				}
 			} else {
+				// CtrlS - Variable to increase hitCount just 1 when Piercing bullet hits enemy
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
@@ -459,11 +471,19 @@ public class GameScreen extends Screen {
                         this.scoreManager.addScore(enemyShip.getPointValue()); //clove
                         this.score += CntAndPnt[1];
 
+						// CtrlS - If collision occur then increase hitCount and checkCount
+						if (bullet.isCheckCount()) {
+							hitCount++;
+							bullet.setCheckCount(false);
+							this.logger.info("Hit count!");
+						}
 
 						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
 
 						// Check PiercingBullet piercing count and add to recyclable if necessary
 						if (bullet.getPiercingCount() <= 0) {
+							//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
+							bullet.setCheckCount(true);
 							recyclable.add(bullet);
 						}
 
@@ -472,6 +492,12 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
+					// CtrlS - If collision occur then increase hitCount and checkCount
+					if (bullet.isCheckCount()) {
+						hitCount++;
+						bullet.setCheckCount(false);
+						this.logger.info("Hit count!");
+					}
 					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue()); //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
@@ -481,6 +507,8 @@ public class GameScreen extends Screen {
 
 					// Check PiercingBullet piercing count for special enemy and add to recyclable if necessary
 					if (bullet.getPiercingCount() <= 0) {
+						//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
+						bullet.setCheckCount(true);
 						recyclable.add(bullet);
 					}
 
@@ -534,9 +562,9 @@ public class GameScreen extends Screen {
 	 *
 	 * @return Current game state.
 	 */
-	public final GameState getGameState() {
+	public final GameState getGameState() 	{
 		return new GameState(this.level, this.scoreManager.getAccumulatedScore(), this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency, this.gem); // Team-Ctrl-S(Currency)
+				this.bulletsShot, this.shipsDestroyed, this.playTime, this.coin, this.gem, this.hitCount); // Team-Ctrl-S(Currency)
 	}
 	public int getLives() {
 		return lives;

@@ -17,23 +17,22 @@ public class Statistics {
 
     private AchievementConditions achievementConditions;
     private ScheduledExecutorService scheduler;
-    // TODO: Achievement won't work well if not static
     /** Number of Player's Highest Reached Level */
-    private static int highestLevel;
+    private int highestLevel;
     /** Number of Totally Fired Bullet */
-    private static int totalBulletsShot;
+    private int totalBulletsShot;
     /** Number of Totally Destroyed Ships*/
-    private static int totalShipsDestroyed;
+    private int totalShipsDestroyed;
     /** Number of ships destroyed consecutively */
-    private static int shipsDestructionStreak;
+    private int shipsDestructionStreak;
     /** Number of games played */
-    private static int playedGameNumber;
+    private int playedGameNumber;
     /** Number of achievements cleared */
-    private static int clearAchievementNumber;
+    private int clearAchievementNumber;
     /** Total playtime */
-    private static long totalPlaytime;
+    private long totalPlaytime;
     /** Additional playtime */
-    private static long playTime;
+    private long playTime;
 
     private static FileManager fileManager;
     private static Logger logger;
@@ -66,8 +65,8 @@ public class Statistics {
         this.clearAchievementNumber = clearAchievementNumber;
         this.totalPlaytime = TotalPlaytime;
 
-        this.achievementConditions = new AchievementConditions();
-        this.scheduler = Executors.newSingleThreadScheduledExecutor();
+        //this.achievementConditions = new AchievementConditions();
+        //this.scheduler = Executors.newSingleThreadScheduledExecutor();
     }
 
     /**
@@ -78,7 +77,6 @@ public class Statistics {
         fileManager = Core.getFileManager();
         logger = Core.getLogger();
         this.playerStatistics = new ArrayList<Statistics>();
-
     }
 
     /**
@@ -90,7 +88,7 @@ public class Statistics {
      */
 
     public void comHighestLevel(int Level) throws IOException {
-        loadUserData();
+        this.stat = loadUserData(stat);
         int CurrentHighestLevel = stat.getHighestLevel();
         if(CurrentHighestLevel < Level){
             playerStatistics.clear();
@@ -109,7 +107,7 @@ public class Statistics {
      */
 
     public void addBulletShot(int PlusBulletShot) throws IOException{
-        loadUserData();
+        this.stat = loadUserData(stat);
         int CurrentBulletShot = stat.getTotalBulletsShot();
         CurrentBulletShot += PlusBulletShot;
 
@@ -130,7 +128,7 @@ public class Statistics {
 
 
     public void addShipsDestroyed(int PlusShipsDestroyed) throws IOException{
-        loadUserData();
+        this.stat = loadUserData(stat);
         int CurrentShipsDestroyed = stat.getTotalShipsDestroyed();
         CurrentShipsDestroyed += PlusShipsDestroyed;
 
@@ -155,7 +153,7 @@ public class Statistics {
      */
 
     public void addPlayedGameNumber(int PlusPlayedGameNumber) throws IOException {
-        loadUserData();
+        this.stat = loadUserData(stat);
         int CurrentPlayedGameNumber = stat.getPlayedGameNumber();
         CurrentPlayedGameNumber += PlusPlayedGameNumber;
 
@@ -176,7 +174,7 @@ public class Statistics {
      */
 
     public void comShipsDestructionStreak(int DestroyedShipNumber) throws IOException {
-        loadUserData();
+        this.stat = loadUserData(stat);
         int CurrentShipsDestructionStreak = stat.getShipsDestructionStreak();
         if(CurrentShipsDestructionStreak < DestroyedShipNumber){
             playerStatistics.clear();
@@ -197,7 +195,7 @@ public class Statistics {
      */
 
     public void comClearAchievementNumber(int ClearedAchievement) throws IOException {
-        loadUserData();
+        this.stat = loadUserData(stat);
         int CurrentClearAchievementNumber = stat.getClearAchievementNumber();
         if(CurrentClearAchievementNumber < ClearedAchievement){
             playerStatistics.clear();
@@ -217,7 +215,7 @@ public class Statistics {
      */
 
     public void addTotalPlayTime(long Playtime) throws IOException {
-        loadUserData();
+        this.stat = loadUserData(stat);
         long CurrentPlaytime = stat.getTotalPlaytime();
         CurrentPlaytime += Playtime;
 
@@ -233,13 +231,21 @@ public class Statistics {
      * @throws IOException
      *              In case of loading problems.
      */
-    public void loadUserData() throws IOException {
-        this.stat = fileManager.loadUserData();
+    public Statistics loadUserData(Statistics stat) throws IOException {
+        stat = fileManager.loadUserData();
+        return stat;
     }
 
     public Statistics getStatisticsData() throws IOException {
         Statistics StatisticsData = fileManager.loadUserData();
         return StatisticsData;
+    }
+
+    public void resetStatistics() throws IOException {
+        this.playerStatistics = new ArrayList<Statistics>();
+        playerStatistics.add(new Statistics(0, 0, 0, 0,
+                0, 0, 0));
+        fileManager.saveUserData(playerStatistics);
     }
 
     public void startAddingShipsDestroyed() {
@@ -256,9 +262,9 @@ public class Statistics {
 
     public int getTotalBulletsShot() { return totalBulletsShot; }
 
-    public static int getTotalShipsDestroyed() { return totalShipsDestroyed; }
+    public int getTotalShipsDestroyed() { return totalShipsDestroyed; }
 
-    public static int getShipsDestructionStreak() { return shipsDestructionStreak; }
+    public int getShipsDestructionStreak() { return shipsDestructionStreak; }
 
     public int getPlayedGameNumber() { return playedGameNumber; }
 

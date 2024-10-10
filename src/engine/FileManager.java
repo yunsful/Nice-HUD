@@ -294,16 +294,23 @@ public final class FileManager {
 					.getResourceAsStream("recent");
 			reader = new BufferedReader(new InputStreamReader(inputStream));
 
-			Score recentScore = null;
+			Score recentScore;
 			String date = reader.readLine();
 			String score = reader.readLine();
+			String highestLevel = reader.readLine();
+			String totalShipDestroyed = reader.readLine();
+			String clearAchievementNumber = reader.readLine();
 			String name = null;
 
 			while ((date != null) && (score != null)) {
-				recentScore = new Score(name, Integer.parseInt(score), date);
+				recentScore = new Score(name, Integer.parseInt(score), date, Integer.parseInt(highestLevel),
+						Integer.parseInt(totalShipDestroyed), Integer.parseInt(clearAchievementNumber));
 				recentScores.add(recentScore);
 				date = reader.readLine();
 				score = reader.readLine();
+				highestLevel = reader.readLine();
+				totalShipDestroyed = reader.readLine();
+				clearAchievementNumber = reader.readLine();
 			}
 
 		} finally {
@@ -348,16 +355,24 @@ public final class FileManager {
 
 			logger.info("Loading user recent scores.");
 
-			Score recentScore = null;
+			Score recentScore;
 			String date = bufferedReader.readLine();
 			String score = bufferedReader.readLine();
+			String highestLevel = bufferedReader.readLine();
+			String totalShipDestroyed = bufferedReader.readLine();
+			String clearAchievementNumber = bufferedReader.readLine();
 			String name = null;
 
 			while ((date != null) && (score != null)) {
-				recentScore = new Score(name, Integer.parseInt(score), date);
+				recentScore = new Score(name, Integer.parseInt(score), date, Integer.parseInt(highestLevel),
+						Integer.parseInt(totalShipDestroyed), Integer.parseInt(clearAchievementNumber));
 				recentScores.add(recentScore);
 				date = bufferedReader.readLine();
 				score = bufferedReader.readLine();
+				highestLevel = bufferedReader.readLine();
+				totalShipDestroyed = bufferedReader.readLine();
+				clearAchievementNumber = bufferedReader.readLine();
+
 			}
 
 		} catch (FileNotFoundException e) {
@@ -407,6 +422,9 @@ public final class FileManager {
 			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
 					outputStream, Charset.forName("UTF-8")));
 
+			Statistics stat = new Statistics();
+			stat = stat.loadUserData(stat);
+
 			logger.info("Saving user recent scores.");
 
 			// Saves 10 or less scores.
@@ -418,8 +436,15 @@ public final class FileManager {
 				bufferedWriter.newLine();
 				bufferedWriter.write(Integer.toString(score.getScore()));
 				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getHighestLevel()));
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getShipDestroyed()));
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getClearAchievementNumber()));
+				bufferedWriter.newLine();
 				savedCount++;
 			}
+			stat.resetStatistics();
 
 		} finally {
 			if (bufferedWriter != null)

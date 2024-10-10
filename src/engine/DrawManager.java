@@ -614,15 +614,46 @@ public class DrawManager {
 								 final List<Score> recentScores) {
 		backBufferGraphics.setColor(Color.WHITE);
 		int i = 0;
+		boolean isFirstLine = true;
 		String scoreString = "";
 
 		for (Score score : recentScores) {
-			scoreString = String.format("%s        %04d", score.getDate(),
-					score.getScore());
-			drawCenteredRegularString(screen, scoreString, screen.getHeight()
-					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
-			i++;
+			if (isFirstLine) { // Create Header
+				scoreString = String.format("           Date                           " +
+						" Score       Level       Destroy       Achievement");
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				isFirstLine = false;
+				i++;
+			} else {
+				scoreString = String.format("   %s                      %04d         %04d             %04d         " +
+								"             %04d",
+						score.getDate(), score.getScore(), score.getHighestLevel(),
+						score.getShipDestroyed(), score.getClearAchievementNumber());
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				i++;
+			}
 		}
+	}
+
+
+	/**
+	 * Draws a righted string on regular font
+	 *
+	 * @param screen
+	 * 				Screen to draw on.
+	 * @param string
+	 * 				String to draw.
+	 * @param height
+	 * 				Height of the drawing.
+	 *
+	 * 		//Clove
+	 */
+	public void drawRightedRegularString(final Screen screen,
+										 final String string, final int height) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.drawString(string, 0, height);
 	}
 
 	/**
@@ -641,6 +672,7 @@ public class DrawManager {
 		backBufferGraphics.drawString(string, screen.getWidth() / 2
 				- fontRegularMetrics.stringWidth(string) / 2, height);
 	}
+
 
 	/**
 	 * Draws a centered string on big font.

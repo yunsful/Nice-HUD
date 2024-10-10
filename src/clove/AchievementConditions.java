@@ -6,11 +6,12 @@ import java.util.List;
 import engine.Core;
 import engine.DrawManager;
 import engine.GameState;
+import clove.Statistics;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
+import java.util.logging.Logger;
 
 
 public class AchievementConditions {
@@ -18,6 +19,16 @@ public class AchievementConditions {
     private DrawManager drawManager;
 
     private GameState gameState;
+    private static Logger logger;
+
+    private int highestLevel;
+    private int totalBulletsShot;
+    private int totalShipsDestroyed;
+    private int shipsDestructionStreak;
+    private int playedGameNumber;
+    private int clearAchievementNumber;
+    private long TotalPlaytime;
+    private Statistics stats;
 
     private List<Achievement> killAchievements = new ArrayList<>();
     private List<Achievement> trialAchievements = new ArrayList<>();
@@ -34,8 +45,19 @@ public class AchievementConditions {
     public AchievementConditions() {
         initializeAchievements();
 
+        try{
+            this.stats = new Statistics();
+            setStatistics();
+        } catch (IOException e){
+            logger.warning("Couldn't load Statistics!");
+        }
+
         scheduler = Executors.newSingleThreadScheduledExecutor();
         startFastKillCheck();
+    }
+
+    private void setStatistics() throws IOException {
+        this.stats = stats.loadUserData(stats);
     }
 
     private int enemiesKilledIn3Seconds = 0;
@@ -102,15 +124,6 @@ public class AchievementConditions {
         allAchievements.add(new Achievement("Medal of Honor", "Complete all achievements", 0, Achievement.AchievementType.STAGE));
     }
 
-    Statistics stats = new Statistics();
-    int highestLevel = stats.getHighestLevel();
-    int totalBulletsShot = stats.getTotalBulletsShot();
-    int totalShipsDestroyed = stats.getTotalShipsDestroyed();
-    int shipsDestructionStreak = stats.getShipsDestructionStreak();
-    int playedGameNumber = stats.getPlayedGameNumber();
-    int clearAchievementNumber = stats.getClearAchievementNumber();
-    long TotalPlaytime = stats.getTotalPlaytime();
-
     // Have to check if the code right below works
     public void checkAllAchievements() {
         boolean allCompleted = true;
@@ -140,8 +153,6 @@ public class AchievementConditions {
     public void onKill() throws IOException {
         enemiesKilledIn3Seconds++;
         lastKillTime = System.currentTimeMillis();
-
-        stats.addShipsDestroyed(1);
 
         int currentKills = stats.getTotalShipsDestroyed();
         System.out.println("Checking kill achievements. Current kills: " + currentKills);

@@ -96,7 +96,9 @@ public class DrawManager {
 		/** coin */
 		Coin,
 		/** add sign */
-		AddSign
+		AddSign,
+		/** Gem - Added by CtrlS */
+		Gem,
 	};
 
 	/**
@@ -129,6 +131,7 @@ public class DrawManager {
 			spriteMap.put(SpriteType.Item, new boolean[5][5]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
+			spriteMap.put(SpriteType.Gem, new boolean[7][6]); // by CtrlS
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");

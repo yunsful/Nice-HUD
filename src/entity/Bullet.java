@@ -25,7 +25,11 @@ public class Bullet extends Entity {
 	 * if hit occur then checkCount will be false
 	 */
 	protected boolean checkCount;
-
+	//Ctrl S
+	/**
+	 * give unique id for certain shot of bullets
+	 */
+	protected int fire_id;
 	/**
 	 * Constructor, establishes the bullet's properties.
 	 * 
@@ -39,7 +43,9 @@ public class Bullet extends Entity {
 	 */
 	public Bullet(final int positionX, final int positionY, final int speed) {
 		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
+		//CtrlS
 		this.checkCount = true;
+		//CtrlS
 		this.speed = speed;
 		setSprite();
 	}
@@ -100,4 +106,18 @@ public class Bullet extends Entity {
 	 * 	          New checkCount of the bullet.
 	 */
 	public final void setCheckCount(final boolean checkCount) { this.checkCount = checkCount; }
+
+	/**
+	 * Getter for the fire_id of the bullet
+	 *
+	 * @return Get fire_id of the bullet.
+	 */
+	public final int getFire_id() { return this.fire_id; }
+	/**
+	 * Setter for the fire_id of the bullet.
+	 *
+	 *  @param id
+	 * 	          New fire_id of the bullet.
+	 */
+	public final void setFire_id(final int id) { this.fire_id = id; }
 }

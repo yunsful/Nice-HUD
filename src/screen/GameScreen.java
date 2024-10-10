@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
+import clove.AchievementConditions;
+import clove.Statistics;
 import Enemy.*;
 import HUDTeam.Achievement;
 import HUDTeam.DrawManagerImpl;
@@ -19,6 +21,7 @@ import entity.Ship;
 import inventory_develop.*;
 // Sound Operator
 import Sound_Operator.SoundManager;
+import clove.ScoreManager;    // CLOVE
 
 
 /**
@@ -98,6 +101,16 @@ public class GameScreen extends Screen {
 	private int currency;
 	/** Total gem **/
 	private int gem;
+	/** Score calculation. */
+	private ScoreManager scoreManager;    //clove
+	/** Check start-time*/
+	private long startTime;    //clove
+	/** Check end-time*/
+	private long endTime;    //clove
+
+	private Statistics statistics; //Team Clove
+	private AchievementConditions achievementConditions;
+	private int fastKill;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -134,6 +147,9 @@ public class GameScreen extends Screen {
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 		// Soomin Lee / TeamHUD
 		this.playTime = gameState.getTime();
+		this.scoreManager = gameState.scoreManager; //Team Clove
+		this.statistics = new Statistics(); //Team Clove
+		this.achievementConditions = new AchievementConditions();
 	}
 
 	/**
@@ -159,6 +175,8 @@ public class GameScreen extends Screen {
 		this.screenFinishedCooldown = Core.getCooldown(SCREEN_CHANGE_INTERVAL);
 		this.bullets = new HashSet<PiercingBullet>(); // Edited by Enemy
 
+		this.startTime = System.currentTimeMillis();    //clove
+
 		// Special input delay / countdown.
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
@@ -178,7 +196,7 @@ public class GameScreen extends Screen {
 		super.run();
 
 		this.score += LIFE_SCORE * (this.lives - 1);
-		this.logger.info("Screen cleared with a score of " + this.score);
+		this.logger.info("Screen cleared with a score of " + this.scoreManager.getAccumulatedScore());
 
 		return this.returnCode;
 	}
@@ -252,9 +270,31 @@ public class GameScreen extends Screen {
 			this.screenFinishedCooldown.reset();
 		}
 
-		if (this.levelFinished && this.screenFinishedCooldown.checkFinished())
-			this.isRunning = false;
+		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
+			this.endTime = System.currentTimeMillis();    //clove
+			long playTime = (this.endTime - this.startTime) / 1000;    //clove
+			//this.logger.info("Final Playtime: " + playTime + " seconds");    //clove
+			achievementConditions.checkNoDeathAchievements(lives);
+			achievementConditions.score(score);
+            try { //Team Clove
+				statistics.comHighestLevel(level);
+				statistics.addBulletShot(bulletsShot);
+				statistics.addShipsDestroyed(shipsDestroyed);
+                statistics.addTotalPlayTime(playTime);
 
+				achievementConditions.onKill();
+				achievementConditions.onStage();
+				achievementConditions.trials();
+				achievementConditions.killStreak();
+				achievementConditions.fastKill(fastKill);
+				achievementConditions.score(score);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            this.isRunning = false;
+		}
 	}
 
 	/**
@@ -289,7 +329,7 @@ public class GameScreen extends Screen {
 		this.itemManager.drawItems(); //by Enemy team
 
 		// Interface.
-		drawManager.drawScore(this, this.score);
+		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
@@ -355,7 +395,7 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation)
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						this.score += enemyShip.getPointValue();
+						this.scoreManager.addScore(enemyShip.getPointValue());    //clove
 						this.shipsDestroyed++;
 						this.enemyShipFormation.destroy(enemyShip);
 						recyclable.add(bullet);
@@ -363,7 +403,7 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
+					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue());    //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
@@ -416,7 +456,8 @@ public class GameScreen extends Screen {
 							this.itemManager.dropItem(enemyShip,1,1);}
 						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip);	// team Inventory
 						this.shipsDestroyed += CntAndPnt[0];
-						this.score += CntAndPnt[1];
+                        this.scoreManager.addScore(enemyShip.getPointValue()); //clove
+                        this.score += CntAndPnt[1];
 
 
 						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
@@ -431,7 +472,7 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
+					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue()); //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
@@ -483,6 +524,10 @@ public class GameScreen extends Screen {
 		return distanceX < maxDistanceX && distanceY < maxDistanceY;
 	}
 
+	public int getBulletsShot(){    //clove
+		return this.bulletsShot;    //clove
+	}                               //clove
+
 	/**
 	 * Add playtime parameter - Soomin Lee / TeamHUD
 	 * Returns a GameState object representing the status of the game.
@@ -490,7 +535,7 @@ public class GameScreen extends Screen {
 	 * @return Current game state.
 	 */
 	public final GameState getGameState() {
-		return new GameState(this.level, this.score, this.lives,
+		return new GameState(this.level, this.scoreManager.getAccumulatedScore(), this.lives,
 				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency, this.gem); // Team-Ctrl-S(Currency)
 	}
 	public int getLives() {

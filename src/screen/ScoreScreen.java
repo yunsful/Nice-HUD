@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import clove.Statistics; //Team Clove
 import HUDTeam.Achievement;
 import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
@@ -28,6 +29,8 @@ public class ScoreScreen extends Screen {
 	private static final int FIRST_CHAR = 65;
 	/** Code of last mayus character. */
 	private static final int LAST_CHAR = 90;
+	/** Maximum number of recent scores / Team Clover */
+	private static final int MAX_RECENT_SCORE_NUM = 10;
 
 	/** Current score. */
 	private int score;
@@ -49,6 +52,17 @@ public class ScoreScreen extends Screen {
 	private Cooldown selectionCooldown;
 	/** Total coin earned this game */
 	private int coin; // Team-Ctrl-S(Currency)
+	/** User's Final Reached Level */ //Team Clove
+	private int level;
+
+	/** List of user recent scores */
+	private List<Score> recentScore; // Team Clove
+	/** To symbolize current score is always the most recent score. value is always true */
+	private final boolean isRecentScore = true; // Team Clove
+
+	private Statistics statistics; //Team Clove
+
+	private long playTime; //Team Clove
 
 	private GameState gameState; // Team-Ctrl-S(Currency)
 
@@ -79,6 +93,8 @@ public class ScoreScreen extends Screen {
 		this.selectionCooldown.reset();
 		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gameState = gameState; // Team-Ctrl-S(Currency)
+		this.level = gameState.getLevel(); //Team Clove
+		this.statistics = new Statistics(); //Team Clove
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -89,6 +105,11 @@ public class ScoreScreen extends Screen {
 
 		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
+		}
+		try {																			// Team Clove added Exception
+			this.recentScore = Core.getFileManager().loadRecentScores();
+		} catch (IOException e) {
+			logger.warning("Couldn't load recent scores!");
 		}
 	}
 
@@ -119,6 +140,8 @@ public class ScoreScreen extends Screen {
 					saveScore();
 				}
 				saveCoin(); // Team-Ctrl-S(Currency)
+				saveStatistics(); //Team Clove
+				saveRecentScore(); // Team Clove
 			} else if (inputManager.isKeyDown(KeyEvent.VK_SPACE)) {
 				// Play again.
 				this.returnCode = 2;
@@ -127,6 +150,8 @@ public class ScoreScreen extends Screen {
 					saveScore();
 				}
 				saveCoin(); // Team-Ctrl-S(Currency)
+				saveStatistics(); //Team Clove
+				saveRecentScore(); // Team Clove
 			}
 
 			if (this.isNewRecord && this.selectionCooldown.checkFinished()) {
@@ -172,6 +197,34 @@ public class ScoreScreen extends Screen {
 			Core.getFileManager().saveHighScores(highScores);
 		} catch (IOException e) {
 			logger.warning("Couldn't load high scores!");
+		}
+	}
+
+	/** Saves the score as a recent score.
+	 *  Team Clove
+	 */
+	private void saveRecentScore() {
+		recentScore.add(new Score(null, score));
+		if (recentScore.size() > MAX_RECENT_SCORE_NUM)
+			recentScore.remove(0);
+		try {
+			Core.getFileManager().saveRecentScores(recentScore);
+		} catch (IOException e) {
+			logger.warning("Couldn't load recent scores!");
+		}
+	}
+
+	/**
+	 *  Saves the Player's Statistics
+	 */
+
+	private void saveStatistics(){
+		try{
+			statistics.comShipsDestructionStreak(0);
+			statistics.addPlayedGameNumber(1);
+			statistics.comClearAchievementNumber(0);
+		} catch (IOException e) {
+			logger.warning("Couldn't load Statistics!");
 		}
 	}
 

@@ -41,11 +41,11 @@ public class RoundState {
 
 
         int baseCoin = roundScore / 10;
-        //레벨 보너스
+        //레벨 보너스(levelBonus)
         int levelBonus = baseCoin * currState.getLevel();
         coin += levelBonus;
 
-        //정확도 보너스
+        //정확도 보너스(accuracyBonus)
         int accuracyBonus = 0;
 
         if (roundHitRate > 0.9) {
@@ -65,7 +65,7 @@ public class RoundState {
         // Round clear time in seconds
         // DEBUGGING NEEDED(playTime)
         long timeDifferenceInSeconds = (currState.getTime() - prevState.getTime()) / 1000;
-        //시간 보너스
+        //시간 보너스(timeBonus)
         int timeBonus = 0;
 
         /*

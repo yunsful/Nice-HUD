@@ -29,13 +29,13 @@ import inventory_develop.TemporaryShield;
 
 
 /**
- * Implements the game screen, where the action happens.
- * 
- * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
- */
+* Implements the game screen, where the action happens.
+* 
+* @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+* 
+*/
 public class GameScreen extends Screen {
-
+	
 	/** Milliseconds until the screen accepts user input. */
 	private static final int INPUT_DELAY = 6000;
 	/** Bonus score for each life remaining at the end of the level. */
@@ -50,7 +50,7 @@ public class GameScreen extends Screen {
 	private static final int SCREEN_CHANGE_INTERVAL = 1500;
 	/** Height of the interface separation line. */
 	private static final int SEPARATION_LINE_HEIGHT = 40;
-
+	
 	/** Current game difficulty settings. */
 	private GameSettings gameSettings;
 	/** Current difficulty level number. */
@@ -86,25 +86,25 @@ public class GameScreen extends Screen {
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
 	/**
-	 * Added by the Level Design team
-	 *
-	 * Counts the number of waves destroyed
-	 * **/
+	* Added by the Level Design team
+	*
+	* Counts the number of waves destroyed
+	* **/
 	private int waveCounter;
-
+	
 	/** ### TEAM INTERNATIONAL ### */
 	/** Booleans for horizontal background movement */
 	private boolean backgroundMoveLeft = false;
 	private boolean backgroundMoveRight = false;
-
-
-
+	
+	
+	
 	// --- OBSTACLES
 	private Set<Obstacle> obstacles; // Store obstacles
 	private Cooldown obstacleSpawnCooldown; //control obstacle spawn speed
 	/** Shield item */
 	private TemporaryShield shield;
-
+	
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */
 	private long playStartTime;
@@ -112,16 +112,16 @@ public class GameScreen extends Screen {
 	private int playTime = 0;
 	/** Play time on previous levels */
 	private int playTimePre = 0;
-
+	
 	// Sound Operator
 	private static SoundManager sm;
-
+	
 	// Team-Ctrl-S(Currency)
 	/** Total currency **/
 	private int currency;
 	/** Total gem **/
 	private int gem;
-
+	
 	/**
 	* Constructor, establishes the properties of the screen.
 	*
@@ -142,88 +142,88 @@ public class GameScreen extends Screen {
 	final GameSettings gameSettings, final boolean bonusLife,
 	final int width, final int height, final int fps) {
 		super(width, height, fps);
-
+		
 		this.gameSettings = gameSettings;
 		this.bonusLife = bonusLife;
 		this.level = gameState.getLevel();
 		this.score = gameState.getScore();
 		this.lives = gameState.getLivesRemaining();
 		if (this.bonusLife)
-		    this.lives++;
+		this.lives++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.shield = new TemporaryShield();
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
-
+		
 		/**
-		 * Added by the Level Design team
-		 *
-		 * Sets the wave counter
-		 * **/
+		* Added by the Level Design team
+		*
+		* Sets the wave counter
+		* **/
 		this.waveCounter = 1;
 	}
-
+	
 	/**
-	 * Initializes basic screen properties, and adds necessary elements.
-	 */
+	* Initializes basic screen properties, and adds necessary elements.
+	*/
 	public final void initialize() {
 		super.initialize();
-
+		
 		enemyShipFormation = new EnemyShipFormation(this.gameSettings);
 		enemyShipFormation.attach(this);
 		this.ship = new Ship(this.width / 2, this.height - 30);
-
+		
 		/** initialize itemManager */
 		this.itemManager = new ItemManager(this.height, drawManager); //by Enemy team
 		this.itemManager.initialize(); //by Enemy team
-
+		
 		// Appears each 10-30 seconds.
- 		this.enemyShipSpecialCooldown = Core.getVariableCooldown(
-				BONUS_SHIP_INTERVAL, BONUS_SHIP_VARIANCE);
+		this.enemyShipSpecialCooldown = Core.getVariableCooldown(
+		BONUS_SHIP_INTERVAL, BONUS_SHIP_VARIANCE);
 		this.enemyShipSpecialCooldown.reset();
 		this.enemyShipSpecialExplosionCooldown = Core
-				.getCooldown(BONUS_SHIP_EXPLOSION);
+		.getCooldown(BONUS_SHIP_EXPLOSION);
 		this.screenFinishedCooldown = Core.getCooldown(SCREEN_CHANGE_INTERVAL);
 		this.bullets = new HashSet<PiercingBullet>(); // Edited by Enemy
-
+		
 		// Special input delay / countdown.
 		this.gameStartTime = System.currentTimeMillis();
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
-
+		
 		// Soomin Lee / TeamHUD
 		this.playStartTime = gameStartTime + INPUT_DELAY;
 		this.playTimePre = playTime;
-
-
-        // 	// --- OBSTACLES - Initialize obstacles
-        this.obstacles = new HashSet<>();
-        this.obstacleSpawnCooldown = Core.getCooldown(4000); // change obstacle spawn time
-
-
-    }
-
+		
+		
+		// 	// --- OBSTACLES - Initialize obstacles
+		this.obstacles = new HashSet<>();
+		this.obstacleSpawnCooldown = Core.getCooldown(4000); // change obstacle spawn time
+		
+		
+	}
+	
 	/**
-	 * Starts the action.
-	 * 
-	 * @return Next screen code.
-	 */
+	* Starts the action.
+	* 
+	* @return Next screen code.
+	*/
 	public final int run() {
 		super.run();
-
+		
 		this.score += LIFE_SCORE * (this.lives - 1);
 		this.logger.info("Screen cleared with a score of " + this.score);
-
+		
 		return this.returnCode;
 	}
-
+	
 	/**
-	 * Updates the elements on screen and checks for events.
-	 */
+	* Updates the elements on screen and checks for events.
+	*/
 	protected final void update() {
 		super.update();
-
+		
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
 			// --- OBSTACLES
 			if (this.obstacleSpawnCooldown.checkFinished()) {
@@ -232,23 +232,28 @@ public class GameScreen extends Screen {
 				obstacles.add(new Obstacle(randomX, 50)); // Start at top of the screen
 				this.obstacleSpawnCooldown.reset();
 			}
-
+			
 			// --- OBSTACLES
+			Set<Obstacle> obstaclesToRemove = new HashSet<>();
 			for (Obstacle obstacle : this.obstacles) {
-				obstacle.update(); // Make obstacles move or perform actions
+				obstacle.update(this.level); // Make obstacles move or perform actions
+				if (obstacle.shouldBeRemoved()) {
+					obstaclesToRemove.add(obstacle);  // Mark obstacle for removal after explosion
+				}
 			}
-
+			this.obstacles.removeAll(obstaclesToRemove);
+			
 			if (!this.ship.isDestroyed()) {
 				boolean moveRight = inputManager.isKeyDown(KeyEvent.VK_RIGHT)
-						|| inputManager.isKeyDown(KeyEvent.VK_D);
+				|| inputManager.isKeyDown(KeyEvent.VK_D);
 				boolean moveLeft = inputManager.isKeyDown(KeyEvent.VK_LEFT)
-						|| inputManager.isKeyDown(KeyEvent.VK_A);
-
+				|| inputManager.isKeyDown(KeyEvent.VK_A);
+				
 				boolean isRightBorder = this.ship.getPositionX()
-						+ this.ship.getWidth() + this.ship.getSpeed() > this.width - 1;
+				+ this.ship.getWidth() + this.ship.getSpeed() > this.width - 1;
 				boolean isLeftBorder = this.ship.getPositionX()
-						- this.ship.getSpeed() < 1;
-
+				- this.ship.getSpeed() < 1;
+				
 				if (moveRight && !isRightBorder) {
 					this.ship.moveRight();
 					this.backgroundMoveRight = true;
@@ -258,19 +263,19 @@ public class GameScreen extends Screen {
 					this.backgroundMoveLeft = true;
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-					if (this.ship.shoot(this.bullets))
-						this.bulletsShot++;
+				if (this.ship.shoot(this.bullets))
+				this.bulletsShot++;
 			}
-
+			
 			if (this.enemyShipSpecial != null) {
 				if (!this.enemyShipSpecial.isDestroyed())
-					this.enemyShipSpecial.move(2, 0);
+				this.enemyShipSpecial.move(2, 0);
 				else if (this.enemyShipSpecialExplosionCooldown.checkFinished())
-					this.enemyShipSpecial = null;
-
+				this.enemyShipSpecial = null;
+				
 			}
 			if (this.enemyShipSpecial == null
-					&& this.enemyShipSpecialCooldown.checkFinished()) {
+			&& this.enemyShipSpecialCooldown.checkFinished()) {
 				this.enemyShipSpecial = new EnemyShip();
 				this.enemyShipSpecialCooldown.reset();
 				//Sound Operator
@@ -279,280 +284,302 @@ public class GameScreen extends Screen {
 				this.logger.info("A special ship appears");
 			}
 			if (this.enemyShipSpecial != null
-					&& this.enemyShipSpecial.getPositionX() > this.width) {
+			&& this.enemyShipSpecial.getPositionX() > this.width) {
 				this.enemyShipSpecial = null;
 				this.logger.info("The special ship has escaped");
 			}
-
+			
 			this.shield.update();
 			this.ship.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
 		}
-		//manageCollisions();
+		// manageCollisions();
 		manageCollisions_add_tiem(); //by Enemy team
 		cleanBullets();
 		this.itemManager.cleanItems(); //by Enemy team
 		draw();
-
+		
 		/**
-		 * Added by the Level Design team
-		 *
-		 * Counts and checks if the number of waves destroyed match the intended number of waves for this level
-		 * Spawn another wave
-		 **/
+		* Added by the Level Design team
+		*
+		* Counts and checks if the number of waves destroyed match the intended number of waves for this level
+		* Spawn another wave
+		**/
 		if (this.enemyShipFormation.isEmpty() && waveCounter < this.gameSettings.getWavesNumber()) {
-
+			
 			waveCounter++;
 			this.initialize();
-
+			
 		}
-
+		
 		/**
-		 * Wave counter condition added by the Level Design team
-		 *
-		 * Checks if the intended number of waves for this level was destroyed
-		 * **/
+		* Wave counter condition added by the Level Design team
+		*
+		* Checks if the intended number of waves for this level was destroyed
+		* **/
 		if ((this.enemyShipFormation.isEmpty() || this.lives == 0)
-				&& !this.levelFinished
-				&& waveCounter == this.gameSettings.getWavesNumber()) {
+		&& !this.levelFinished
+		&& waveCounter == this.gameSettings.getWavesNumber()) {
 			this.levelFinished = true;
 			this.screenFinishedCooldown.reset();
 		}
-
+		
 		if (this.levelFinished && this.screenFinishedCooldown.checkFinished())
-			this.isRunning = false;
-
+		this.isRunning = false;
+		
 	}
-
+	
 	/**
-	 * Draws the elements associated with the screen.
-	 */
+	* Draws the elements associated with the screen.
+	*/
 	private void draw() {
 		drawManager.initDrawing(this);
-
+		
 		// Jo minseo / HUD team
 		if(Achievement.getTimer() < 100) {
 			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
 			Achievement.addTimer();
 		}
-
+		
 		/** ### TEAM INTERNATIONAL ### */
 		drawManager.drawBackground(this, this.level, backgroundMoveRight, backgroundMoveLeft);
 		this.backgroundMoveRight = false;
 		this.backgroundMoveLeft = false;
-
+		
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
-				this.ship.getPositionY());
+		this.ship.getPositionY());
 		if (this.enemyShipSpecial != null)
-			drawManager.drawEntity(this.enemyShipSpecial,
-					this.enemyShipSpecial.getPositionX(),
-					this.enemyShipSpecial.getPositionY());
-
+		drawManager.drawEntity(this.enemyShipSpecial,
+		this.enemyShipSpecial.getPositionX(),
+		this.enemyShipSpecial.getPositionY());
+		
 		enemyShipFormation.draw();
-
+		
 		DrawManagerImpl.drawSpeed(this, ship.getSpeed());
-
+		
 		for (PiercingBullet bullet : this.bullets)
-			drawManager.drawEntity(bullet, bullet.getPositionX(),
-					bullet.getPositionY());
-
+		drawManager.drawEntity(bullet, bullet.getPositionX(),
+		bullet.getPositionY());
+		
 		this.itemManager.drawItems(); //by Enemy team
-
+		
 		// --- OBSTACLES - Draw Obstaacles
 		for (Obstacle obstacle : this.obstacles) {
 			drawManager.drawEntity(obstacle, obstacle.getPositionX(), obstacle.getPositionY());
 		}
-
+		
 		// Interface.
 		drawManager.drawScore(this, this.score);
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawLevel(this, this.level);
 		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
-//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
+		//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
-
-
+		
+		
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {
 			int countdown = (int) ((INPUT_DELAY
-					- (System.currentTimeMillis()
-							- this.gameStartTime)) / 1000);
-
+			- (System.currentTimeMillis()
+			- this.gameStartTime)) / 1000);
+			
 			/**
-			 * Wave counter condition added by the Level Design team
-			 *
-			 * Display the wave number instead of the level number
-			 * **/
+			* Wave counter condition added by the Level Design team
+			*
+			* Display the wave number instead of the level number
+			* **/
 			if (waveCounter != 1) {
 				drawManager.drawWave(this, waveCounter, countdown);
 			} else {
 				drawManager.drawCountDown(this, this.level, countdown,
-						this.bonusLife);
+				this.bonusLife);
 			}
-
+			
 			drawManager.drawHorizontalLine(this, this.height / 2 - this.height
-					/ 12);
+			/ 12);
 			drawManager.drawHorizontalLine(this, this.height / 2 + this.height
-					/ 12);
+			/ 12);
 		}
-
+		
 		// Soomin Lee / TeamHUD
 		if (this.inputDelay.checkFinished()) {
 			playTime = (int) ((System.currentTimeMillis() - playStartTime) / 1000) + playTimePre;
 		}
-
+		
 		drawManager.completeDrawing(this);
 	}
-
+	
 	/**
-	 * Cleans bullets that go off screen.
-	 */
+	* Cleans bullets that go off screen.
+	*/
 	private void cleanBullets() {
 		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>(); // Edited by Enemy
 		for (PiercingBullet bullet : this.bullets) { // Edited by Enemy
 			bullet.update();
 			if (bullet.getPositionY() < SEPARATION_LINE_HEIGHT
-					|| bullet.getPositionY() > this.height)
-				recyclable.add(bullet);
+			|| bullet.getPositionY() > this.height)
+			recyclable.add(bullet);
 		}
 		this.bullets.removeAll(recyclable);
 		PiercingBulletPool.recycle(recyclable); // Edited by Enemy
 	}
-
+	
 	/**
-	 * Manages collisions between bullets and ships. -original code
-	 */
+	* Manages collisions between bullets and ships. -original code
+	*/
 	private void manageCollisions() {
 		Set<Bullet> recyclable = new HashSet<Bullet>();
 		for (Bullet bullet : this.bullets)
-			if (bullet.getSpeed() > 0) {
-				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
-					recyclable.add(bullet);
-					if (!this.ship.isDestroyed() && !this.shield.isActive()) {
-						this.ship.destroy();
-						this.lives--;
-						this.logger.info("Hit on player ship, " + this.lives
-								+ " lives remaining.");
-					}
-				}
-			} else {
-				for (EnemyShip enemyShip : this.enemyShipFormation)
-					if (!enemyShip.isDestroyed()
-							&& checkCollision(bullet, enemyShip)) {
-						this.score += enemyShip.getPointValue();
-						this.shipsDestroyed++;
-						this.enemyShipFormation.destroy(enemyShip);
-						recyclable.add(bullet);
-					}
-				if (this.enemyShipSpecial != null
-						&& !this.enemyShipSpecial.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
-					this.shipsDestroyed++;
-					this.enemyShipSpecial.destroy();
-					this.enemyShipSpecialExplosionCooldown.reset();
-					recyclable.add(bullet);
+		if (bullet.getSpeed() > 0) {
+			if (checkCollision(bullet, this.ship) && !this.levelFinished) {
+				recyclable.add(bullet);
+				if (!this.ship.isDestroyed() && !this.shield.isActive()) {
+					this.ship.destroy();
+					this.lives--;
+					this.logger.info("Hit on player ship, " + this.lives
+					+ " lives remaining.");
 				}
 			}
+		} else {
+			for (EnemyShip enemyShip : this.enemyShipFormation)
+			if (!enemyShip.isDestroyed()
+			&& checkCollision(bullet, enemyShip)) {
+				this.score += enemyShip.getPointValue();
+				this.shipsDestroyed++;
+				this.enemyShipFormation.destroy(enemyShip);
+				recyclable.add(bullet);
+			}
+			if (this.enemyShipSpecial != null
+			&& !this.enemyShipSpecial.isDestroyed()
+			&& checkCollision(bullet, this.enemyShipSpecial)) {
+				this.score += this.enemyShipSpecial.getPointValue();
+				this.shipsDestroyed++;
+				this.enemyShipSpecial.destroy();
+				this.enemyShipSpecialExplosionCooldown.reset();
+				recyclable.add(bullet);
+			}
+		}
+		
+		
 		this.bullets.removeAll(recyclable);
 		BulletPool.recycle(recyclable);
 	}
-
-
+	
+	
 	/**
-	 * Manages collisions between bullets and ships. -Edited code for Drop Item
-	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
-	 */
+	* Manages collisions between bullets and ships. -Edited code for Drop Item
+	* Manages collisions between bullets and ships. -Edited code for Piercing Bullet
+	*/
 	//by Enemy team
 	private void manageCollisions_add_tiem() {
 		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
 		for (PiercingBullet bullet : this.bullets)
-			if (bullet.getSpeed() > 0) {
-				if (checkCollision(bullet, this.ship) && !this.levelFinished) {
-					recyclable.add(bullet);
-					if (!this.ship.isDestroyed()) {
-						this.ship.destroy();
-						this.lives--;
-						this.logger.info("Hit on player ship, " + this.lives
-								+ " lives remaining.");
-
-						// Sound Operator
-						if (this.lives == 0) {
-							sm = SoundManager.getInstance();
-							sm.playES("ally_airship_destroy_explosion");
-							new Thread(() -> {
-								try {
-									Thread.sleep(1000);
-								} catch (InterruptedException e) {
-									throw new RuntimeException(e);
-								}
-								sm.playES("ally_airship_destroy_die");
-							}).start();
-						}
+		if (bullet.getSpeed() > 0) {
+			if (checkCollision(bullet, this.ship) && !this.levelFinished) {
+				recyclable.add(bullet);
+				if (!this.ship.isDestroyed()) {
+					this.ship.destroy();
+					this.lives--;
+					this.logger.info("Hit on player ship, " + this.lives
+					+ " lives remaining.");
+					
+					// Sound Operator
+					if (this.lives == 0) {
+						sm = SoundManager.getInstance();
+						sm.playES("ally_airship_destroy_explosion");
+						new Thread(() -> {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								throw new RuntimeException(e);
+							}
+							sm.playES("ally_airship_destroy_die");
+						}).start();
 					}
-				}
-			} else {
-				for (EnemyShip enemyShip : this.enemyShipFormation)
-					if (!enemyShip.isDestroyed()
-							&& checkCollision(bullet, enemyShip)) {
-						this.enemyShipFormation._destroy(enemyShip);
-						if(enemyShip.getHp() <= 0) {
-							this.score += enemyShip.getPointValue();
-							this.shipsDestroyed++;
-						}
-
-						bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
-
-						// Check PiercingBullet piercing count and add to recyclable if necessary
-						if (bullet.getPiercingCount() <= 0) {
-							recyclable.add(bullet);
-						}
-
-						// Drop item to 30%
-						this.itemManager.dropItem(enemyShip,0.3,1);
-					}
-				if (this.enemyShipSpecial != null
-						&& !this.enemyShipSpecial.isDestroyed()
-						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					this.score += this.enemyShipSpecial.getPointValue();
-					this.shipsDestroyed++;
-					this.enemyShipSpecial.destroy();
-					this.enemyShipSpecialExplosionCooldown.reset();
-
-					bullet.onCollision(this.enemyShipSpecial); // Handle bullet collision with special enemy
-
-					// Check PiercingBullet piercing count for special enemy and add to recyclable if necessary
-					if (bullet.getPiercingCount() <= 0) {
-						recyclable.add(bullet);
-					}
-
-					//// Drop item to 100%
-					this.itemManager.dropItem(enemyShipSpecial,1,2);
 				}
 			}
+		} else {
+			for (EnemyShip enemyShip : this.enemyShipFormation)
+			if (!enemyShip.isDestroyed()
+			&& checkCollision(bullet, enemyShip)) {
+				this.enemyShipFormation._destroy(enemyShip);
+				if(enemyShip.getHp() <= 0) {
+					this.score += enemyShip.getPointValue();
+					this.shipsDestroyed++;
+				}
+				
+				bullet.onCollision(enemyShip); // Handle bullet collision with enemy ship
+				
+				// Check PiercingBullet piercing count and add to recyclable if necessary
+				if (bullet.getPiercingCount() <= 0) {
+					recyclable.add(bullet);
+				}
+				
+				// Drop item to 30%
+				this.itemManager.dropItem(enemyShip,0.3,1);
+			}
+			if (this.enemyShipSpecial != null
+			&& !this.enemyShipSpecial.isDestroyed()
+			&& checkCollision(bullet, this.enemyShipSpecial)) {
+				this.score += this.enemyShipSpecial.getPointValue();
+				this.shipsDestroyed++;
+				this.enemyShipSpecial.destroy();
+				this.enemyShipSpecialExplosionCooldown.reset();
+				
+				bullet.onCollision(this.enemyShipSpecial); // Handle bullet collision with special enemy
+				
+				// Check PiercingBullet piercing count for special enemy and add to recyclable if necessary
+				if (bullet.getPiercingCount() <= 0) {
+					recyclable.add(bullet);
+				}
+				
+				//// Drop item to 100%
+				this.itemManager.dropItem(enemyShipSpecial,1,2);
+			}
+			for (Obstacle obstacle : this.obstacles) {
+				if (!obstacle.isDestroyed() && checkCollision(bullet, obstacle)) {
+					obstacle.destroy();  // Destroy obstacle
+					recyclable.add(bullet);  // Remove bullet
+				}
+			}
+		}
+		
+		
+		for (Obstacle obstacle : this.obstacles) {
+			if (!obstacle.isDestroyed() && checkCollision(this.ship, obstacle)) {
+				this.lives--;
+				obstacle.destroy();  // Destroy obstacle
+				this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
+				if (!this.ship.isDestroyed()) {
+					this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
+				}
+				break;  // Stop further collisions if the ship is destroyed.
+			}
+		}
+		
 		this.bullets.removeAll(recyclable);
 		PiercingBulletPool.recycle(recyclable);
-
+		
 		//Check item and ship collision
 		for(Item item : itemManager.items){
 			itemManager.addItemRecycle(checkCollision(item,ship)?item:null);
 		}
 		itemManager.removeAllReItems();
 	}
-
-
+	
+	
 	/**
-	 * Checks if two entities are colliding.
-	 * 
-	 * @param a
-	 *            First entity, the bullet.
-	 * @param b
-	 *            Second entity, the ship.
-	 * @return Result of the collision test.
-	 */
+	* Checks if two entities are colliding.
+	* 
+	* @param a
+	*            First entity, the bullet.
+	* @param b
+	*            Second entity, the ship.
+	* @return Result of the collision test.
+	*/
 	private boolean checkCollision(final Entity a, final Entity b) {
 		// Calculate center point of the entities in both axis.
 		int centerAX = a.getPositionX() + a.getWidth() / 2;
@@ -565,19 +592,19 @@ public class GameScreen extends Screen {
 		// Calculates distance.
 		int distanceX = Math.abs(centerAX - centerBX);
 		int distanceY = Math.abs(centerAY - centerBY);
-
+		
 		return distanceX < maxDistanceX && distanceY < maxDistanceY;
 	}
-
+	
 	/**
-	 * Add playtime parameter - Soomin Lee / TeamHUD
-	 * Returns a GameState object representing the status of the game.
-	 *
-	 * @return Current game state.
-	 */
+	* Add playtime parameter - Soomin Lee / TeamHUD
+	* Returns a GameState object representing the status of the game.
+	*
+	* @return Current game state.
+	*/
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency, this.gem); // Team-Ctrl-S(Currency)
+		this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency, this.gem); // Team-Ctrl-S(Currency)
 	}
 	public int getLives() {
 		return lives;

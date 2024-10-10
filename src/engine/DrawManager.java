@@ -752,7 +752,7 @@ public class DrawManager {
 		itemBomb.setSpriteType(DrawManager.SpriteType.ItemBomb);
 
 		if(Bomb.getIsBomb() && Bomb.getCanShoot()){
-			drawEntity(itemBomb, 140, screen.getHeight() - 50);
+			drawEntity(itemBomb, screen.getWidth() / 5, screen.getHeight() - 50);
 		}
 	}
 }

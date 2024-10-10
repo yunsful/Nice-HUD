@@ -75,6 +75,10 @@ public class DrawManager {
 		EnemyShipC1,
 		/** Third enemy ship - second form. */
 		EnemyShipC2,
+		/** First explosive enemy ship - first form. */
+		ExplosiveEnemyShip1, //Edited by Enemy
+		/** First explosive enemy ship - second form. */
+		ExplosiveEnemyShip2, //Edited by Enemy
 		/** Bonus ship. */
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
@@ -83,15 +87,16 @@ public class DrawManager {
 		Heart, //Please have the Nice HUD team fix it. - Enemy team
 		/**Item*/
 		Item, //by enemy team
+		/**Boss*/
+		Boss, //by enemy team
 		/** Player Lives. */
 		/** Item */
-		ItemAttackSpeed,
+    	ItemHeart,
+		ShipBarrierStatus,
+		ItemCoin,
+		ItemPierce,
 		ItemBomb,
 		ItemBarrier,
-		ItemRecovery,
-		ItemSpeed,
-		ItemCoinIncrease,
-		ItemNumberOfBullet,
     //Produced by Starter Team
 		/** coin */
 		Coin,
@@ -125,13 +130,22 @@ public class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipB2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
+			spriteMap.put(SpriteType.ExplosiveEnemyShip1, new boolean[12][8]); //Edited by Enemy
+			spriteMap.put(SpriteType.ExplosiveEnemyShip2, new boolean[12][8]); //Edited by Enemy
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
-			spriteMap.put(SpriteType.Item, new boolean[5][5]); //by Enemy team
+			spriteMap.put(SpriteType.Boss, new boolean[24][16]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.Gem, new boolean[7][6]); // by CtrlS
+			//by Item team
+			spriteMap.put(SpriteType.ItemHeart, new boolean[7][5]);
+			spriteMap.put(SpriteType.ItemBarrier, new boolean[9][10]);
+			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
+			spriteMap.put(SpriteType.ShipBarrierStatus, new boolean[13][8]);	// temporary
+			spriteMap.put(SpriteType.ItemCoin, new boolean[7][7]);
+			spriteMap.put(SpriteType.ItemPierce, new boolean[7][7]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
@@ -339,6 +353,7 @@ public class DrawManager {
 	public void drawMenu(final Screen screen, final int option) {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
+		String RecentRecord = "Recent Records";
 		String playString = "Play";
 		String highScoresString = "High scores";
 		String exitString = "exit";
@@ -387,14 +402,21 @@ public class DrawManager {
 		drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 8 - 12);
 
+        // Record scores (Team Clove)
+        if (option == 7)
+            backBufferGraphics.setColor(Color.GREEN);
+        else
+            backBufferGraphics.setColor(Color.WHITE);
+        drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
+                / 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
 
-		// Exit (starter)
+        // Exit (starter)
 		if (option == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 12); // adjusted Height
 	}
 
 	/**
@@ -541,6 +563,25 @@ public class DrawManager {
 	}
 
 	/**
+	 * Draws recent score(record) screen title and instructions.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * Team Clove
+	 */
+	public void drawRecordMenu(final Screen screen) {
+		String recentScoreString = "Recent Records";
+		String instructionsString = "Press Space to return";
+
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, recentScoreString, screen.getHeight() / 8);
+
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 5);
+	}
+
+	/**
 	 * Draws high scores.
 	 *
 	 * @param screen
@@ -564,6 +605,61 @@ public class DrawManager {
 	}
 
 	/**
+	 * Draws recent scores.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param recentScores
+	 *            List of recent scores.
+	 * Team Clove
+	 */
+	public void drawRecentScores(final Screen screen,
+								 final List<Score> recentScores) {
+		backBufferGraphics.setColor(Color.WHITE);
+		int i = 0;
+		boolean isFirstLine = true;
+		String scoreString = "";
+
+		for (Score score : recentScores) {
+			if (isFirstLine) { // Create Header
+				scoreString = String.format("           Date                           " +
+						" Score       Level       Destroy       Achievement");
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				isFirstLine = false;
+				i++;
+			} else {
+				scoreString = String.format("   %s                      %04d         %04d             %04d         " +
+								"             %04d",
+						score.getDate(), score.getScore(), score.getHighestLevel(),
+						score.getShipDestroyed(), score.getClearAchievementNumber());
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				i++;
+			}
+		}
+	}
+
+
+	/**
+	 * Draws a righted string on regular font
+	 *
+	 * @param screen
+	 * 				Screen to draw on.
+	 * @param string
+	 * 				String to draw.
+	 * @param height
+	 * 				Height of the drawing.
+	 *
+	 * 		//Clove
+	 */
+	public void drawRightedRegularString(final Screen screen,
+										 final String string, final int height) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.drawString(string, 0, height);
+	}
+
+	/**
 	 * Draws a centered string on regular font.
 	 *
 	 * @param screen
@@ -579,6 +675,7 @@ public class DrawManager {
 		backBufferGraphics.drawString(string, screen.getWidth() / 2
 				- fontRegularMetrics.stringWidth(string) / 2, height);
 	}
+
 
 	/**
 	 * Draws a centered string on big font.

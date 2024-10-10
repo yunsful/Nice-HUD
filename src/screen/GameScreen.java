@@ -330,7 +330,9 @@ public class GameScreen extends Screen {
 		this.itemManager.drawItems(); //by Enemy team
 
 		// Interface.
-		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove
+//		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove -> edit by jesung ko - TeamHUD(to udjust score)
+//		drawManager.drawScore(this, this.score); // by jesung ko - TeamHUD
+		DrawManagerImpl.drawScore2(this,this.scoreManager.getAccumulatedScore()); // by jesung ko - TeamHUD
 		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
@@ -339,6 +341,7 @@ public class GameScreen extends Screen {
 //		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
+		drawManager.drawItem(this); // HUD team - Jo Minseo
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {

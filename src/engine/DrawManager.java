@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import CtrlS.RoundState;
 import entity.AddSign;
 import entity.Coin;
+import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;
@@ -350,6 +351,7 @@ public class DrawManager {
 	public void drawMenu(final Screen screen, final int option) {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
+		String RecentRecord = "Recent Records";
 		String playString = "Play";
 		String highScoresString = "High scores";
 		String exitString = "exit";
@@ -398,14 +400,21 @@ public class DrawManager {
 		drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 8 - 12);
 
+        // Record scores (Team Clove)
+        if (option == 7)
+            backBufferGraphics.setColor(Color.GREEN);
+        else
+            backBufferGraphics.setColor(Color.WHITE);
+        drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
+                / 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
 
-		// Exit (starter)
+        // Exit (starter)
 		if (option == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 12); // adjusted Height
 	}
 
 	/**
@@ -552,6 +561,25 @@ public class DrawManager {
 	}
 
 	/**
+	 * Draws recent score(record) screen title and instructions.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * Team Clove
+	 */
+	public void drawRecordMenu(final Screen screen) {
+		String recentScoreString = "Recent Records";
+		String instructionsString = "Press Space to return";
+
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, recentScoreString, screen.getHeight() / 8);
+
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 5);
+	}
+
+	/**
 	 * Draws high scores.
 	 *
 	 * @param screen
@@ -575,6 +603,61 @@ public class DrawManager {
 	}
 
 	/**
+	 * Draws recent scores.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param recentScores
+	 *            List of recent scores.
+	 * Team Clove
+	 */
+	public void drawRecentScores(final Screen screen,
+								 final List<Score> recentScores) {
+		backBufferGraphics.setColor(Color.WHITE);
+		int i = 0;
+		boolean isFirstLine = true;
+		String scoreString = "";
+
+		for (Score score : recentScores) {
+			if (isFirstLine) { // Create Header
+				scoreString = String.format("           Date                           " +
+						" Score       Level       Destroy       Achievement");
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				isFirstLine = false;
+				i++;
+			} else {
+				scoreString = String.format("   %s                      %04d         %04d             %04d         " +
+								"             %04d",
+						score.getDate(), score.getScore(), score.getHighestLevel(),
+						score.getShipDestroyed(), score.getClearAchievementNumber());
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				i++;
+			}
+		}
+	}
+
+
+	/**
+	 * Draws a righted string on regular font
+	 *
+	 * @param screen
+	 * 				Screen to draw on.
+	 * @param string
+	 * 				String to draw.
+	 * @param height
+	 * 				Height of the drawing.
+	 *
+	 * 		//Clove
+	 */
+	public void drawRightedRegularString(final Screen screen,
+										 final String string, final int height) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.drawString(string, 0, height);
+	}
+
+	/**
 	 * Draws a centered string on regular font.
 	 *
 	 * @param screen
@@ -590,6 +673,7 @@ public class DrawManager {
 		backBufferGraphics.drawString(string, screen.getWidth() / 2
 				- fontRegularMetrics.stringWidth(string) / 2, height);
 	}
+
 
 	/**
 	 * Draws a centered string on big font.
@@ -734,5 +818,24 @@ public class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(coin), coinX + coinImage.getWidth() + 10, 20);
+	}
+
+
+	/**
+	 * Draw the item that player got
+	 *
+	 * @param screen
+	 *			  Screen to draw on.
+	 *
+	 * HUD Team - Jo Minseo
+	 */
+	public void drawItem(final Screen screen){
+		//Bomb
+		Entity itemBomb = new Entity(0, 0, 13 * 2, 8 * 2, Color.gray);
+		itemBomb.setSpriteType(DrawManager.SpriteType.ItemBomb);
+
+		if(Bomb.getIsBomb() && Bomb.getCanShoot()){
+			drawEntity(itemBomb, screen.getWidth() / 5, screen.getHeight() - 50);
+		}
 	}
 }

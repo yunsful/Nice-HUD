@@ -79,8 +79,6 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
-	/** Total currency **/
-	private int currency; // Team-Ctrl-S(Currency)
 	/** Shield item */
 
 	// Soomin Lee / TeamHUD
@@ -94,6 +92,11 @@ public class GameScreen extends Screen {
 	// Sound Operator
 	private static SoundManager sm;
 
+	// Team-Ctrl-S(Currency)
+	/** Total currency **/
+	private int currency;
+	/** Total gem **/
+	private int gem;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -126,6 +129,8 @@ public class GameScreen extends Screen {
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.item = new ItemBarrierAndHeart();	// team Inventory
+		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
+		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 	}
 
 	/**
@@ -478,7 +483,7 @@ public class GameScreen extends Screen {
 	 */
 	public final GameState getGameState() {
 		return new GameState(this.level, this.score, this.lives,
-				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency); // Team-Ctrl-S(Currency)
+				this.bulletsShot, this.shipsDestroyed, this.playTime, this.currency, this.gem); // Team-Ctrl-S(Currency)
 	}
 	public int getLives() {
 		return lives;

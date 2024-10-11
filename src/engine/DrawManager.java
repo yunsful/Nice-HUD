@@ -14,9 +14,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import CtrlS.RoundState;
+import CtrlS.Gem;
 import entity.AddSign;
 import entity.Coin;
-import entity.Gem;
 import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
@@ -27,11 +27,11 @@ import level_design.Background;
 import javax.imageio.ImageIO;
 
 /**
-* Manages screen drawing.
-*
-* @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
-*
-*/
+ * Manages screen drawing.
+ *
+ * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+ *
+ */
 public class DrawManager {
 
 	/** Singleton instance of the class. */
@@ -105,22 +105,22 @@ public class DrawManager {
 		ItemBomb,
 		ItemBarrier,
 
-		//Produced by Starter Team
+        //Produced by Starter Team
 		/** coin */
 		Coin,
-		/** gem */
-		Gem,
 		/** add sign */
 		AddSign,
+		/** Gem - Added by CtrlS */
+		Gem,
 		Obstacle
 	};
 
 	/**
-	* Private constructor.
-	*
-	* Modifying Access Restrictor to public
-	* - HUDTeam - LeeHyunWoo
-	*/
+	 * Private constructor.
+	 *
+	 * Modifying Access Restrictor to public
+	 * - HUDTeam - LeeHyunWoo
+	 */
 	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
@@ -146,8 +146,8 @@ public class DrawManager {
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
 			spriteMap.put(SpriteType.Boss, new boolean[24][16]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
-			spriteMap.put(SpriteType.Gem, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
+			spriteMap.put(SpriteType.Gem, new boolean[7][6]); // CtrlS: res/graphics, line 20
 			//by Item team
 			spriteMap.put(SpriteType.ItemHeart, new boolean[7][5]);
 			spriteMap.put(SpriteType.ItemBarrier, new boolean[9][10]);

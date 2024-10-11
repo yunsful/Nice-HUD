@@ -133,7 +133,8 @@ public final class Core {
 		do {
 			// Add playtime parameter - Soomin Lee / TeamHUD
 			// Add hitCount parameter - Ctrl S
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0, 0);
+			// Add coinItemsCollected parameter - Ctrl S
+			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0, 0, 0);
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -181,8 +182,9 @@ public final class Core {
 							gameState.getTime(),
 							gameState.getCoin() + roundState.getRoundCoin(),
 							gameState.getGem(),
-							gameState.getHitCount());
-          LOGGER.info("Round Coin: " + roundState.getRoundCoin());
+							gameState.getHitCount(),
+							gameState.getCoinItemsCollected());
+          			LOGGER.info("Round Coin: " + roundState.getRoundCoin());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
 					LOGGER.info("Round Time: " + roundState.getRoundTime());
 

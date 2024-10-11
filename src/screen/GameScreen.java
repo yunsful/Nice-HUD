@@ -120,6 +120,9 @@ public class GameScreen extends Screen {
 	private AchievementConditions achievementConditions;
 	private int fastKill;
 
+	/** CtrlS: Count the number of coin collected in game */
+	private int coinItemsCollected;
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -161,6 +164,7 @@ public class GameScreen extends Screen {
 		this.scoreManager = gameState.scoreManager; //Team Clove
 		this.statistics = new Statistics(); //Team Clove
 		this.achievementConditions = new AchievementConditions();
+		this.coinItemsCollected = gameState.getCoinItemsCollected(); // CtrlS
 	}
 
 	/**
@@ -540,7 +544,12 @@ public class GameScreen extends Screen {
 
 		//Check item and ship collision
 		for(Item item : itemManager.items){
-			itemManager.OperateItem(checkCollision(item,ship)?item:null);
+			if (checkCollision(item, ship)) {
+				itemManager.OperateItem(item);
+				// CtrlS: Count coin
+				if (item.getSpriteType() == DrawManager.SpriteType.ItemCoin) coinItemsCollected++;
+				Core.getLogger().info("coin: " + coinItemsCollected);
+			}
 		}
 		itemManager.removeAllReItems();
 	}

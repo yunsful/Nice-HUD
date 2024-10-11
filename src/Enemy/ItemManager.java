@@ -18,6 +18,9 @@ import inventory_develop.NumberOfBullet;
 
 import CtrlS.CurrencyManager;
 
+// Sound Operator
+import Sound_Operator.SoundManager;
+
 
 public class ItemManager {
 
@@ -32,6 +35,8 @@ public class ItemManager {
     private Ship ship;
     private PlayerGrowth growth;
     private CurrencyManager currencyManager;
+    // Sound Operator
+    private static SoundManager sm;
 
     public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
         this.items = new HashSet<>();
@@ -110,6 +115,12 @@ public class ItemManager {
     public void addItemRecycle(Item item) {
         recyclableItems.add(item);
         String itemLog = item.getSpriteType().toString().toLowerCase().substring(4);
+        // Sound Operator
+        if (itemLog.equals("coin")){
+            sm = SoundManager.getInstance();
+            sm.playES("item_coin");
+        }
+
         if (!itemLog.equals("coin")) {
             this.logger.info("get " + itemLog + " item");   // Change log for each item
         }

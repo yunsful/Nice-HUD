@@ -3,7 +3,7 @@ package screen;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 
-import HUDTeam.Achievement;
+import HUDTeam.DrawAchievementHud;
 import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
@@ -246,17 +246,14 @@ public class TitleScreen extends Screen {
 		int gem = this.cureentGem;
 		drawManager.initDrawing(this);
 
-		// Jo minseo / HUD team
-		if(Achievement.getTimer() < 100) {
-			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
-			Achievement.addTimer();
-		}
+
 
 		drawManager.drawTitle(this);
 		drawManager.drawMenu(this, this.returnCode, this.pnumSelectionCode, this.merchantState);
 		drawManager.drawCurrentCoin(this,coin);
 		drawManager.drawCurrentGem(this,gem);
 
+		super.drawPost();
 		drawManager.completeDrawing(this);
 	}
 

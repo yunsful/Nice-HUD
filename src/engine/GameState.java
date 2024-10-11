@@ -33,6 +33,8 @@ public class GameState {
 	private int hitCount;
 	// Clove
 	public ScoreManager scoreManager;
+	/** Current coinItemsCollected */
+	private int coinItemsCollected;
 
 	/**
 	 * Constructor.
@@ -60,7 +62,7 @@ public class GameState {
 	 */
 	public GameState(final int level, final int score,
 					 final int livesRemaining, final int bulletsShot,
-					 final int shipsDestroyed, final int playTime, final int coin, final int gem, final int hitCount) {
+					 final int shipsDestroyed, final int playTime, final int coin, final int gem, final int hitCount, final int coinItemsCollected) {
 		this.level = level;
 		this.score = score;
 		this.livesRemaining = livesRemaining;
@@ -71,6 +73,7 @@ public class GameState {
 		this.gem = gem; // Team-Ctrl-S(Currency)
 		this.hitCount = hitCount; // Ctrl-S
 		this.scoreManager = new ScoreManager(level, score);
+		this.coinItemsCollected = coinItemsCollected; // Ctrl-S
 	}
 
 	// TEAM CLOVER : Added two static below
@@ -162,4 +165,10 @@ public class GameState {
 	 */
 	// Team-Ctrl-S(Currency)
 	public final int getHitCount() { return hitCount; }
+
+	/**
+	 * @return the coinItemsCollected
+	 */
+	// Team-Ctrl-S(Currency)
+	public int getCoinItemsCollected() { return coinItemsCollected; }
 }

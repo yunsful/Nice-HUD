@@ -58,7 +58,7 @@ public class RoundState {
             accuracyBonus += (int) (baseCoin * 0.1);
             Core.getLogger().info("hitRate bonus occurs (10%).");
         }
-        coin += accuracyBonus
+        coin += accuracyBonus;
 
         // Round clear time in seconds
         // DEBUGGING NEEDED(playTime)

@@ -202,8 +202,8 @@ public class Ship extends Entity {
 	 *
 	 * @return bullet speed (Pixels per frame).
 	 */
-	public final double getBulletSpeed() {
-		double speed = growth.getBulletSpeed();
+	public final int getBulletSpeed() {
+		int speed = growth.getBulletSpeed();
 		if (speed >= 0) return speed;
 		else return speed * (-1);
 	}

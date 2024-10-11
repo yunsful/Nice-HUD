@@ -227,7 +227,7 @@ public final class Core {
 				returnCode = frame.setScreen(currentScreen);
 				LOGGER.info("Closing high score screen.");
 				break;
-			case 7:
+			case 5: // 7 -> 5 replaced by Starter
 				// Recent Records.
 				currentScreen = new RecordScreen(width, height, FPS);
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT

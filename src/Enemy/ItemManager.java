@@ -88,16 +88,28 @@ public class ItemManager {
                 case ItemBomb:
                     Bomb.setIsbomb(true);
                     Bomb.setCanShoot(true);
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemBarrier:
                     Item2.activatebarrier();
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemHeart:
                     Item2.activeheart(gameScreen, ship, growth);
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemPierce:
                     numberOfBullet.pierceup();
                     ship.increaseBulletSpeed();
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemCoin:
                     try {

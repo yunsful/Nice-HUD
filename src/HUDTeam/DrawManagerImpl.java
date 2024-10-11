@@ -20,10 +20,10 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawString(levelText, xPosition - fontRegularMetrics.stringWidth(levelText) / 2, yPosition); // edit by jesung ko - TeamHUD
     } // Lee Hyun Woo - level
     
-    public static void drawBulletSpeed(final Screen screen, final double bulletSpeed) {
+    public static void drawBulletSpeed(final Screen screen, final int bulletSpeed) {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
-        String attackSpeedText = String.format("BS : %.2f px/f ", bulletSpeed);
+        String attackSpeedText = String.format("BS : %d px/f ", bulletSpeed);
         backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 15);
     }
 

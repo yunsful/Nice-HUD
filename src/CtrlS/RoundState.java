@@ -90,7 +90,7 @@ public class RoundState {
         }
 
         //코인 증가
-        if(roundHealth > 0){
+        if(currState.getLivesRemaining() > 0){
             coin += levelBonus;
             coin += accuracyBonus;
             coin += timeBonus;

@@ -9,6 +9,8 @@ public class RoundState {
     private final GameState prevState;
     private final GameState currState;
     private final int roundScore;
+
+    private final int roundHealth;
     private final int roundBulletsShot;
     private final int roundHitCount;
     private final int roundCoin;
@@ -23,6 +25,7 @@ public class RoundState {
         this.prevState = prevState;
         this.currState = currState;
         this.roundScore = currState.getScore() - prevState.getScore();
+        this.roundHealth = currState.getLivesRemaining();
         this.roundBulletsShot = currState.getBulletsShot() - prevState.getBulletsShot();
         this.roundHitCount = currState.getHitCount() - prevState.getHitCount();
         this.roundHitRate = roundHitCount / (float) roundBulletsShot;
@@ -43,7 +46,7 @@ public class RoundState {
         int baseCoin = roundScore / 10;
         //레벨 보너스(levelBonus)
         int levelBonus = baseCoin * currState.getLevel();
-        coin += levelBonus;
+
 
         //정확도 보너스(accuracyBonus)
         int accuracyBonus = 0;
@@ -58,7 +61,7 @@ public class RoundState {
             accuracyBonus += (int) (baseCoin * 0.1);
             Core.getLogger().info("hitRate bonus occurs (10%).");
         }
-        coin += accuracyBonus;
+
 
         // Round clear time in seconds
         // DEBUGGING NEEDED(playTime)
@@ -79,11 +82,18 @@ public class RoundState {
         } else if (timeDifferenceInSeconds <= 100) {
             timeBonus = 10;
         }
-        coin += timeBonus;
+
 
         if (levelBonus2 > 1){
             coin = (int) (coin * levelBonus2);
             Core.getLogger().info("item level bonus occurs (" + (int) ((levelBonus2 - 1) * 100) + "%).");
+        }
+
+        //코인 증가
+        if(roundHealth > 0){
+            coin += levelBonus;
+            coin += accuracyBonus;
+            coin += timeBonus;
         }
 
         return coin;
@@ -91,6 +101,10 @@ public class RoundState {
 
     public int getRoundScore() {
         return roundScore;
+    }
+
+    public int getRoundHealth(){
+        return roundHealth;
     }
 
     public float getRoundHitRate() {

@@ -849,6 +849,7 @@ public class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(gem), coinX + gemImage.getWidth() + 10, 35);
+	}
 	/**
 	* ### TEAM INTERNATIONAL ###
 	* Background draw and update method

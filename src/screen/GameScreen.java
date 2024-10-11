@@ -10,7 +10,7 @@ import java.io.IOException;
 import clove.AchievementConditions;
 import clove.Statistics;
 import Enemy.*;
-import HUDTeam.Achievement;
+import HUDTeam.DrawAchievementHud;
 import HUDTeam.DrawManagerImpl;
 import engine.*;
 import entity.Bullet;
@@ -282,8 +282,10 @@ public class GameScreen extends Screen {
 					this.backgroundMoveLeft = true;
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-					if (this.ship.shoot(this.bullets))
+					if (this.ship.shoot(this.bullets)) {
 						this.bulletsShot++;
+						DrawAchievementHud.achieve("sentence");
+					}
 			}
 
 			if (this.enemyShipSpecial != null) {
@@ -369,6 +371,7 @@ public class GameScreen extends Screen {
 
             this.isRunning = false;
 		}
+		super.updatePost();
 	}
 
 	/**
@@ -376,12 +379,6 @@ public class GameScreen extends Screen {
 	 */
 	private void draw() {
 		drawManager.initDrawing(this);
-
-		// Jo minseo / HUD team
-		if(Achievement.getTimer() < 100) {
-			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
-			Achievement.addTimer();
-		}
 
 		/** ### TEAM INTERNATIONAL ### */
 		drawManager.drawBackground(this, this.level, backgroundMoveRight, backgroundMoveLeft);

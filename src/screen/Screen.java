@@ -4,7 +4,8 @@ import java.awt.Insets;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import HUDTeam.Achievement;
+import HUDTeam.DrawAchievementHud;
+import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
@@ -66,7 +67,7 @@ public class Screen {
 		this.inputDelay.reset();
 		this.returnCode = 0;
 
-		new Achievement();
+		new DrawAchievementHud();
 	}
 
 	/**
@@ -108,6 +109,17 @@ public class Screen {
 	protected void update() {
 	}
 
+	/**
+	 * Update the elements on screen after update all child screen
+	 */
+	protected void updatePost() {
+		// Jo minseo / HUD team
+		logger.info("timer:"+DrawAchievementHud.getTimer()+" text:"+DrawAchievementHud.getAchievementText());
+		if(DrawAchievementHud.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, DrawAchievementHud.getAchievementText());
+			DrawAchievementHud.addTimer();
+		}
+	}
 	/**
 	 * Getter for screen width.
 	 * 

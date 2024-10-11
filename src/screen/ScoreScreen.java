@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import clove.Statistics; //Team Clove
-import HUDTeam.Achievement;
+import HUDTeam.DrawAchievementHud;
 import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
@@ -181,7 +181,7 @@ public class ScoreScreen extends Screen {
 				}
 			}
 		}
-
+		super.updatePost();
 	}
 
 	/**
@@ -246,12 +246,6 @@ public class ScoreScreen extends Screen {
 	 */
 	private void draw() {
 		drawManager.initDrawing(this);
-
-		// Jo minseo / HUD team
-		if(Achievement.getTimer() < 100) {
-			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
-			Achievement.addTimer();
-		}
 
 		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
 				this.isNewRecord);

@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 
-import HUDTeam.Achievement;
+import HUDTeam.DrawAchievementHud;
 import HUDTeam.DrawManagerImpl;
 import engine.Core;
 import engine.Score;
@@ -68,6 +68,7 @@ public class HighScoreScreen extends Screen {
 		if (inputManager.isKeyDown(KeyEvent.VK_SPACE)
 				&& this.inputDelay.checkFinished())
 			this.isRunning = false;
+		super.updatePost();
 	}
 
 	/**
@@ -76,11 +77,6 @@ public class HighScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		// Jo minseo / HUD team
-		if(Achievement.getTimer() < 100) {
-			DrawManagerImpl.drawAchievement(this, Achievement.getAchievementText());
-			Achievement.addTimer();
-		}
 
 		drawManager.drawHighScoreMenu(this);
 		drawManager.drawHighScores(this, this.highScores);

@@ -9,6 +9,7 @@ import engine.Cooldown;
 import engine.Core;
 // Sound Operator
 import Sound_Operator.SoundManager;
+import entity.Gem;
 
 /**
  * Implements the title screen.
@@ -25,7 +26,7 @@ public class TitleScreen extends Screen {
 	private Cooldown selectionCooldown;
 
 	private int currentCoin = 500;
-
+	private int cureentGem = 500;
 	// select One player or Two player
 	private int pnumSelectionCode; //produced by Starter
 	private int merchantState;
@@ -243,6 +244,7 @@ public class TitleScreen extends Screen {
 	private void draw() {
 
 		int coin = this.currentCoin;
+		int gem = this.cureentGem;
 		drawManager.initDrawing(this);
 
 		// Jo minseo / HUD team
@@ -254,6 +256,7 @@ public class TitleScreen extends Screen {
 		drawManager.drawTitle(this);
 		drawManager.drawMenu(this, this.returnCode, this.pnumSelectionCode, this.merchantState);
 		drawManager.drawCurrentCoin(this,coin);
+		drawManager.drawCurrentGem(this,gem);
 
 		drawManager.completeDrawing(this);
 	}

@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import CtrlS.RoundState;
 import entity.AddSign;
 import entity.Coin;
+import entity.Gem;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;
@@ -95,6 +96,8 @@ public class DrawManager {
     //Produced by Starter Team
 		/** coin */
 		Coin,
+		/** gem */
+		Gem,
 		/** add sign */
 		AddSign
 	};
@@ -128,6 +131,7 @@ public class DrawManager {
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
 			spriteMap.put(SpriteType.Item, new boolean[5][5]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
+			spriteMap.put(SpriteType.Gem, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
 
 			fileManager.loadSprite(spriteMap);
@@ -731,5 +735,15 @@ public class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(coin), coinX + coinImage.getWidth() + 10, 20);
+	}
+
+	public void drawCurrentGem(final Screen screen , final int gem) {
+		Gem gemImage = new Gem();
+		int coinX = screen.getWidth() - 60;
+		int coinY = 25;
+		drawEntity(gemImage, coinX, coinY);
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString(Integer.toString(gem), coinX + gemImage.getWidth() + 10, 35);
 	}
 }

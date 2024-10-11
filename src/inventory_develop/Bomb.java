@@ -41,6 +41,9 @@ public class Bomb{
                     count++;
 
                     int columnIndex = enemyShips.indexOf(column);
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("enemy_explosion");
 
                     // left
                     if (columnIndex > 0) {
@@ -63,9 +66,7 @@ public class Bomb{
                             rightColumn.get(i).destroy();
                             count++;
                             logger.info("Destroyed right ship at (" + (columnIndex + 1) + "," + i + ")");
-                            //Sound_Operator
-                            sm = SoundManager.getInstance();
-                            sm.playES("enemy_explosion");
+
                         }
                     }
 

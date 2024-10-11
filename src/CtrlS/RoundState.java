@@ -100,10 +100,6 @@ public class RoundState {
         return roundScore;
     }
 
-    public int getRoundHealth(){
-        return roundHealth;
-    }
-
     public float getRoundHitRate() {
         return roundHitRate;
     }

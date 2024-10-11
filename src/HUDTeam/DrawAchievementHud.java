@@ -2,13 +2,10 @@ package HUDTeam;
 
 public class DrawAchievementHud {
 
-    static int timer;
-    static String achievementText;
+    static int timer = 100;
+    static String achievementText = null;
 
-    public DrawAchievementHud() {
-        timer = 100;
-        achievementText = null;
-    }
+    public DrawAchievementHud() {}
 
     public static int getTimer(){return timer;}
 

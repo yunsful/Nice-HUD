@@ -10,8 +10,9 @@ public class RoundState {
     private final GameState currState;
     private final int roundScore;
     private final int roundBulletsShot;
-    private final int roundShipsDestroyed;
-    private final int roundCurrency;
+    private final int roundHitCount;
+    private final int roundCoin;
+
     private final float roundHitRate;
     private final long roundTime;
 
@@ -23,27 +24,27 @@ public class RoundState {
         this.currState = currState;
         this.roundScore = currState.getScore() - prevState.getScore();
         this.roundBulletsShot = currState.getBulletsShot() - prevState.getBulletsShot();
-        this.roundShipsDestroyed = currState.getShipsDestroyed() - prevState.getShipsDestroyed();
-        this.roundHitRate = roundShipsDestroyed / (float) roundBulletsShot;
+        this.roundHitCount = currState.getHitCount() - prevState.getHitCount();
+        this.roundHitRate = roundHitCount / (float) roundBulletsShot;
         this.roundTime = currState.getTime() - prevState.getTime();
-        this.roundCurrency = calculateCurrency();
+        this.roundCoin = calculateCoin();
 
         //Coin Bonus increase by Level
         shipStatus = new ShipStatus();
         shipStatus.loadStatus();
     }
 
-    private int calculateCurrency() {
+    private int calculateCoin() {
 
-        int baseCurrency = roundScore / 10;
-        int levelBonus = baseCurrency * currState.getLevel();
-        int currency = baseCurrency + levelBonus;
+        int baseCoin = roundScore / 10;
+        int levelBonus = baseCoin * currState.getLevel();
+        int coin = baseCoin + levelBonus;
 
         if (roundHitRate > 0.9) {
-            currency += (int) (currency * 0.3); // 30% 보너스 지급
+            coin += (int) (coin * 0.3); // 30% 보너스 지급
             Core.getLogger().info("hitRate bonus occurs (30%).");
         } else if (roundHitRate > 0.8) {
-            currency += (int) (currency * 0.2); // 20% 보너스 지급
+            coin += (int) (coin * 0.2); // 20% 보너스 지급
             Core.getLogger().info("hitRate bonus occurs (20%).");
         }
 
@@ -66,14 +67,14 @@ public class RoundState {
         } else if (timeDifferenceInSeconds <= 100) {
             timeBonus = 10;
         }
-        currency += timeBonus;
+        coin += timeBonus;
 
         if (levelBonus2 > 1){
-            currency = (int) (currency * levelBonus2);
+            coin = (int) (coin * levelBonus2);
             Core.getLogger().info("item level bonus occurs (" + (int) ((levelBonus2 - 1) * 100) + "%).");
         }
 
-        return currency;
+        return coin;
     }
 
     public int getRoundScore() {
@@ -88,8 +89,8 @@ public class RoundState {
         return roundTime;
     }
 
-    public int getRoundCurrency() {
-        return roundCurrency;
+    public int getRoundCoin() {
+        return roundCoin;
     }
 
     public void levelBonusIN(){

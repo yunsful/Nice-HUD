@@ -96,7 +96,7 @@ public class ItemManager {
                     break;
                 case ItemCoin:
                     try {
-                        Core.getCurrencyManager().addCurrency(10);
+                        Core.getCurrencyManager().addCoin(10);
                         logger.info("You get coin (10$)");
                     } catch (IOException e) {
                         logger.warning("Couldn't load currency!");

@@ -104,7 +104,7 @@ public class GameScreen extends Screen {
 	private Set<Obstacle> obstacles; // Store obstacles
 	private Cooldown obstacleSpawnCooldown; //control obstacle spawn speed
 	/** Shield item */
-	private TemporaryShield shield;
+
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */

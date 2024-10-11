@@ -321,12 +321,13 @@ public class GameScreen extends Screen {
 		draw();
 
 		/**
-		* Added by the Level Design team
+		* Added by the Level Design team and edit by team Enemy
+		* Changed the conditions for the game to end  by team Enemy
 		*
 		* Counts and checks if the number of waves destroyed match the intended number of waves for this level
 		* Spawn another wave
 		**/
-		if (this.enemyShipFormation.isEmpty() && waveCounter < this.gameSettings.getWavesNumber()) {
+		if (getRemainingEnemies() == 0 && waveCounter < this.gameSettings.getWavesNumber()) {
 
 			waveCounter++;
 			this.initialize();
@@ -334,11 +335,12 @@ public class GameScreen extends Screen {
 		}
 
 		/**
-		* Wave counter condition added by the Level Design team
+		* Wave counter condition added by the Level Design team*
+		* Changed the conditions for the game to end  by team Enemy
 		*
 		* Checks if the intended number of waves for this level was destroyed
 		* **/
-		if ((this.enemyShipFormation.isEmpty() || this.lives == 0)
+		if ((getRemainingEnemies() == 0 || this.lives == 0)
 		&& !this.levelFinished
 		&& waveCounter == this.gameSettings.getWavesNumber()) {
 			this.levelFinished = true;

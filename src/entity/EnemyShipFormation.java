@@ -1,8 +1,12 @@
 package entity;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
+import javax.swing.Timer;
 
 import Enemy.PiercingBullet;
 import Enemy.HpEnemyShip;
@@ -158,7 +162,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				column.add(new EnemyShip((SEPARATION_DISTANCE
 						* this.enemyShips.indexOf(column))
 								+ positionX, (SEPARATION_DISTANCE * i)
-								+ positionY, spriteType,hp));// Edited by Enemy
+								+ positionY, spriteType,hp,this.enemyShips.indexOf(column),i));// Edited by Enemy
 				this.shipCount++;
 				hp = 1;// Edited by Enemy
 			}
@@ -476,22 +480,24 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 						switch (destroyedShip.spriteType){
 							case ExplosiveEnemyShip1:
 							case ExplosiveEnemyShip2:
-								// HpEnemyShip.hit(destroyedShip);
 								destroyedShip.chainExplode(); // Edited by team Enemy
-								for (List<EnemyShip> enemyShip : this.enemyShips)
-									if (enemyShip.size() > i
-											&& !enemyShip.get(i).isDestroyed())
-										this._destroy(bullet, enemyShip.get(i), true);
-								for (int j = 0; j < column.size(); j++)
-									if (!column.get(j).isDestroyed())
-										this._destroy(bullet, column.get(j), true);
-
+								explosive(destroyedShip.getX(), destroyedShip.getY(),this.enemyShips.indexOf(column),i); //Add by team Enemy
+								// HpEnemyShip.hit(destroyedShip);
+//								for (List<EnemyShip> enemyShip : this.enemyShips)
+//									if (enemyShip.size() > i
+//											&& !enemyShip.get(i).isDestroyed())
+//										this._destroy(bullet, enemyShip.get(i));
+//								for (int j = 0; j < column.size(); j++)
+//									if (!column.get(j).isDestroyed())
+//										this._destroy(bullet, column.get(j));
 								break;
 							default:
-								if (!destroyedShip.isDestroyed())
+								if (!destroyedShip.isDestroyed()){
 									HpEnemyShip.hit(destroyedShip);
+								}
 								break;
 						}
+
 						if (column.get(i).getHp() > 0) {
 							this.logger.info("Enemy ship lost 1 HP in ("
 									+ this.enemyShips.indexOf(column) + "," + i + ")");
@@ -539,5 +545,66 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		int[] returnValue = {count, point};
 		return returnValue;
+	}
+
+	/**
+	 * A function that explosive up, down, left, and right when an explosive EnemyShip dies
+	 *
+	 * @param x
+	 *            explosive EnemyShip's Initial x-coordinates
+	 * @param y
+	 *            explosive EnemyShip's Initial y-coordinates
+	 * @param index_x
+	 * 			  explosive EnemyShip's x-coordinates in EnemyShips
+	 * @param index_y
+	 * 			  explosive EnemyShip's y-coordinates in EnemyShips
+	 */
+
+	public void explosive(final int x, final int y,final int index_x, final int index_y) {
+		javax.swing.Timer timer = new javax.swing.Timer(200, null);
+		final int[] i = {1};
+
+
+		Bullet bullet = new Bullet(0,0,-1);
+		ActionListener listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+
+				if(enemyShips.size() > index_x+i[0] && enemyShips.get(index_x+i[0]).size() > y){ // right
+					EnemyShip targetShip = enemyShips.get(index_x+i[0]).get(y);
+					if (targetShip.getX() == x+i[0] && targetShip.getY() ==y){
+						_destroy(bullet,targetShip,true);
+					}
+				}
+
+				if( index_x-i[0] >= 0 && enemyShips.size() > index_x-i[0] && enemyShips.get(index_x-i[0]).size() > y){ // left
+					EnemyShip targetShip = enemyShips.get(index_x-i[0]).get(y);
+					if (targetShip.getX() == x-i[0] && targetShip.getY() ==y){
+						_destroy(bullet,targetShip,true);
+					}
+				}
+
+				if(index_y-1 >= 0){//up
+					EnemyShip targetShip = enemyShips.get(index_x).get(index_y-1);
+					if (targetShip.getX() == x && targetShip.getY() == y-i[0]){
+						_destroy(bullet,targetShip,true);
+					}
+				}
+
+				if(enemyShips.get(index_x).size() > index_y+1){//down
+					EnemyShip targetShip = enemyShips.get(index_x).get(index_y+1);
+					if (targetShip.getX() == x && targetShip.getY() == y+i[0]){
+						_destroy(bullet,targetShip,true);
+					}
+				}
+
+				((Timer) e.getSource()).stop();
+
+			}
+		};
+
+		timer.addActionListener(listener);
+		timer.start();
 	}
 }

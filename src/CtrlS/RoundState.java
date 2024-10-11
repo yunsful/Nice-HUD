@@ -9,8 +9,6 @@ public class RoundState {
     private final GameState prevState;
     private final GameState currState;
     private final int roundScore;
-
-    private final int roundHealth;
     private final int roundBulletsShot;
     private final int roundHitCount;
     private final int roundCoin;

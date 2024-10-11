@@ -16,24 +16,24 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
 
-        int xPosition = screen.getWidth() - fontRegularMetrics.stringWidth(levelText) - 100;
+        int xPosition = screen.getWidth() / 2;
         int yPosition = 25;
 
-        backBufferGraphics.drawString(levelText, xPosition, yPosition);
+        backBufferGraphics.drawString(levelText, xPosition - fontRegularMetrics.stringWidth(levelText) / 2, yPosition); // edit by jesung ko - TeamHUD
     } // Lee Hyun Woo - level
     
     public static void drawAttackSpeed(final Screen screen, final double attackSpeed) {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
-        String attackSpeedText = String.format("AS: %.2f ", attackSpeed);
-        backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 25);
+        String attackSpeedText = String.format("AS : %.2f ", attackSpeed);
+        backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 15);
     }
 
     public static void drawSpeed(final Screen screen, final int speed) {
         String speedString = "MS : " + speed;
         backBufferGraphics.setColor(Color.WHITE);
         backBufferGraphics.setFont(fontRegular);
-        backBufferGraphics.drawString(speedString, 85, screen.getHeight() - 25);
+        backBufferGraphics.drawString(speedString, 10, screen.getHeight() - 35);
     }
 
     public void drawLivesWithHeart(final Screen screen, final int lives) {
@@ -64,9 +64,27 @@ public class DrawManagerImpl extends DrawManager {
         int playTimeMinutes = playTime / 60;
         int playTimeSeconds = playTime % 60;
         String playTimeString = String.format("%d"+"m "+"%d"+"s", playTimeMinutes, playTimeSeconds);
-        backBufferGraphics.drawString(playTimeString, screen.getWidth() / 2 - 20, 25);
+        int xPosition = (screen.getWidth() * 4) / 6; // position 4/6
+        backBufferGraphics.drawString(playTimeString, xPosition - fontRegularMetrics.stringWidth(playTimeString) / 2, 25); // edit by jesung ko - TeamHUD
     }
 
+    /**
+     * Draws the player's score on the screen.
+     * The score is displayed at the 2/6 position of the screen width.
+     *
+     * @param screen
+     *          The screen to draw on.
+     * @param score
+     *          The current score to display.
+     * by jesung Ko - TeamHUD
+     */
+    public static void drawScore2(final Screen screen, final int score) {
+        String scoreString = "Score: " + score;
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        int xPosition = (screen.getWidth() * 2) / 6; // 2/6 지점
+        backBufferGraphics.drawString(scoreString, xPosition - fontRegularMetrics.stringWidth(scoreString) / 2, 25);
+    }
     /**
      * Show accomplished achievement
      *
@@ -74,26 +92,72 @@ public class DrawManagerImpl extends DrawManager {
      *            Screen to draw on.
      * @param achievementText
      *            Accomplished achievement text.
+     *
+     * by Jo Minseo - HUD team
      */
     public static void drawAchievement(final Screen screen, String achievementText) {
         int width = screen.getWidth() / 4;
         int height = screen.getHeight() / 16;
+        int fontWidth;
 
         backBufferGraphics.setColor(Color.white);
-        backBufferGraphics.drawRect(screen.getWidth() - width - 8, screen.getHeight() - height - 20, width, height);
+        backBufferGraphics.drawRect(screen.getWidth() - width - 3, screen.getHeight() - height - 18, width, height);
 
+        //Modify the location of the window and the text - Jo Minseo/HUD team
         backBufferGraphics.setColor(Color.white);
         backBufferGraphics.setFont(fontRegular);
         if(achievementText.length() < 14){
-            backBufferGraphics.drawString(achievementText, screen.getWidth() - width, screen.getHeight() - 35);
+            fontWidth = fontRegularMetrics.stringWidth(achievementText);
+            backBufferGraphics.drawString(achievementText, screen.getWidth() - width / 2 - fontWidth / 2, screen.getHeight() - 35);
         }
         else if(achievementText.length() < 27){
-            backBufferGraphics.drawString(achievementText.substring(0,13), screen.getWidth() - width, screen.getHeight() - 45);
-            backBufferGraphics.drawString(achievementText.substring(13), screen.getWidth() - width, screen.getHeight() - 25);
+            fontWidth = fontRegularMetrics.stringWidth(achievementText.substring(0,13));
+            backBufferGraphics.drawString(achievementText.substring(0,13), screen.getWidth() - width / 2 - fontWidth / 2, screen.getHeight() - 43);
+            fontWidth = fontRegularMetrics.stringWidth(achievementText.substring(13));
+            backBufferGraphics.drawString(achievementText.substring(13), screen.getWidth() - width/2 - fontWidth / 2, screen.getHeight() - 25);
         }
         else{
-            backBufferGraphics.drawString(achievementText.substring(0,13), screen.getWidth() - width, screen.getHeight() - 45);
-            backBufferGraphics.drawString(achievementText.substring(13,26), screen.getWidth() - width, screen.getHeight() - 25);
+            fontWidth = fontRegularMetrics.stringWidth(achievementText.substring(0,13));
+            backBufferGraphics.drawString(achievementText.substring(0,13), screen.getWidth() - width / 2 - fontWidth / 2, screen.getHeight() - 43);
+            fontWidth = fontRegularMetrics.stringWidth(achievementText.substring(13,25)+"...");
+            backBufferGraphics.drawString(achievementText.substring(13,25)+"...", screen.getWidth() - width / 2 - fontWidth / 2, screen.getHeight() - 25);
         }
+    }
+
+    /**
+     * Draw remaining enemies
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param remainingEnemies
+     *            remaining enemies count.
+     */
+    public static void drawRemainingEnemies(final Screen screen, final int remainingEnemies) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        String remainingEnemiesString = "Enemies: " + remainingEnemies;
+        int textWidth = fontRegularMetrics.stringWidth(remainingEnemiesString);
+
+        int x = (screen.getWidth() - textWidth) / 2;
+        int y = screen.getHeight() - 25;
+
+        backBufferGraphics.drawString(remainingEnemiesString, x, y);
+    } // by SeungYun
+
+    /**
+     * Draws current score on screen.
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param positionY
+     *            Position to display separator line.
+     *
+     * by Ko jesung - TeamHUD
+     */
+    public static void drawSeparatorLine(final Screen screen, final int positionY) {
+        backBufferGraphics.setColor(Color.GREEN);
+        backBufferGraphics.drawLine(0, positionY, screen.getWidth(), positionY);
+        backBufferGraphics.drawLine(0, positionY + 1, screen.getWidth(),
+                positionY + 1);
     }
 }

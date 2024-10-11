@@ -12,11 +12,11 @@ import CtrlS.CurrencyManager;
 import CtrlS.RoundState;
 import CtrlS.ReceiptScreen;
 import Sound_Operator.SoundManager;
-import screen.GameScreen;
-import screen.HighScoreScreen;
-import screen.ScoreScreen;
-import screen.Screen;
-import screen.TitleScreen;
+import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
+import Sound_Operator.SoundManager;
+import clove.AchievementManager;
+import screen.*;
 
 
 /**
@@ -35,11 +35,11 @@ public final class Core {
 	private static final int FPS = 60;
 
 	/** Max lives. */
-	private static final int MAX_LIVES = 3;
+	public static final int MAX_LIVES = 3; // TEAM CLOVER: Fixed MAX_LIVES from private to public for usage in achievement
 	/** Levels between extra life. */
 	private static final int EXTRA_LIFE_FRECUENCY = 3;
 	/** Total number of levels. */
-	private static final int NUM_LEVELS = 7;
+	public static final int NUM_LEVELS = 7; // TEAM CLOVER : Fixed NUM_LEVELS from privated to public for usage in achievement
 	
 	/** Difficulty settings for level 1. */
 	private static final GameSettings SETTINGS_LEVEL_1 =
@@ -78,7 +78,7 @@ public final class Core {
 	private static ConsoleHandler consoleHandler;
 	// Sound Operator
 	private static SoundManager sm;
-
+    private static AchievementManager achievementManager; // Team CLOVER
 
 	/**
 	 * Test implementation.
@@ -101,6 +101,11 @@ public final class Core {
 			LOGGER.addHandler(fileHandler);
 			LOGGER.addHandler(consoleHandler);
 			LOGGER.setLevel(Level.ALL);
+
+			// TEAM CLOVER : Added log to check if function is working
+			System.out.println("Initializing AchievementManager...");
+			achievementManager = new AchievementManager(DrawManager.getInstance());
+			System.out.println("AchievementManager initialized!");
 
 		} catch (Exception e) {
 			// TODO handle exception
@@ -160,6 +165,9 @@ public final class Core {
 					frame.setScreen(currentScreen);
 					LOGGER.info("Closing game screen.");
 
+
+					achievementManager.updateAchievements(currentScreen); // TEAM CLOVER : Achievement
+
 					gameState = ((GameScreen) currentScreen).getGameState();
 
 					roundState = new RoundState(prevState, gameState);
@@ -190,6 +198,10 @@ public final class Core {
 						LOGGER.info("Closing receiptScreen.");
 					}
 
+                    if (achievementManager != null) { // TEAM CLOVER : Added code
+                        achievementManager.updateAchievements(currentScreen);
+                    }
+
 				} while (gameState.getLivesRemaining() > 0
 						&& gameState.getLevel() <= NUM_LEVELS);
 
@@ -214,6 +226,14 @@ public final class Core {
 						+ " high score screen at " + FPS + " fps.");
 				returnCode = frame.setScreen(currentScreen);
 				LOGGER.info("Closing high score screen.");
+				break;
+			case 7:
+				// Recent Records.
+				currentScreen = new RecordScreen(width, height, FPS);
+				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
+						+ " recent record screen at " + FPS + " fps.");
+				returnCode = frame.setScreen(currentScreen);
+				LOGGER.info("Closing recent record screen.");
 				break;
 			default:
 				break;

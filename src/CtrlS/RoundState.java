@@ -12,12 +12,14 @@ public class RoundState {
     private final int roundBulletsShot;
     private final int roundHitCount;
     private final int roundCoin;
+    private final int roundCoinItemsCollected;
 
     private final float roundHitRate;
     private final long roundTime;
 
     private ShipStatus shipStatus;   //inventory team
     private static double levelBonus2 = 1;
+    private static final int COIN_ITEM_VALUE = 10;
 
     public RoundState(GameState prevState, GameState currState) {
         this.prevState = prevState;
@@ -27,6 +29,7 @@ public class RoundState {
         this.roundHitCount = currState.getHitCount() - prevState.getHitCount();
         this.roundHitRate = roundHitCount / (float) roundBulletsShot;
         this.roundTime = currState.getTime() - prevState.getTime();
+        this.roundCoinItemsCollected = currState.getCoinItemsCollected() - prevState.getCoinItemsCollected();
         this.roundCoin = calculateCoin();
 
         //Coin Bonus increase by Level
@@ -74,6 +77,10 @@ public class RoundState {
             Core.getLogger().info("item level bonus occurs (" + (int) ((levelBonus2 - 1) * 100) + "%).");
         }
 
+        int coinItemsCollectedValue = COIN_ITEM_VALUE * this.roundCoinItemsCollected;
+        baseCoin += coinItemsCollectedValue;
+        Core.getLogger().info("Coin item bonus: " + this.roundCoinItemsCollected + " X " + COIN_ITEM_VALUE + " = " + coinItemsCollectedValue);
+
         return coin;
     }
 
@@ -92,6 +99,8 @@ public class RoundState {
     public int getRoundCoin() {
         return roundCoin;
     }
+
+    public int getRoundCoinItemsCollected() { return roundCoinItemsCollected; }
 
     public void levelBonusIN(){
         levelBonus2 += shipStatus.getCoinIn();

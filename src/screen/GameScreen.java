@@ -609,6 +609,8 @@ public class GameScreen extends Screen {
 			itemManager.OperateItem(checkCollision(item,ship)?item:null);
 		}
 		itemManager.removeAllReItems();
+
+
 	}
 
 

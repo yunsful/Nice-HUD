@@ -18,6 +18,8 @@ import inventory_develop.NumberOfBullet;
 
 import CtrlS.CurrencyManager;
 
+import Sound_Operator.SoundManager; //Sound_Operator
+
 
 public class ItemManager {
 
@@ -32,6 +34,8 @@ public class ItemManager {
     private Ship ship;
     private PlayerGrowth growth;
     private CurrencyManager currencyManager;
+    // Sound Operator
+    private static SoundManager sm;
 
     public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
         this.items = new HashSet<>();
@@ -83,16 +87,28 @@ public class ItemManager {
                 case ItemBomb:
                     Bomb.setIsbomb(true);
                     Bomb.setCanShoot(true);
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemBarrier:
                     Item2.activatebarrier();
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemHeart:
                     Item2.activeheart(gameScreen, ship, growth);
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemPierce:
                     numberOfBullet.pierceup();
                     ship.increaseBulletSpeed();
+                    //Sound_Operator
+                    sm = SoundManager.getInstance();
+                    sm.playES("get_item");
                     break;
                 case ItemCoin:
                     try {

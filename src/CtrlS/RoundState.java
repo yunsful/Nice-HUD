@@ -49,18 +49,16 @@ public class RoundState {
         int accuracyBonus = 0;
 
         if (roundHitRate > 0.9) {
-            accuracyBonus += (int) (coin * 0.3);
-            coin += (int) (coin * 0.3); // 30% 보너스 지급
+            accuracyBonus += (int) (baseCoin * 0.3);
             Core.getLogger().info("hitRate bonus occurs (30%).");
         } else if (roundHitRate > 0.8) {
-            accuracyBonus += (int) (coin * 0.3);
-            coin += (int) (coin * 0.2); // 20% 보너스 지급
+            accuracyBonus += (int) (baseCoin * 0.2);
             Core.getLogger().info("hitRate bonus occurs (20%).");
         } else if (roundHitRate > 0.7) {
-            accuracyBonus += (int) (coin * 0.3);
-            coin += (int) (coin * 0.1); // 10% 보너스 지급
+            accuracyBonus += (int) (baseCoin * 0.1);
             Core.getLogger().info("hitRate bonus occurs (10%).");
         }
+        coin += accuracyBonus
 
         // Round clear time in seconds
         // DEBUGGING NEEDED(playTime)

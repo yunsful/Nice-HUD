@@ -5,8 +5,6 @@ import screen.Screen;
 import entity.Entity;
 import java.awt.Color;
 
-import java.awt.*;
-
 public class DrawManagerImpl extends DrawManager {
 
     // Add method
@@ -22,10 +20,10 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawString(levelText, xPosition - fontRegularMetrics.stringWidth(levelText) / 2, yPosition); // edit by jesung ko - TeamHUD
     } // Lee Hyun Woo - level
     
-    public static void drawAttackSpeed(final Screen screen, final double attackSpeed) {
+    public static void drawBulletSpeed(final Screen screen, final double bulletSpeed) {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
-        String attackSpeedText = String.format("AS : %.2f ", attackSpeed);
+        String attackSpeedText = String.format("BS : %.2f px/f ", bulletSpeed);
         backBufferGraphics.drawString(attackSpeedText, 10, screen.getHeight() - 15);
     }
 

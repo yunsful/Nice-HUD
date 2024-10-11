@@ -69,6 +69,7 @@ public class RecordScreen extends Screen {
         drawManager.drawRecordMenu(this);
         drawManager.drawRecentScores(this, this.recentScores);
 
+        super.drawPost();
         drawManager.completeDrawing(this);
     }
 }

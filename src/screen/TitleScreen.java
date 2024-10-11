@@ -99,7 +99,7 @@ public class TitleScreen extends Screen {
 			}
 
 			// produced by Starter
-			if (returnCode == 4) {
+			if (returnCode == 2) {
 				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)
 						|| inputManager.isKeyDown(KeyEvent.VK_A)) {
 					moveMenuLeft();
@@ -116,7 +116,7 @@ public class TitleScreen extends Screen {
 				}
 			}
 
-			if(returnCode == 5) {
+			if(returnCode == 4) {
 				if (inputManager.isKeyDown(KeyEvent.VK_LEFT)
 						|| inputManager.isKeyDown(KeyEvent.VK_A)) {
 					nextMerchantState();
@@ -135,7 +135,7 @@ public class TitleScreen extends Screen {
 			}
 
 			if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-				if(returnCode == 5) {
+				if(returnCode == 4) {
 					teststatUpgrade();
 					testCoinDiscounter();
 					this.selectionCooldown.reset();
@@ -178,7 +178,7 @@ public class TitleScreen extends Screen {
 
 	}
 	private void nextMenuItem() {
-		if (this.returnCode == 7) // Team Clover changed values because recordMenu added
+		if (this.returnCode == 5) // Team Clover changed values because recordMenu added
 			this.returnCode = 0; // from '2 player mode' to 'Exit' (starter)
 		else if (this.returnCode == 0)
 			this.returnCode = 2; // from 'Exit' to 'Play' (starter)
@@ -192,7 +192,7 @@ public class TitleScreen extends Screen {
 	private void previousMenuItem() {
 		this.merchantState =0;
 		if (this.returnCode == 0)
-			this.returnCode = 7; // from 'Exit' to '2 player mode' (starter) // Team Clover changed values because recordMenu added
+			this.returnCode = 5; // from 'Exit' to '2 player mode' (starter) // Team Clover changed values because recordMenu added
 		else if (this.returnCode == 2)
 			this.returnCode = 0; // from 'Play' to 'Exit' (starter)
 		else
@@ -201,7 +201,7 @@ public class TitleScreen extends Screen {
 
 	// left and right move -- produced by Starter
 	private void moveMenuLeft() {
-		if (this.returnCode == 4 ) {
+		if (this.returnCode == 2 ) {
 			if (this.pnumSelectionCode == 0)
 				this.pnumSelectionCode++;
 			else
@@ -211,7 +211,7 @@ public class TitleScreen extends Screen {
 	}
 
 	private void moveMenuRight() {
-		if (this.returnCode == 4) {
+		if (this.returnCode == 2) {
 			if (this.pnumSelectionCode == 0)
 				this.pnumSelectionCode++;
 			else
@@ -220,7 +220,7 @@ public class TitleScreen extends Screen {
 	}
 
 	private void nextMerchantState() {
-		if (this.returnCode == 5) {
+		if (this.returnCode == 4) {
 			if (this.merchantState == 4)
 				this.merchantState = 0;
 			else
@@ -229,7 +229,7 @@ public class TitleScreen extends Screen {
 	}
 
 	private void previousMerchantState() {
-		if (this.returnCode == 5) {
+		if (this.returnCode == 4) {
 			if (this.merchantState == 0)
 				this.merchantState = 4;
 			else

@@ -7,6 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,16 +17,21 @@ import CtrlS.RoundState;
 import entity.AddSign;
 import entity.Coin;
 import entity.Gem;
+import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;
 
+import level_design.Background;
+
+import javax.imageio.ImageIO;
+
 /**
- * Manages screen drawing.
- *
- * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- *
- */
+* Manages screen drawing.
+*
+* @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+*
+*/
 public class DrawManager {
 
 	/** Singleton instance of the class. */
@@ -76,6 +82,10 @@ public class DrawManager {
 		EnemyShipC1,
 		/** Third enemy ship - second form. */
 		EnemyShipC2,
+		/** First explosive enemy ship - first form. */
+		ExplosiveEnemyShip1, //Edited by Enemy
+		/** First explosive enemy ship - second form. */
+		ExplosiveEnemyShip2, //Edited by Enemy
 		/** Bonus ship. */
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
@@ -84,30 +94,33 @@ public class DrawManager {
 		Heart, //Please have the Nice HUD team fix it. - Enemy team
 		/**Item*/
 		Item, //by enemy team
+		/**Boss*/
+		Boss, //by enemy team
 		/** Player Lives. */
 		/** Item */
-		ItemAttackSpeed,
+    	ItemHeart,
+		ShipBarrierStatus,
+		ItemCoin,
+		ItemPierce,
 		ItemBomb,
 		ItemBarrier,
-		ItemRecovery,
-		ItemSpeed,
-		ItemCoinIncrease,
-		ItemNumberOfBullet,
-    //Produced by Starter Team
+
+		//Produced by Starter Team
 		/** coin */
 		Coin,
 		/** gem */
 		Gem,
 		/** add sign */
-		AddSign
+		AddSign,
+		Obstacle
 	};
 
 	/**
-	 * Private constructor.
-	 *
-	 * Modifying Access Restrictor to public
-	 * - HUDTeam - LeeHyunWoo
-	 */
+	* Private constructor.
+	*
+	* Modifying Access Restrictor to public
+	* - HUDTeam - LeeHyunWoo
+	*/
 	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
@@ -115,7 +128,7 @@ public class DrawManager {
 
 		try {
 			spriteMap = new LinkedHashMap<SpriteType, boolean[][]>();
-
+			spriteMap.put(SpriteType.Obstacle, new boolean[12][12]); //by Level Design Team
 			spriteMap.put(SpriteType.Ship, new boolean[13][8]);
 			spriteMap.put(SpriteType.ShipDestroyed, new boolean[13][8]);
 			spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
@@ -126,13 +139,22 @@ public class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipB2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
+			spriteMap.put(SpriteType.ExplosiveEnemyShip1, new boolean[12][8]); //Edited by Enemy
+			spriteMap.put(SpriteType.ExplosiveEnemyShip2, new boolean[12][8]); //Edited by Enemy
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
-			spriteMap.put(SpriteType.Item, new boolean[5][5]); //by Enemy team
+			spriteMap.put(SpriteType.Boss, new boolean[24][16]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.Gem, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
+			//by Item team
+			spriteMap.put(SpriteType.ItemHeart, new boolean[7][5]);
+			spriteMap.put(SpriteType.ItemBarrier, new boolean[9][10]);
+			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
+			spriteMap.put(SpriteType.ShipBarrierStatus, new boolean[13][8]);	// temporary
+			spriteMap.put(SpriteType.ItemCoin, new boolean[7][7]);
+			spriteMap.put(SpriteType.ItemPierce, new boolean[7][7]);
 
 			fileManager.loadSprite(spriteMap);
 			logger.info("Finished loading the sprites.");
@@ -341,6 +363,7 @@ public class DrawManager {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
 		String mode = onePlayerModeString;
+		String RecentRecord = "Recent Records";
 		String playString = "Play";
 		String highScoresString = "High scores";
 		String exitString = "exit";
@@ -399,14 +422,21 @@ public class DrawManager {
 		/*drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 6 - 12);*/
 
+        // Record scores (Team Clove)
+        if (option == 7)
+            backBufferGraphics.setColor(Color.GREEN);
+        else
+            backBufferGraphics.setColor(Color.WHITE);
+        drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
+                / 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
 
-		// Exit (starter)
+        // Exit (starter)
 		if (option == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 8); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 12); // adjusted Height
 	}
 
 	/**
@@ -553,6 +583,25 @@ public class DrawManager {
 	}
 
 	/**
+	 * Draws recent score(record) screen title and instructions.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * Team Clove
+	 */
+	public void drawRecordMenu(final Screen screen) {
+		String recentScoreString = "Recent Records";
+		String instructionsString = "Press Space to return";
+
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, recentScoreString, screen.getHeight() / 8);
+
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 5);
+	}
+
+	/**
 	 * Draws high scores.
 	 *
 	 * @param screen
@@ -573,6 +622,61 @@ public class DrawManager {
 					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
 			i++;
 		}
+	}
+
+	/**
+	 * Draws recent scores.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param recentScores
+	 *            List of recent scores.
+	 * Team Clove
+	 */
+	public void drawRecentScores(final Screen screen,
+								 final List<Score> recentScores) {
+		backBufferGraphics.setColor(Color.WHITE);
+		int i = 0;
+		boolean isFirstLine = true;
+		String scoreString = "";
+
+		for (Score score : recentScores) {
+			if (isFirstLine) { // Create Header
+				scoreString = String.format("           Date                           " +
+						" Score       Level       Destroy       Achievement");
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				isFirstLine = false;
+				i++;
+			} else {
+				scoreString = String.format("   %s                      %04d         %04d             %04d         " +
+								"             %04d",
+						score.getDate(), score.getScore(), score.getHighestLevel(),
+						score.getShipDestroyed(), score.getClearAchievementNumber());
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				i++;
+			}
+		}
+	}
+
+
+	/**
+	 * Draws a righted string on regular font
+	 *
+	 * @param screen
+	 * 				Screen to draw on.
+	 * @param string
+	 * 				String to draw.
+	 * @param height
+	 * 				Height of the drawing.
+	 *
+	 * 		//Clove
+	 */
+	public void drawRightedRegularString(final Screen screen,
+										 final String string, final int height) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.drawString(string, 0, height);
 	}
 
 	/**
@@ -745,5 +849,72 @@ public class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(gem), coinX + gemImage.getWidth() + 10, 35);
+	/**
+	* ### TEAM INTERNATIONAL ###
+	* Background draw and update method
+	*/
+	Background background = new Background();
+
+	public void drawBackground(final Screen screen, int levelNumber, boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+		// I still have no clue how relative pathing or class pathing works
+		InputStream imageStream = Background.getBackgroundImageStream(levelNumber);
+		BufferedImage backgroundImage;
+		try {
+			assert imageStream != null;
+			backgroundImage = ImageIO.read(imageStream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		int verticalOffset = background.getVerticalOffset(frame);
+		int horizontalOffset = background.getHorizontalOffset(frame, backgroundMoveRight, backgroundMoveLeft);
+
+		backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
+	}
+
+	/**
+	* ### TEAM INTERNATIONAL ###
+	*
+	* Wave draw method
+	* **/
+	public void drawWave(final Screen screen, final int wave, final int number) {
+
+		int rectWidth = screen.getWidth();
+		int rectHeight = screen.getHeight() / 6;
+		backBufferGraphics.setColor(Color.BLACK);
+		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
+		rectWidth, rectHeight);
+		backBufferGraphics.setColor(Color.GREEN);
+		if (number >= 4)
+
+		drawCenteredBigString(screen, "Wave " + wave,
+		screen.getHeight() / 2
+		+ fontBigMetrics.getHeight() / 3);
+
+		else if (number != 0)
+		drawCenteredBigString(screen, Integer.toString(number),
+		screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+		else
+		drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
+		+ fontBigMetrics.getHeight() / 3);
+	}
+
+
+	/**
+	 * Draw the item that player got
+	 *
+	 * @param screen
+	 *			  Screen to draw on.
+	 *
+	 * HUD Team - Jo Minseo
+	 */
+	public void drawItem(final Screen screen){
+		//Bomb
+		Entity itemBomb = new Entity(0, 0, 13 * 2, 8 * 2, Color.gray);
+		itemBomb.setSpriteType(DrawManager.SpriteType.ItemBomb);
+
+		if(Bomb.getIsBomb() && Bomb.getCanShoot()){
+			drawEntity(itemBomb, screen.getWidth() / 5, screen.getHeight() - 50);
+		}
 	}
 }

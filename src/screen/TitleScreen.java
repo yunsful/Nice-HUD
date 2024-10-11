@@ -178,9 +178,8 @@ public class TitleScreen extends Screen {
 
 	}
 	private void nextMenuItem() {
-		this.merchantState =0;
-		if (this.returnCode == 5)
-			this.returnCode = 0; // from 'merchant' to 'Exit' (starter)
+		if (this.returnCode == 7) // Team Clover changed values because recordMenu added
+			this.returnCode = 0; // from '2 player mode' to 'Exit' (starter)
 		else if (this.returnCode == 0)
 			this.returnCode = 2; // from 'Exit' to 'Play' (starter)
 		else
@@ -193,7 +192,7 @@ public class TitleScreen extends Screen {
 	private void previousMenuItem() {
 		this.merchantState =0;
 		if (this.returnCode == 0)
-			this.returnCode = 5; // from 'Exit' to 'merchant' (starter)
+			this.returnCode = 7; // from 'Exit' to '2 player mode' (starter) // Team Clover changed values because recordMenu added
 		else if (this.returnCode == 2)
 			this.returnCode = 0; // from 'Play' to 'Exit' (starter)
 		else

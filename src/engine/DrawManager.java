@@ -378,12 +378,16 @@ public class DrawManager {
 
 
 		// Play (starter)
-		if (option == 2)
-			backBufferGraphics.setColor(Color.GREEN);
+		if (option == 2 && option2 == 0)
+			backBufferGraphics.setColor(Color.CYAN);
+		else if (option == 2 && option2 == 1)
+			backBufferGraphics.setColor(Color.MAGENTA);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, playString,
-				screen.getHeight() / 4 * 2); // adjusted Height
+		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (starter), default: 1 player mode
+		if (option == 2) {mode = "<- " + mode + " ->";}
+		drawCenteredRegularString(screen, mode, screen.getHeight()
+				/ 4 * 2); // adjusted Height
 
 		// High scores (starter)
 		if (option == 3)
@@ -393,42 +397,31 @@ public class DrawManager {
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 2); // adjusted Height
 
-		if (option == 4 && option2 == 0)
-			backBufferGraphics.setColor(Color.CYAN);
-		else if (option == 4 && option2 == 1)
-			backBufferGraphics.setColor(Color.MAGENTA);
-		else
-			backBufferGraphics.setColor(Color.WHITE);
-		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (starter), default: 1 player mode
-		if (option == 4) {mode = "<- " + mode + " ->";}
-		drawCenteredRegularString(screen, mode, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 4); // adjusted Height
-
 		if (option3 == 0) {merchantState = merchant;}
 		if (option3 == 1) {merchantState = bulletCountString;}
 		if (option3 == 2) {merchantState = shipSpeedString;}
 		if (option3 == 3) {merchantState = attackSpeedString;}
 		if (option3 == 4) {merchantState = coinGainString;}
-		if (option == 5) {merchantState = "<- " + merchantState + " ->";}
-		if (option == 5 && option3 == 0)
+		if (option == 4) {merchantState = "<- " + merchantState + " ->";}
+		if (option == 4 && option3 == 0)
 			backBufferGraphics.setColor(Color.GREEN);
-		else if (option == 5 && option3 != 0)
+		else if (option == 4 && option3 != 0)
 			backBufferGraphics.setColor(Color.CYAN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 
 		drawCenteredRegularString(screen, merchantState, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 6);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 4);
 		/*drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 6 - 12);*/
 
         // Record scores (Team Clove)
-        if (option == 7)
+        if (option == 5)
             backBufferGraphics.setColor(Color.GREEN);
         else
             backBufferGraphics.setColor(Color.WHITE);
         drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
-                / 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
+                / 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
 
         // Exit (starter)
 		if (option == 0)
@@ -436,7 +429,7 @@ public class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 12); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
 	}
 
 	/**

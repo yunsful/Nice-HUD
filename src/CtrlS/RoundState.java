@@ -35,23 +35,35 @@ public class RoundState {
     }
 
     private int calculateCoin() {
+        int coin = 0;
+
+
+
 
         int baseCoin = roundScore / 10;
+        //레벨 보너스(levelBonus)
         int levelBonus = baseCoin * currState.getLevel();
-        int coin = baseCoin + levelBonus;
+
+
+        //정확도 보너스(accuracyBonus)
+        int accuracyBonus = 0;
 
         if (roundHitRate > 0.9) {
-            coin += (int) (coin * 0.3); // 30% 보너스 지급
+            accuracyBonus += (int) (baseCoin * 0.3);
             Core.getLogger().info("hitRate bonus occurs (30%).");
         } else if (roundHitRate > 0.8) {
-            coin += (int) (coin * 0.2); // 20% 보너스 지급
+            accuracyBonus += (int) (baseCoin * 0.2);
             Core.getLogger().info("hitRate bonus occurs (20%).");
+        } else if (roundHitRate > 0.7) {
+            accuracyBonus += (int) (baseCoin * 0.1);
+            Core.getLogger().info("hitRate bonus occurs (10%).");
         }
+
 
         // Round clear time in seconds
         // DEBUGGING NEEDED(playTime)
         long timeDifferenceInSeconds = (currState.getTime() - prevState.getTime()) / 1000;
-
+        //시간 보너스(timeBonus)
         int timeBonus = 0;
 
         /*
@@ -67,11 +79,18 @@ public class RoundState {
         } else if (timeDifferenceInSeconds <= 100) {
             timeBonus = 10;
         }
-        coin += timeBonus;
+
 
         if (levelBonus2 > 1){
             coin = (int) (coin * levelBonus2);
             Core.getLogger().info("item level bonus occurs (" + (int) ((levelBonus2 - 1) * 100) + "%).");
+        }
+
+        //코인 증가
+        if(currState.getLivesRemaining() > 0){
+            coin += levelBonus;
+            coin += accuracyBonus;
+            coin += timeBonus;
         }
 
         return coin;

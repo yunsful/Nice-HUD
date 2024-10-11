@@ -43,27 +43,26 @@ public final class Core {
 	
 	/** Difficulty settings for level 1. */
 	private static final GameSettings SETTINGS_LEVEL_1 =
-			new GameSettings(5, 4, 60, 2000);
+			new GameSettings(5, 4, 60, 2000, 1);
 	/** Difficulty settings for level 2. */
 	private static final GameSettings SETTINGS_LEVEL_2 =
-			new GameSettings(5, 5, 50, 2500);
+			new GameSettings(5, 5, 50, 2500, 1);
 	/** Difficulty settings for level 3. */
 	private static final GameSettings SETTINGS_LEVEL_3 =
-			new GameSettings(6, 5, 40, 1500);
+			new GameSettings(6, 5, 40, 1500, 1);
 	/** Difficulty settings for level 4. */
 	private static final GameSettings SETTINGS_LEVEL_4 =
-			new GameSettings(6, 6, 30, 1500);
+			new GameSettings(6, 6, 30, 1500, 2);
 	/** Difficulty settings for level 5. */
 	private static final GameSettings SETTINGS_LEVEL_5 =
-			new GameSettings(7, 6, 20, 1000);
+			new GameSettings(7, 6, 20, 1000, 2);
 	/** Difficulty settings for level 6. */
 	private static final GameSettings SETTINGS_LEVEL_6 =
-			new GameSettings(7, 7, 10, 1000);
+			new GameSettings(7, 7, 10, 1000, 3);
 	/** Difficulty settings for level 7. */
 	private static final GameSettings SETTINGS_LEVEL_7 =
-			new GameSettings(8, 7, 2, 500);
-
-
+			new GameSettings(8, 7, 2, 500, 1);
+	
 	/** Frame to draw the screen on. */
 	private static Frame frame;
 	/** Screen currently shown. */
@@ -89,7 +88,6 @@ public final class Core {
 	 */
 	public static void main(final String[] args) {
 		try {
-
 			LOGGER.setUseParentHandlers(false);
 
 			fileHandler = new FileHandler("log");

@@ -24,9 +24,9 @@ import clove.Statistics; //Team Clove
 
 /**
  * Manages files used in the application.
- *
+ * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- *
+ * 
  */
 public final class FileManager {
 
@@ -48,7 +48,7 @@ public final class FileManager {
 
 	/**
 	 * Returns shared instance of FileManager.
-	 *
+	 * 
 	 * @return Shared instance of FileManager.
 	 */
 	protected static FileManager getInstance() {
@@ -59,7 +59,7 @@ public final class FileManager {
 
 	/**
 	 * Loads sprites from disk.
-	 *
+	 * 
 	 * @param spriteMap
 	 *            Mapping of sprite type and empty boolean matrix that will
 	 *            contain the image.
@@ -101,7 +101,7 @@ public final class FileManager {
 
 	/**
 	 * Loads a font of a given size.
-	 *
+	 * 
 	 * @param size
 	 *            Point size of the font.
 	 * @return New font.
@@ -136,7 +136,7 @@ public final class FileManager {
 	/**
 	 * Returns the application default scores if there is no user high scores
 	 * file.
-	 *
+	 * 
 	 * @return Default high scores.
 	 * @throws IOException
 	 *             In case of loading problems.
@@ -172,7 +172,7 @@ public final class FileManager {
 	/**
 	 * Loads high scores from file, and returns a sorted list of pairs score -
 	 * value.
-	 *
+	 * 
 	 * @return Sorted list of scores - players.
 	 * @throws IOException
 	 *             In case of loading problems.
@@ -225,7 +225,7 @@ public final class FileManager {
 
 	/**
 	 * Saves user high scores to disk.
-	 *
+	 * 
 	 * @param highScores
 	 *            High scores to save.
 	 * @throws IOException

@@ -282,10 +282,8 @@ public class GameScreen extends Screen {
 					this.backgroundMoveLeft = true;
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
-					if (this.ship.shoot(this.bullets)) {
+					if (this.ship.shoot(this.bullets))
 						this.bulletsShot++;
-						DrawAchievementHud.achieve("sentence");
-					}
 			}
 
 			if (this.enemyShipSpecial != null) {
@@ -371,7 +369,6 @@ public class GameScreen extends Screen {
 
             this.isRunning = false;
 		}
-		super.updatePost();
 	}
 
 	/**
@@ -452,6 +449,7 @@ public class GameScreen extends Screen {
 			playTime = (int) ((System.currentTimeMillis() - playStartTime) / 1000) + playTimePre;
 		}
 
+		super.drawPost();
 		drawManager.completeDrawing(this);
 	}
 

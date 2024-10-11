@@ -181,7 +181,6 @@ public class ScoreScreen extends Screen {
 				}
 			}
 		}
-		super.updatePost();
 	}
 
 	/**
@@ -256,6 +255,7 @@ public class ScoreScreen extends Screen {
 		if (this.isNewRecord)
 			drawManager.drawNameInput(this, this.name, this.nameCharSelected);
 
+		super.drawPost();
 		drawManager.completeDrawing(this);
 	}
 }

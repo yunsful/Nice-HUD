@@ -142,7 +142,6 @@ public class TitleScreen extends Screen {
 				}
 				else this.isRunning = false;
 		}
-		super.updatePost();
 	}
 	// Use later if needed. -Starter
 	// public int getPnumSelectionCode() {return this.pnumSelectionCode;}
@@ -254,6 +253,7 @@ public class TitleScreen extends Screen {
 		drawManager.drawCurrentCoin(this,coin);
 		drawManager.drawCurrentGem(this,gem);
 
+		super.drawPost();
 		drawManager.completeDrawing(this);
 	}
 

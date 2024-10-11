@@ -66,8 +66,6 @@ public class Screen {
 		this.inputDelay = Core.getCooldown(INPUT_DELAY);
 		this.inputDelay.reset();
 		this.returnCode = 0;
-
-		new DrawAchievementHud();
 	}
 
 	/**
@@ -112,9 +110,8 @@ public class Screen {
 	/**
 	 * Update the elements on screen after update all child screen
 	 */
-	protected void updatePost() {
+	protected void drawPost() {
 		// Jo minseo / HUD team
-		logger.info("timer:"+DrawAchievementHud.getTimer()+" text:"+DrawAchievementHud.getAchievementText());
 		if(DrawAchievementHud.getTimer() < 100) {
 			DrawManagerImpl.drawAchievement(this, DrawAchievementHud.getAchievementText());
 			DrawAchievementHud.addTimer();

@@ -58,7 +58,6 @@ public class RecordScreen extends Screen {
         if (inputManager.isKeyDown(KeyEvent.VK_SPACE)
                 && this.inputDelay.checkFinished())
             this.isRunning = false;
-        super.updatePost();
     }
 
     /**
@@ -70,6 +69,7 @@ public class RecordScreen extends Screen {
         drawManager.drawRecordMenu(this);
         drawManager.drawRecentScores(this, this.recentScores);
 
+        super.drawPost();
         drawManager.completeDrawing(this);
     }
 }

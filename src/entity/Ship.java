@@ -206,7 +206,7 @@ public class Ship extends Entity {
 		int speed = growth.getBulletSpeed();
 		if (speed >= 0) return speed;
 		else return speed * (-1);
-	}
+	} // by SeungYun TeamHUD
 
 	public PlayerGrowth getPlayerGrowth() {
 		return growth;

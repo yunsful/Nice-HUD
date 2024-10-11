@@ -23,7 +23,6 @@ public class RoundState {
         this.prevState = prevState;
         this.currState = currState;
         this.roundScore = currState.getScore() - prevState.getScore();
-        this.roundHealth = currState.getLivesRemaining();
         this.roundBulletsShot = currState.getBulletsShot() - prevState.getBulletsShot();
         this.roundHitCount = currState.getHitCount() - prevState.getHitCount();
         this.roundHitRate = roundHitCount / (float) roundBulletsShot;

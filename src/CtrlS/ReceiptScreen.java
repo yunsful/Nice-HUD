@@ -65,6 +65,7 @@ public class ReceiptScreen extends Screen {
 
 		drawManager.drawReceipt(this, this.roundState, this.gameState);
 
+		super.drawPost();
 		drawManager.completeDrawing(this);
 	}
 }

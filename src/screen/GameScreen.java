@@ -135,7 +135,7 @@ public class GameScreen extends Screen {
 
 	/**
 	 * Constructor, establishes the properties of the screen.
-	 * 
+	 *
 	 * @param gameState
 	 *            Current game state.
 	 * @param gameSettings
@@ -225,7 +225,7 @@ public class GameScreen extends Screen {
 
 	/**
 	 * Starts the action.
-	 * 
+	 *
 	 * @return Next screen code.
 	 */
 	public final int run() {
@@ -585,9 +585,14 @@ public class GameScreen extends Screen {
 					//// Drop item to 100%
 					this.itemManager.dropItem(enemyShipSpecial,1,2);
 				}
-			}
-		}
 
+				for (Obstacle obstacle : this.obstacles) {
+					if (!obstacle.isDestroyed() && checkCollision(bullet, obstacle)) {
+						obstacle.destroy();  // Destroy obstacle
+						recyclable.add(bullet);  // Remove bullet
+					}
+				}
+			}
 
 		for (Obstacle obstacle : this.obstacles) {
 			if (!obstacle.isDestroyed() && checkCollision(this.ship, obstacle)) {
@@ -610,6 +615,13 @@ public class GameScreen extends Screen {
 		}
 		itemManager.removeAllReItems();
 	}
+
+
+
+
+
+
+
 
 
 	/**

@@ -7,6 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,16 @@ import screen.Screen;
 import entity.Entity;
 import entity.Ship;
 
+import level_design.Background;
+
+import javax.imageio.ImageIO;
+
 /**
- * Manages screen drawing.
- *
- * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- *
- */
+* Manages screen drawing.
+*
+* @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+*
+*/
 public class DrawManager {
 
 	/** Singleton instance of the class. */
@@ -98,19 +103,21 @@ public class DrawManager {
 		ItemPierce,
 		ItemBomb,
 		ItemBarrier,
-    //Produced by Starter Team
+
+		//Produced by Starter Team
 		/** coin */
 		Coin,
 		/** add sign */
-		AddSign
+		AddSign,
+		Obstacle
 	};
 
 	/**
-	 * Private constructor.
-	 *
-	 * Modifying Access Restrictor to public
-	 * - HUDTeam - LeeHyunWoo
-	 */
+	* Private constructor.
+	*
+	* Modifying Access Restrictor to public
+	* - HUDTeam - LeeHyunWoo
+	*/
 	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
@@ -118,7 +125,7 @@ public class DrawManager {
 
 		try {
 			spriteMap = new LinkedHashMap<SpriteType, boolean[][]>();
-
+			spriteMap.put(SpriteType.Obstacle, new boolean[12][12]); //by Level Design Team
 			spriteMap.put(SpriteType.Ship, new boolean[13][8]);
 			spriteMap.put(SpriteType.ShipDestroyed, new boolean[13][8]);
 			spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
@@ -674,7 +681,6 @@ public class DrawManager {
 				- fontRegularMetrics.stringWidth(string) / 2, height);
 	}
 
-
 	/**
 	 * Draws a centered string on big font.
 	 *
@@ -818,6 +824,56 @@ public class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(coin), coinX + coinImage.getWidth() + 10, 20);
+	}
+
+	/**
+	* ### TEAM INTERNATIONAL ###
+	* Background draw and update method
+	*/
+	Background background = new Background();
+
+	public void drawBackground(final Screen screen, int levelNumber, boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+		// I still have no clue how relative pathing or class pathing works
+		InputStream imageStream = Background.getBackgroundImageStream(levelNumber);
+		BufferedImage backgroundImage;
+		try {
+			assert imageStream != null;
+			backgroundImage = ImageIO.read(imageStream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		int verticalOffset = background.getVerticalOffset(frame);
+		int horizontalOffset = background.getHorizontalOffset(frame, backgroundMoveRight, backgroundMoveLeft);
+
+		backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
+	}
+
+	/**
+	* ### TEAM INTERNATIONAL ###
+	*
+	* Wave draw method
+	* **/
+	public void drawWave(final Screen screen, final int wave, final int number) {
+
+		int rectWidth = screen.getWidth();
+		int rectHeight = screen.getHeight() / 6;
+		backBufferGraphics.setColor(Color.BLACK);
+		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
+		rectWidth, rectHeight);
+		backBufferGraphics.setColor(Color.GREEN);
+		if (number >= 4)
+
+		drawCenteredBigString(screen, "Wave " + wave,
+		screen.getHeight() / 2
+		+ fontBigMetrics.getHeight() / 3);
+
+		else if (number != 0)
+		drawCenteredBigString(screen, Integer.toString(number),
+		screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+		else
+		drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
+		+ fontBigMetrics.getHeight() / 3);
 	}
 
 

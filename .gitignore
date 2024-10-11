@@ -170,6 +170,7 @@ pip-log.txt
 #############
 
 log*
+*.ttf
 .checkstyle
 Nice-HUD.iml
 Invader_Space_HUD.iml

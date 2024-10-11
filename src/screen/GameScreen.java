@@ -3,6 +3,7 @@ package screen;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import entity.BulletPool;
 import entity.EnemyShip;
 import entity.EnemyShipFormation;
 import entity.Entity;
+import entity.Obstacle;
 import entity.Ship;
 // shield and heart recovery
 import inventory_develop.*;
@@ -84,7 +86,25 @@ public class GameScreen extends Screen {
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
 	private boolean bonusLife;
+	/**
+	* Added by the Level Design team
+	*
+	* Counts the number of waves destroyed
+	* **/
+	private int waveCounter;
+
+	/** ### TEAM INTERNATIONAL ### */
+	/** Booleans for horizontal background movement */
+	private boolean backgroundMoveLeft = false;
+	private boolean backgroundMoveRight = false;
+
+
+
+	// --- OBSTACLES
+	private Set<Obstacle> obstacles; // Store obstacles
+	private Cooldown obstacleSpawnCooldown; //control obstacle spawn speed
 	/** Shield item */
+
 
 	// Soomin Lee / TeamHUD
 	/** Moment the user starts to play */
@@ -115,7 +135,7 @@ public class GameScreen extends Screen {
 
 	/**
 	 * Constructor, establishes the properties of the screen.
-	 * 
+	 *
 	 * @param gameState
 	 *            Current game state.
 	 * @param gameSettings
@@ -146,6 +166,14 @@ public class GameScreen extends Screen {
 		this.item = new ItemBarrierAndHeart();	// team Inventory
 		this.currency = gameState.getCurrency(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
+
+		/**
+		* Added by the Level Design team
+		*
+		* Sets the wave counter
+		* **/
+		this.waveCounter = 1;
+
 		// Soomin Lee / TeamHUD
 		this.playTime = gameState.getTime();
 		this.scoreManager = gameState.scoreManager; //Team Clove
@@ -186,11 +214,18 @@ public class GameScreen extends Screen {
 		// Soomin Lee / TeamHUD
 		this.playStartTime = gameStartTime + INPUT_DELAY;
 		this.playTimePre = playTime;
+
+
+		// 	// --- OBSTACLES - Initialize obstacles
+		this.obstacles = new HashSet<>();
+		this.obstacleSpawnCooldown = Core.getCooldown(4000); // change obstacle spawn time
+
+
 	}
 
 	/**
 	 * Starts the action.
-	 * 
+	 *
 	 * @return Next screen code.
 	 */
 	public final int run() {
@@ -209,6 +244,23 @@ public class GameScreen extends Screen {
 		super.update();
 
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
+			// --- OBSTACLES
+			if (this.obstacleSpawnCooldown.checkFinished()) {
+				// Spawn obstacle at a random position
+				int randomX = new Random().nextInt(this.width);
+				obstacles.add(new Obstacle(randomX, 50)); // Start at top of the screen
+				this.obstacleSpawnCooldown.reset();
+			}
+
+			// --- OBSTACLES
+			Set<Obstacle> obstaclesToRemove = new HashSet<>();
+			for (Obstacle obstacle : this.obstacles) {
+				obstacle.update(this.level); // Make obstacles move or perform actions
+				if (obstacle.shouldBeRemoved()) {
+					obstaclesToRemove.add(obstacle);  // Mark obstacle for removal after explosion
+				}
+			}
+			this.obstacles.removeAll(obstaclesToRemove);
 
 			if (!this.ship.isDestroyed()) {
 				boolean moveRight = inputManager.isKeyDown(KeyEvent.VK_RIGHT)
@@ -223,9 +275,11 @@ public class GameScreen extends Screen {
 
 				if (moveRight && !isRightBorder) {
 					this.ship.moveRight();
+					this.backgroundMoveRight = true;
 				}
 				if (moveLeft && !isLeftBorder) {
 					this.ship.moveLeft();
+					this.backgroundMoveLeft = true;
 				}
 				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
 					if (this.ship.shoot(this.bullets))
@@ -265,8 +319,27 @@ public class GameScreen extends Screen {
 		this.itemManager.cleanItems(); //by Enemy team
 		draw();
 
+		/**
+		* Added by the Level Design team
+		*
+		* Counts and checks if the number of waves destroyed match the intended number of waves for this level
+		* Spawn another wave
+		**/
+		if (this.enemyShipFormation.isEmpty() && waveCounter < this.gameSettings.getWavesNumber()) {
+
+			waveCounter++;
+			this.initialize();
+
+		}
+
+		/**
+		* Wave counter condition added by the Level Design team
+		*
+		* Checks if the intended number of waves for this level was destroyed
+		* **/
 		if ((this.enemyShipFormation.isEmpty() || this.lives == 0)
-				&& !this.levelFinished) {
+		&& !this.levelFinished
+		&& waveCounter == this.gameSettings.getWavesNumber()) {
 			this.levelFinished = true;
 			this.screenFinishedCooldown.reset();
 		}
@@ -310,6 +383,11 @@ public class GameScreen extends Screen {
 			Achievement.addTimer();
 		}
 
+		/** ### TEAM INTERNATIONAL ### */
+		drawManager.drawBackground(this, this.level, backgroundMoveRight, backgroundMoveLeft);
+		this.backgroundMoveRight = false;
+		this.backgroundMoveLeft = false;
+
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
 				this.ship.getPositionY());
 		if (this.enemyShipSpecial != null)
@@ -329,6 +407,11 @@ public class GameScreen extends Screen {
 
 		this.itemManager.drawItems(); //by Enemy team
 
+		// --- OBSTACLES - Draw Obstaacles
+		for (Obstacle obstacle : this.obstacles) {
+			drawManager.drawEntity(obstacle, obstacle.getPositionX(), obstacle.getPositionY());
+		}
+
 		// Interface.
 //		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove -> edit by jesung ko - TeamHUD(to udjust score)
 //		drawManager.drawScore(this, this.score); // by jesung ko - TeamHUD
@@ -338,7 +421,7 @@ public class GameScreen extends Screen {
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
 		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
-//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
+		//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
 		drawManager.drawItem(this); // HUD team - Jo Minseo
@@ -346,10 +429,21 @@ public class GameScreen extends Screen {
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {
 			int countdown = (int) ((INPUT_DELAY
-					- (System.currentTimeMillis()
-							- this.gameStartTime)) / 1000);
-			drawManager.drawCountDown(this, this.level, countdown,
-					this.bonusLife);
+			- (System.currentTimeMillis()
+			- this.gameStartTime)) / 1000);
+
+			/**
+			* Wave counter condition added by the Level Design team
+			*
+			* Display the wave number instead of the level number
+			* **/
+			if (waveCounter != 1) {
+				drawManager.drawWave(this, waveCounter, countdown);
+			} else {
+				drawManager.drawCountDown(this, this.level, countdown,
+				this.bonusLife);
+			}
+
 			drawManager.drawHorizontalLine(this, this.height / 2 - this.height
 					/ 12);
 			drawManager.drawHorizontalLine(this, this.height / 2 + this.height
@@ -491,7 +585,27 @@ public class GameScreen extends Screen {
 					//// Drop item to 100%
 					this.itemManager.dropItem(enemyShipSpecial,1,2);
 				}
+
+				for (Obstacle obstacle : this.obstacles) {
+					if (!obstacle.isDestroyed() && checkCollision(bullet, obstacle)) {
+						obstacle.destroy();  // Destroy obstacle
+						recyclable.add(bullet);  // Remove bullet
+					}
+				}
 			}
+
+		for (Obstacle obstacle : this.obstacles) {
+			if (!obstacle.isDestroyed() && checkCollision(this.ship, obstacle)) {
+				this.lives--;
+				obstacle.destroy();  // Destroy obstacle
+				this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
+				if (!this.ship.isDestroyed()) {
+					this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
+				}
+				break;  // Stop further collisions if the ship is destroyed.
+			}
+		}
+
 		this.bullets.removeAll(recyclable);
 		PiercingBulletPool.recycle(recyclable);
 
@@ -501,6 +615,13 @@ public class GameScreen extends Screen {
 		}
 		itemManager.removeAllReItems();
 	}
+
+
+
+
+
+
+
 
 
 	/**

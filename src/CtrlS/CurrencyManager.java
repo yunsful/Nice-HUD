@@ -94,5 +94,5 @@ public final class CurrencyManager {
     public int getGem() throws IOException {
         return fileManager.loadGem();
     }
-    
+
 }

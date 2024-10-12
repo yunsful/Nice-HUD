@@ -220,7 +220,7 @@ public class GameScreen extends Screen {
 		
 		// 	// --- OBSTACLES - Initialize obstacles
 		this.obstacles = new HashSet<>();
-		this.obstacleSpawnCooldown = Core.getCooldown(Math.max(3000 - (level * 800), 500)); // Min 0.8s
+		this.obstacleSpawnCooldown = Core.getCooldown(Math.max(2000 - (level * 200), 500)); // Minimum 0.5s
 	}
 	
 	/**
@@ -245,12 +245,15 @@ public class GameScreen extends Screen {
 		
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
 			// --- OBSTACLES
-			if (this.obstacleSpawnCooldown.checkFinished()) {
-				// Spawn obstacle at a random position
-				int randomX = new Random().nextInt(this.width);
-				obstacles.add(new Obstacle(randomX, 50)); // Start at top of the screen
-				this.obstacleSpawnCooldown.reset();
-			}
+if (this.obstacleSpawnCooldown.checkFinished()) {
+    // Adjust spawn amount based on the level
+    int spawnAmount = Math.min(level, 3); // Spawn up to 3 obstacles at higher levels
+    for (int i = 0; i < spawnAmount; i++) {
+        int randomX = new Random().nextInt(this.width - 30);
+        obstacles.add(new Obstacle(randomX, 50)); // Start each at the top of the screen
+    }
+    this.obstacleSpawnCooldown.reset();
+}
 			
 			// --- OBSTACLES
 			Set<Obstacle> obstaclesToRemove = new HashSet<>();
@@ -316,6 +319,7 @@ public class GameScreen extends Screen {
 		//manageCollisions();
 		manageCollisions_add_item(); //by Enemy team
 		cleanBullets();
+		cleanObstacles();
 		this.itemManager.cleanItems(); //by Enemy team
 		draw();
 		
@@ -471,6 +475,21 @@ public class GameScreen extends Screen {
 		}
 		this.bullets.removeAll(recyclable);
 		PiercingBulletPool.recycle(recyclable); // Edited by Enemy
+	}
+	
+	/**
+	* Clean obstacles that go off screen.
+	*/
+	private void cleanObstacles() { //added by Level Design Team
+		Set<Obstacle> removableObstacles = new HashSet<>();
+		for (Obstacle obstacle : this.obstacles) {
+			obstacle.update(this.level);
+			if (obstacle.getPositionY() > this.height - 70 || 
+			obstacle.getPositionY() < SEPARATION_LINE_HEIGHT) { 
+				removableObstacles.add(obstacle);
+			}
+		}
+		this.obstacles.removeAll(removableObstacles);
 	}
 	
 	/**

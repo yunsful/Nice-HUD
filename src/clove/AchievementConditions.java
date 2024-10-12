@@ -7,6 +7,7 @@ import engine.Core;
 import engine.DrawManager;
 import engine.GameState;
 import clove.Statistics;
+import HUDTeam.DrawAchievementHud;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -254,6 +255,7 @@ public class AchievementConditions {
             achievement.completeAchievement();
             getUnlockedAchievements();
             System.out.println("Unlocked achievements list: " + unlockedAchievements);
+            DrawAchievementHud.achieve(achievement.getAchievementName());
         }
         else if (unlockedAchievements.contains(achievement.getAchievementName())) {
             System.out.println(achievement.getAchievementName() + " has already been unlocked.");

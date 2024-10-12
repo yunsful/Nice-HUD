@@ -1,15 +1,9 @@
-package screen;
+package CtrlS;
+
+import screen.Screen;
+import engine.GameState;
 
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.util.List;
-
-import HUDTeam.DrawAchievementHud;
-import HUDTeam.DrawManagerImpl;
-import engine.Core;
-import engine.Score;
-// Sound Operator
-import Sound_Operator.SoundManager;
 
 /**
  * Implements the high scores screen, it shows player records.
@@ -17,14 +11,14 @@ import Sound_Operator.SoundManager;
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
  * 
  */
-public class HighScoreScreen extends Screen {
-
-	/** List of past high scores. */
-	private List<Score> highScores;
+public class ReceiptScreen extends Screen {
+	
+	private final RoundState roundState;
+	private final GameState gameState;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
-	 * 
+	 *
 	 * @param width
 	 *            Screen width.
 	 * @param height
@@ -32,19 +26,12 @@ public class HighScoreScreen extends Screen {
 	 * @param fps
 	 *            Frames per second, frame rate at which the game is run.
 	 */
-	public HighScoreScreen(final int width, final int height, final int fps) {
+	public ReceiptScreen(final int width, final int height, final int fps, final RoundState roundState, final GameState gameState) {
 		super(width, height, fps);
 
-		this.returnCode = 1;
-
-		// Sound Operator
-		SoundManager.getInstance().playBGM("highScore_bgm");
-
-		try {
-			this.highScores = Core.getFileManager().loadHighScores();
-		} catch (NumberFormatException | IOException e) {
-			logger.warning("Couldn't load high scores!");
-		}
+		this.roundState = roundState;
+		this.gameState = gameState;
+		this.returnCode = 2;
 	}
 
 	/**
@@ -76,9 +63,7 @@ public class HighScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-
-		drawManager.drawHighScoreMenu(this);
-		drawManager.drawHighScores(this, this.highScores);
+		drawManager.drawReceipt(this, this.roundState, this.gameState);
 
 		super.drawPost();
 		drawManager.completeDrawing(this);

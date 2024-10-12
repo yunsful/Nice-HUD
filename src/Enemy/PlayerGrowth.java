@@ -5,7 +5,7 @@ public class PlayerGrowth {
     //Player's base stats
     private int health;          //Health
     private static int moveSpeed = 2;       //Movement speed
-    private static int bulletSpeed = -6;     // Bullet speed
+    private static int bulletSpeed = -4;     // Bullet speed
     private static int shootingDelay = 750;   // Shooting delay
 
     //Constructor to set initial values

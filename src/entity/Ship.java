@@ -95,28 +95,13 @@ public class Ship extends Entity {
 	 *
 	 * You can set Number of enemies the bullet can pierce at here.
 	 */
-	//Edit by Enemy
+	//Edit by Enemy and Inventory
 	public final boolean shoot(final Set<PiercingBullet> bullets) {
-		// Do not reset cooldown every time
-//		if (this.shootingCooldown.checkFinished()) {
-//			this.shootingCooldown.reset();
-//			for (Bullet bullet : NBPool.AddBullet(positionX + this.width / 2,
-//					positionY, BULLET_SPEED))
-//
-//				bullets.add(bullet);
-//			return true;
-//		}
-//		return false;
-//	}
+
 		if (this.shootingCooldown.checkFinished()) {
 
-// 			this.shootingCooldown.reset();
-// 			bullets.add(BulletPool.getBullet(positionX + this.width / 2,
-// 					positionY, BULLET_SPEED));
-// 			Bomb.setCanShoot(false);
-
-
 			this.shootingCooldown.reset(); // Reset cooldown after shooting
+
 			// Sound Operator, Apply a Shooting sound
 			sm = SoundManager.getInstance();
 			sm.playES("My_Gun_Shot");
@@ -125,8 +110,12 @@ public class Ship extends Entity {
 			Set<PiercingBullet> newBullets = numberOfBullet.addBullet(
 					positionX + this.width / 2,
 					positionY,
-					growth.getBulletSpeed() // Use PlayerGrowth for bullet speed
+					growth.getBulletSpeed(), // Use PlayerGrowth for bullet speed
+					Bomb.getCanShoot()
 			);
+
+			// now can't shoot bomb
+			Bomb.setCanShoot(false);
 
 			// Add new bullets to the set
 			bullets.addAll(newBullets);

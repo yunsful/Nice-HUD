@@ -35,7 +35,7 @@ import javax.imageio.ImageIO;
 public class DrawManager {
 
 	/** Singleton instance of the class. */
-	private static DrawManager instance;
+	public static DrawManager instance;
 	/** Current frame. */
 	private static Frame frame;
 	/** FileManager instance. */
@@ -176,7 +176,7 @@ public class DrawManager {
 	 *
 	 * @return Shared instance of DrawManager.
 	 */
-	static DrawManager getInstance() {
+	public static DrawManager getInstance() {
 		if (instance == null)
 			instance = new DrawManager();
 		return instance;

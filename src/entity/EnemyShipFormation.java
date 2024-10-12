@@ -482,7 +482,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 						switch (destroyedShip.spriteType){
 							case ExplosiveEnemyShip1:
 							case ExplosiveEnemyShip2:
-									HpEnemyShip.hit(destroyedShip);
+								HpEnemyShip.hit(destroyedShip);
 								//Sound_Operator
 								if (destroyedShip.isDestroyed()) {
 

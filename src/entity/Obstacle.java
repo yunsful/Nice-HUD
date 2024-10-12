@@ -50,7 +50,7 @@ public class Obstacle extends Entity {
             // If the obstacle is not destroyed, move or perform other actions
             if (this.movementCooldown.checkFinished()) {
                 this.movementCooldown.reset();
-            int speed = 10 + (level * 2);  // Base speed is 10, increases by 2 per level.
+            int speed = 50 + (level * 2);  // Base speed is 10, increases by 2 per level.
             this.positionY += speed;            }
         } else {
             // If destroyed, check if the explosion animation should finish

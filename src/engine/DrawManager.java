@@ -19,7 +19,6 @@ import entity.Coin;
 import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
-import entity.Ship;
 
 import level_design.Background;
 

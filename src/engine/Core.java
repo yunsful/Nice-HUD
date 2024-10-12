@@ -12,11 +12,9 @@ import CtrlS.CurrencyManager;
 import CtrlS.RoundState;
 import CtrlS.ReceiptScreen;
 import Sound_Operator.SoundManager;
-import CtrlS.RoundState;
-import CtrlS.ReceiptScreen;
-import Sound_Operator.SoundManager;
 import clove.AchievementManager;
 import screen.*;
+import twoplayermode.TwoPlayerMode;
 
 
 /**
@@ -134,7 +132,7 @@ public final class Core {
 			// Add playtime parameter - Soomin Lee / TeamHUD
 			// Add hitCount parameter - Ctrl S
 			// Add coinItemsCollected parameter - Ctrl S
-			gameState = new GameState(1, 0, MAX_LIVES, 0, 0, 0, 0, 0, 0, 0);
+			gameState = new GameState(1, 0, MAX_LIVES, 0,0, 0, 0, 0, 0, 0, 0);
 			switch (returnCode) {
 			case 1:
 				// Main menu.
@@ -177,6 +175,7 @@ public final class Core {
 					gameState = new GameState(gameState.getLevel() + 1,
 							gameState.getScore(),
 							gameState.getLivesRemaining(),
+							gameState.getLivesTwoRemaining(),
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(),
 							gameState.getTime(),
@@ -268,9 +267,11 @@ public final class Core {
 							gameState.getBulletsShot(),
 							gameState.getShipsDestroyed(),
 							gameState.getTime(),
-							gameState.getCurrency() + roundState.getRoundCurrency(),
-							gameState.getGem());
-					LOGGER.info("Round Currency: " + roundState.getRoundCurrency());
+							gameState.getCoin() + roundState.getRoundCoin(),
+							gameState.getGem(),
+							gameState.getHitCount(),
+							gameState.getCoinItemsCollected());
+					LOGGER.info("Round Coin: " + roundState.getRoundCoin());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
 					LOGGER.info("Round Time: " + roundState.getRoundTime());
 

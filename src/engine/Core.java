@@ -49,7 +49,7 @@ public final class Core {
 			new GameSettings(5, 5, 50, 2500, 1);
 	/** Difficulty settings for level 3. */
 	private static final GameSettings SETTINGS_LEVEL_3 =
-			new GameSettings(6, 5, 40, 1500, 1);
+			new GameSettings(1, 1, -8, 500, 1);
 	/** Difficulty settings for level 4. */
 	private static final GameSettings SETTINGS_LEVEL_4 =
 			new GameSettings(6, 6, 30, 1500, 2);

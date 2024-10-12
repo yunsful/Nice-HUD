@@ -16,6 +16,9 @@ public class GameSettings {
 	private int baseSpeed;
 	/** Frequency of enemy shootings, +/- 30%. */
 	private int shootingFrecuency;
+	/** Level Design team modification
+	 * Number of enemy ships waves during the level **/
+	private int wavesNumber;
 
 	/**
 	 * Constructor.
@@ -28,13 +31,18 @@ public class GameSettings {
 	 *            Speed of the enemies.
 	 * @param shootingFrecuency
 	 *            Frecuency of enemy shootings, +/- 30%.
+	 * @param wavesNumber
+	 * 				Number of waves in the level (Added by the Level Design team)
 	 */
 	public GameSettings(final int formationWidth, final int formationHeight,
-			final int baseSpeed, final int shootingFrecuency) {
+			final int baseSpeed, final int shootingFrecuency, final int wavesNumber) {
 		this.formationWidth = formationWidth;
 		this.formationHeight = formationHeight;
 		this.baseSpeed = baseSpeed;
 		this.shootingFrecuency = shootingFrecuency;
+
+		/** Added by the Level Design team **/
+		this.wavesNumber = wavesNumber;
 	}
 
 	/**
@@ -63,6 +71,14 @@ public class GameSettings {
 	 */
 	public final int getShootingFrecuency() {
 		return shootingFrecuency;
+	}
+
+	/**
+	 * Added by the Level Design team
+	 * @return the wavesNumber
+	 */
+	public final int getWavesNumber() {
+		return wavesNumber;
 	}
 
 }

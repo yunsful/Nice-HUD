@@ -277,6 +277,7 @@ public class GameScreen extends Screen {
 			this.obstacles.removeAll(obstaclesToRemove);
 
 			if (!this.ship.isDestroyed()) {
+
 				boolean moveRight = inputManager.isKeyDown(KeyEvent.VK_RIGHT)
 						|| inputManager.isKeyDown(KeyEvent.VK_D);
 				boolean moveLeft = inputManager.isKeyDown(KeyEvent.VK_LEFT)
@@ -337,12 +338,13 @@ public class GameScreen extends Screen {
 		draw();
 
 		/**
-		* Added by the Level Design team
+		* Added by the Level Design team and edit by team Enemy
+		* Changed the conditions for the game to end  by team Enemy
 		*
 		* Counts and checks if the number of waves destroyed match the intended number of waves for this level
 		* Spawn another wave
 		**/
-		if (this.enemyShipFormation.isEmpty() && waveCounter < this.gameSettings.getWavesNumber()) {
+		if (getRemainingEnemies() == 0 && waveCounter < this.gameSettings.getWavesNumber()) {
 
 			waveCounter++;
 			this.initialize();
@@ -350,11 +352,12 @@ public class GameScreen extends Screen {
 		}
 
 		/**
-		* Wave counter condition added by the Level Design team
+		* Wave counter condition added by the Level Design team*
+		* Changed the conditions for the game to end  by team Enemy
 		*
 		* Checks if the intended number of waves for this level was destroyed
 		* **/
-		if ((this.enemyShipFormation.isEmpty() || this.lives == 0)
+		if ((getRemainingEnemies() == 0 || this.lives == 0)
 		&& !this.levelFinished
 		&& waveCounter == this.gameSettings.getWavesNumber()) {
 			this.levelFinished = true;
@@ -568,13 +571,14 @@ public class GameScreen extends Screen {
 			} else {
 				// CtrlS - set fire_id of bullet.
 				bullet.setFire_id(fire_id);
-				for (EnemyShip enemyShip : this.enemyShipFormation)
+				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
 						//Drop item when MAGENTA color enemy destroyed
-						if(enemyShip.getColor() == Color.MAGENTA){
-							this.itemManager.dropItem(enemyShip,1,1);}
-						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip);	// team Inventory
+						if (enemyShip.getColor() == Color.MAGENTA) {
+							this.itemManager.dropItem(enemyShip, 1, 1);
+						}
+						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip, false);    // team Inventory
 						this.shipsDestroyed += CntAndPnt[0];
                         this.scoreManager.addScore(enemyShip.getPointValue()); //clove
                         this.score += CntAndPnt[1];
@@ -598,9 +602,18 @@ public class GameScreen extends Screen {
 							bullet.setCheckCount(true);
 							recyclable.add(bullet);
 						}
-
-
 					}
+					// Added by team Enemy.
+					// Enemy killed by Explosive enemy gives points too
+					if (enemyShip.isChainExploded()) {
+						if (enemyShip.getColor() == Color.MAGENTA) {
+							this.itemManager.dropItem(enemyShip, 1, 1);
+						}
+						this.score += enemyShip.getPointValue();
+						this.shipsDestroyed++;
+						enemyShip.setChainExploded(false); // resets enemy's chain explosion state.
+					}
+				}
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {

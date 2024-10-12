@@ -727,7 +727,11 @@ public class DrawManager {
 				rectWidth, rectHeight);
 		backBufferGraphics.setColor(Color.GREEN);
 		if (number >= 4)
-			if (!bonusLife) {
+			// Adjust the numbers here to match the appropriate boss levels.
+			if (level == 3) { // Edited by team Enemy // ex) (level == 3 || level == 6 || level == 9)
+				drawCenteredBigString(screen, "BOSS",
+						screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+			} else if (!bonusLife) {
 				drawCenteredBigString(screen, "Level " + level,
 						screen.getHeight() / 2
 								+ fontBigMetrics.getHeight() / 3);

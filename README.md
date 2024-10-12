@@ -60,3 +60,4 @@
   - [Rocket Fly By.wav](https://freesound.org/s/276885/) -&copy; 18hiltc 2015
   - [Laser blast x3(ES)](https://freesound.org/people/peridactyloptrix/sounds/214990/) -&copy; peridactyloptrix 
   - [coin recieved(ES)](https://pixabay.com/ko/sound-effects/coin-recieved-230517/) - &copy; RibhavAgrawal 2023
+  - [8bit medium explosion, bomb boom or blast, cannon, retro old school, classic cartoon(ES)](https://www.zapsplat.com/music/8bit-medium-explosion-bomb-boom-or-blast-cannon-retro-old-school-classic-cartoon/) - &copy; None

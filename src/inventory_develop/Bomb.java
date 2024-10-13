@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
+import clove.ScoreManager; //CLOVE
 
 public class Bomb{
     // Sound Operator
@@ -20,6 +21,10 @@ public class Bomb{
     private static boolean IsBomb = false;
     // Bomb를 먹을 때 true로 전환할 예정
     private static boolean CanShoot = false;
+
+    private static boolean isBombExploded = false; //CLOVE
+
+    private static int totalPoint = 0; //CLOVE
 
     private static Set<EnemyShip> DestroyedshipByBomb = new HashSet<>();    // for dicide next shooter
 
@@ -36,7 +41,7 @@ public class Bomb{
 
                     // middle
                     DestroyedshipByBomb.add(column.get(i));
-                    point += column.get(i).getPointValue();
+                    //point += column.get(i).getPointValue(); //CLOVE-duplicate calculation
                     column.get(i).destroy();
                     count++;
 
@@ -48,7 +53,7 @@ public class Bomb{
                     // left
                     if (columnIndex > 0) {
                         List<EnemyShip> leftColumn = enemyShips.get(columnIndex - 1);
-                        if (i < leftColumn.size()) {
+                        if (i < leftColumn.size() && inposition(column, leftColumn, i, i)) {
                             DestroyedshipByBomb.add(leftColumn.get(i));
                             point += leftColumn.get(i).getPointValue();
                             leftColumn.get(i).destroy();
@@ -60,7 +65,7 @@ public class Bomb{
                     // right
                     if (columnIndex < enemyShips.size() - 1) {
                         List<EnemyShip> rightColumn = enemyShips.get(columnIndex + 1);
-                        if (i < rightColumn.size()) {
+                        if (i < rightColumn.size() && inposition(column, rightColumn, i, i)) {
                             DestroyedshipByBomb.add(rightColumn.get(i));
                             point += rightColumn.get(i).getPointValue();
                             rightColumn.get(i).destroy();
@@ -73,7 +78,7 @@ public class Bomb{
                     // top
                     if (i > 0) {
                         List<EnemyShip> currentColumn = enemyShips.get(columnIndex);
-                        if (i - 1 < currentColumn.size()) {
+                        if (i - 1 < currentColumn.size() && inposition(column, currentColumn, i, i - 1)) {
                             DestroyedshipByBomb.add(currentColumn.get(i - 1));
                             point += currentColumn.get(i - 1).getPointValue();
                             currentColumn.get(i - 1).destroy();
@@ -84,7 +89,7 @@ public class Bomb{
 
                     // bottom
                     List<EnemyShip> currentColumn = enemyShips.get(columnIndex);
-                    if (i + 1 < currentColumn.size()) {
+                    if (i + 1 < currentColumn.size() && inposition(column, currentColumn, i, i + 1)) {
                         DestroyedshipByBomb.add(currentColumn.get(i + 1));
                         point += currentColumn.get(i + 1).getPointValue();
                         currentColumn.get(i + 1).destroy();
@@ -93,6 +98,9 @@ public class Bomb{
                     }
                 }
             }
+
+        isBombExploded = true; //CLOVE
+        totalPoint += point; //CLOVE
 
         Bomb.setIsbomb(false);
         int[] returnValue = {count, point};
@@ -130,6 +138,11 @@ public class Bomb{
             }
     }
 
+    public static int getTotalPoint() { return totalPoint; }
+
+    public static boolean isBombExploded() { return isBombExploded; }
+
+    public static void resetBombExploded() { isBombExploded = false;}
 
     public static boolean getIsBomb() {
         return IsBomb;
@@ -150,5 +163,12 @@ public class Bomb{
     public final void setSpeed(final int BoobSpeed) {this.BombSpeed = BoobSpeed;}
 
     public final int getSpeed() {return this.BombSpeed;}
+
+    public static boolean inposition(List<EnemyShip> column, List<EnemyShip> nextcolumn, int pos, int nextpos){
+        int distanceY = column.get(pos).getPositionY() - nextcolumn.get(nextpos).getPositionY();
+        int distanceX = column.get(pos).getPositionX() - nextcolumn.get(nextpos).getPositionX();
+
+        return (distanceY >= -50 && distanceX >= -50) || (distanceY <= 50 && distanceX <= 50);
+    }
 
 }

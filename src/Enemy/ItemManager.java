@@ -4,7 +4,6 @@ import engine.Core;
 import entity.EnemyShip;
 import entity.Ship;
 import inventory_develop.Bomb;
-import inventory_develop.FeverTimeItem;
 import screen.GameScreen;
 import engine.DrawManager;
 
@@ -31,7 +30,6 @@ public class ItemManager {
     private NumberOfBullet numberOfBullet;
     private Ship ship;
     private PlayerGrowth growth;
-    private FeverTimeItem feverTimeItem;
     private CurrencyManager currencyManager;
 
     public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
@@ -42,7 +40,6 @@ public class ItemManager {
         this.ship = gameScreen.getShip();       // Team Inventory
         this.growth = ship.getPlayerGrowth();
         this.Item2 = gameScreen.getItem();
-        this.feverTimeItem = gameScreen.getFeverTimeItem();
         this.numberOfBullet = new NumberOfBullet();
     }
 
@@ -91,9 +88,6 @@ public class ItemManager {
                     break;
                 case ItemHeart:
                     Item2.activeheart(gameScreen, ship, growth);
-                    break;
-                case ItemFeverTime: // 피버타임 아이템일 경우
-                    feverTimeItem.activate();
                     break;
                 case ItemPierce:
                     numberOfBullet.pierceup();

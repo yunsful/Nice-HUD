@@ -98,16 +98,14 @@ public class DrawManager {
 		Boss, //by enemy team
 		/** Player Lives. */
 		/** Item */
-    ItemHeart,
+    	ItemHeart,
 		ShipBarrierStatus,
 		ItemCoin,
 		ItemPierce,
 		ItemBomb,
 		ItemBarrier,
-		ItemFeverTime,
-		//Produced by Starter Team
 
-    //Produced by Starter Team
+        //Produced by Starter Team
 		/** coin */
 		Coin,
 		/** add sign */
@@ -156,7 +154,6 @@ public class DrawManager {
 			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
 			spriteMap.put(SpriteType.ShipBarrierStatus, new boolean[13][8]);	// temporary
 			spriteMap.put(SpriteType.ItemCoin, new boolean[7][7]);
-			spriteMap.put(SpriteType.ItemFeverTime, new boolean[9][9]);
 			spriteMap.put(SpriteType.ItemPierce, new boolean[7][7]);
 
 			fileManager.loadSprite(spriteMap);

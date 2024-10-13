@@ -14,9 +14,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import CtrlS.RoundState;
+import CtrlS.Gem;
 import entity.AddSign;
 import entity.Coin;
-import entity.Gem;
 import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
@@ -27,15 +27,15 @@ import level_design.Background;
 import javax.imageio.ImageIO;
 
 /**
-* Manages screen drawing.
-*
-* @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
-*
-*/
+ * Manages screen drawing.
+ *
+ * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+ *
+ */
 public class DrawManager {
 
 	/** Singleton instance of the class. */
-	private static DrawManager instance;
+	public static DrawManager instance;
 	/** Current frame. */
 	private static Frame frame;
 	/** FileManager instance. */
@@ -105,22 +105,22 @@ public class DrawManager {
 		ItemBomb,
 		ItemBarrier,
 
-		//Produced by Starter Team
+        //Produced by Starter Team
 		/** coin */
 		Coin,
-		/** gem */
-		Gem,
 		/** add sign */
 		AddSign,
+		/** Gem - Added by CtrlS */
+		Gem,
 		Obstacle
 	};
 
 	/**
-	* Private constructor.
-	*
-	* Modifying Access Restrictor to public
-	* - HUDTeam - LeeHyunWoo
-	*/
+	 * Private constructor.
+	 *
+	 * Modifying Access Restrictor to public
+	 * - HUDTeam - LeeHyunWoo
+	 */
 	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
@@ -146,8 +146,8 @@ public class DrawManager {
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
 			spriteMap.put(SpriteType.Boss, new boolean[24][16]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
-			spriteMap.put(SpriteType.Gem, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
+			spriteMap.put(SpriteType.Gem, new boolean[7][6]); // CtrlS: res/graphics, line 20
 			//by Item team
 			spriteMap.put(SpriteType.ItemHeart, new boolean[7][5]);
 			spriteMap.put(SpriteType.ItemBarrier, new boolean[9][10]);
@@ -176,7 +176,7 @@ public class DrawManager {
 	 *
 	 * @return Shared instance of DrawManager.
 	 */
-	static DrawManager getInstance() {
+	public static DrawManager getInstance() {
 		if (instance == null)
 			instance = new DrawManager();
 		return instance;
@@ -378,12 +378,16 @@ public class DrawManager {
 
 
 		// Play (starter)
-		if (option == 2)
-			backBufferGraphics.setColor(Color.GREEN);
+		if (option == 2 && option2 == 0)
+			backBufferGraphics.setColor(Color.CYAN);
+		else if (option == 2 && option2 == 1)
+			backBufferGraphics.setColor(Color.MAGENTA);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, playString,
-				screen.getHeight() / 4 * 2); // adjusted Height
+		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (starter), default: 1 player mode
+		if (option == 2) {mode = "<- " + mode + " ->";}
+		drawCenteredRegularString(screen, mode, screen.getHeight()
+				/ 4 * 2); // adjusted Height
 
 		// High scores (starter)
 		if (option == 3)
@@ -393,42 +397,31 @@ public class DrawManager {
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 2); // adjusted Height
 
-		if (option == 4 && option2 == 0)
-			backBufferGraphics.setColor(Color.CYAN);
-		else if (option == 4 && option2 == 1)
-			backBufferGraphics.setColor(Color.MAGENTA);
-		else
-			backBufferGraphics.setColor(Color.WHITE);
-		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (starter), default: 1 player mode
-		if (option == 4) {mode = "<- " + mode + " ->";}
-		drawCenteredRegularString(screen, mode, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 4); // adjusted Height
-
 		if (option3 == 0) {merchantState = merchant;}
 		if (option3 == 1) {merchantState = bulletCountString;}
 		if (option3 == 2) {merchantState = shipSpeedString;}
 		if (option3 == 3) {merchantState = attackSpeedString;}
 		if (option3 == 4) {merchantState = coinGainString;}
-		if (option == 5) {merchantState = "<- " + merchantState + " ->";}
-		if (option == 5 && option3 == 0)
+		if (option == 4) {merchantState = "<- " + merchantState + " ->";}
+		if (option == 4 && option3 == 0)
 			backBufferGraphics.setColor(Color.GREEN);
-		else if (option == 5 && option3 != 0)
+		else if (option == 4 && option3 != 0)
 			backBufferGraphics.setColor(Color.CYAN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 
 		drawCenteredRegularString(screen, merchantState, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 6);
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 4);
 		/*drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 6 - 12);*/
 
         // Record scores (Team Clove)
-        if (option == 7)
+        if (option == 5)
             backBufferGraphics.setColor(Color.GREEN);
         else
             backBufferGraphics.setColor(Color.WHITE);
         drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
-                / 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
+                / 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
 
         // Exit (starter)
 		if (option == 0)
@@ -436,7 +429,7 @@ public class DrawManager {
 		else
 			backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, exitString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 12); // adjusted Height
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 10); // adjusted Height
 	}
 
 	/**
@@ -456,7 +449,7 @@ public class DrawManager {
 	 *            If the score is a new high score.
 	 */
 
-	//Ctrl S - add Currency String
+	//Ctrl S - add Coin String
 	public void drawResults(final Screen screen, final int score,
 							final int livesRemaining, final int shipsDestroyed,
 							final float accuracy, final boolean isNewRecord, final GameState gameState) {
@@ -465,7 +458,7 @@ public class DrawManager {
 		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
 		String accuracyString = String
 				.format("accuracy %.2f%%", accuracy * 100);
-		String currencyString = "Earned  $ " + gameState.getCurrency() + "  Coins!";
+		String coinString = "Earned  $ " + gameState.getCoin() + "  Coins!";
 
 		int height = isNewRecord ? 4 : 2;
 
@@ -480,7 +473,7 @@ public class DrawManager {
 						* 4);
 		drawCenteredRegularString(screen, accuracyString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight() * 6);
-		drawCenteredRegularString(screen, currencyString, screen.getHeight()
+		drawCenteredRegularString(screen, coinString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight() * 8);
 	}
 
@@ -734,7 +727,11 @@ public class DrawManager {
 				rectWidth, rectHeight);
 		backBufferGraphics.setColor(Color.GREEN);
 		if (number >= 4)
-			if (!bonusLife) {
+			// Adjust the numbers here to match the appropriate boss levels.
+			if (level == 3) { // Edited by team Enemy // ex) (level == 3 || level == 6 || level == 9)
+				drawCenteredBigString(screen, "BOSS",
+						screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+			} else if (!bonusLife) {
 				drawCenteredBigString(screen, "Level " + level,
 						screen.getHeight() / 2
 								+ fontBigMetrics.getHeight() / 3);
@@ -780,7 +777,7 @@ public class DrawManager {
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageCoinString, screen.getHeight() / 3);
 		backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCurrency()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
+		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCoin()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
 
 		//draw HitRate Bonus part
 		float hitRate = roundState.getRoundHitRate(); // Calculate HitRate

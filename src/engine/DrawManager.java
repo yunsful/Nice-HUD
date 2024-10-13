@@ -27,15 +27,15 @@ import level_design.Background;
 import javax.imageio.ImageIO;
 
 /**
- * Manages screen drawing.
- *
- * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- *
- */
+* Manages screen drawing.
+*
+* @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+*
+*/
 public class DrawManager {
 
 	/** Singleton instance of the class. */
-	private static DrawManager instance;
+	public static DrawManager instance;
 	/** Current frame. */
 	private static Frame frame;
 	/** FileManager instance. */
@@ -56,6 +56,10 @@ public class DrawManager {
 	private static Font fontBig;
 	/** Big sized font properties. */
 	private static FontMetrics fontBigMetrics;
+
+	/** ###TEAM INTERNATIONAL ### */
+	private Background background;
+	private BufferedImage backgroundImage;
 
 	/** Sprite types mapped to their images. */
 	private static Map<SpriteType, boolean[][]> spriteMap;
@@ -104,6 +108,8 @@ public class DrawManager {
 		ItemPierce,
 		ItemBomb,
 		ItemBarrier,
+		ItemFeverTime,
+		//Produced by Starter Team
 
         //Produced by Starter Team
 		/** coin */
@@ -116,11 +122,11 @@ public class DrawManager {
 	};
 
 	/**
-	 * Private constructor.
-	 *
-	 * Modifying Access Restrictor to public
-	 * - HUDTeam - LeeHyunWoo
-	 */
+	* Private constructor.
+	*
+	* Modifying Access Restrictor to public
+	* - HUDTeam - LeeHyunWoo
+	*/
 	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
@@ -154,6 +160,7 @@ public class DrawManager {
 			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
 			spriteMap.put(SpriteType.ShipBarrierStatus, new boolean[13][8]);	// temporary
 			spriteMap.put(SpriteType.ItemCoin, new boolean[7][7]);
+			spriteMap.put(SpriteType.ItemFeverTime, new boolean[9][9]);
 			spriteMap.put(SpriteType.ItemPierce, new boolean[7][7]);
 
 			fileManager.loadSprite(spriteMap);
@@ -176,7 +183,7 @@ public class DrawManager {
 	 *
 	 * @return Shared instance of DrawManager.
 	 */
-	static DrawManager getInstance() {
+	public static DrawManager getInstance() {
 		if (instance == null)
 			instance = new DrawManager();
 		return instance;
@@ -851,21 +858,22 @@ public class DrawManager {
 	* ### TEAM INTERNATIONAL ###
 	* Background draw and update method
 	*/
-	Background background = new Background();
 
-	public void drawBackground(final Screen screen, int levelNumber, boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+	public void loadBackground(int levelNumber) {
+		background = Background.getInstance();
 		// I still have no clue how relative pathing or class pathing works
 		InputStream imageStream = Background.getBackgroundImageStream(levelNumber);
-		BufferedImage backgroundImage;
 		try {
 			assert imageStream != null;
 			backgroundImage = ImageIO.read(imageStream);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
 
-		int verticalOffset = background.getVerticalOffset(frame);
-		int horizontalOffset = background.getHorizontalOffset(frame, backgroundMoveRight, backgroundMoveLeft);
+	public void drawBackground(boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+		int verticalOffset = background.getVerticalOffset();
+		int horizontalOffset = background.getHorizontalOffset(backgroundMoveRight, backgroundMoveLeft);
 
 		backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
 	}

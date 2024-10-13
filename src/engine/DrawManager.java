@@ -858,7 +858,6 @@ public class DrawManager {
 	* ### TEAM INTERNATIONAL ###
 	* Background draw and update method
 	*/
-	Background background = new Background();
 
 	public void loadBackground(int levelNumber) {
 		background = Background.getInstance();

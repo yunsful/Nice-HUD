@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class SoundManager {
     private static SoundManager instance;
@@ -12,6 +13,7 @@ public class SoundManager {
     static Map<String, Clip> BGMs;
     static String[][] ESFiles;
     static String[][] BGMFiles;
+    private static Logger logger;
 /**
 * Code Description
 * Base: BGM files are stored in res/sound/BGM
@@ -236,5 +238,18 @@ public class SoundManager {
         }else{
             return 0;
         }
+    }
+
+    // ksm
+    public void playShipDieSounds() {
+        playES("ally_airship_destroy_explosion");
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                logger.info(String.valueOf(e));
+            }
+            playES("ally_airship_destroy_die");
+        }).start();
     }
 }

@@ -4,8 +4,12 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
 
+import HUDTeam.DrawAchievementHud;
+import HUDTeam.DrawManagerImpl;
 import engine.Core;
 import engine.Score;
+// Sound Operator
+import Sound_Operator.SoundManager;
 
 /**
  * Implements the high scores screen, it shows player records.
@@ -32,6 +36,9 @@ public class HighScoreScreen extends Screen {
 		super(width, height, fps);
 
 		this.returnCode = 1;
+
+		// Sound Operator
+		SoundManager.getInstance().playBGM("highScore_bgm");
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -69,9 +76,11 @@ public class HighScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
+
 		drawManager.drawHighScoreMenu(this);
 		drawManager.drawHighScores(this, this.highScores);
 
+		super.drawPost();
 		drawManager.completeDrawing(this);
 	}
 }

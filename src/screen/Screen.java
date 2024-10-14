@@ -4,6 +4,8 @@ import java.awt.Insets;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import HUDTeam.DrawAchievementHud;
+import HUDTeam.DrawManagerImpl;
 import engine.Cooldown;
 import engine.Core;
 import engine.DrawManager;
@@ -105,6 +107,16 @@ public class Screen {
 	protected void update() {
 	}
 
+	/**
+	 * Update the elements on screen after update all child screen
+	 */
+	protected void drawPost() {
+		// Jo minseo / HUD team
+		if(DrawAchievementHud.getTimer() < 100) {
+			DrawManagerImpl.drawAchievement(this, DrawAchievementHud.getAchievementText());
+			DrawAchievementHud.addTimer();
+		}
+	}
 	/**
 	 * Getter for screen width.
 	 * 

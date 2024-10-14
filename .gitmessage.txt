@@ -1,0 +1,56 @@
+################
+#[Template] Please follow the format below.
+#Be careful not to comment out the actual commit when committing, as it won't be recognized.
+#feat: Add login function
+
+#- Implement user authentication
+#- Add login form with username and password fields
+#- Integrate backend API for login requests
+#- Handle authentication errors and display messages
+
+#Closes #45
+################
+#The section below provides an explanation of the template.
+################
+#[Structure]
+#<type>(<scope>): <subject>          -- Header
+#<BLANK LINE>
+#<body>                              -- Body
+#<BLANK LINE>
+#<footer>                            -- Footer
+################
+#[type]
+#feat : Adding new functionality or modifying existing features to meet requirements
+#fix : Fixing bugs related to functionality
+#build : Changes related to the build
+#chore : Changes to package manager or other minor changes (e.g., .gitignore)
+#ci : Modifications related to CI settings
+#docs : Documentation (or comments) changes
+#style : Code style or formatting changes
+#refactor : Code refactoring without changing functionality (e.g., renaming variables)
+#test : Adding or modifying test code
+#release : Releasing a new version
+################
+# The title should be written in the format of <type>: <subject>
+# The title should be within 50 characters, clearly stating "what" was changed (with details included in the body), without a period at the end.
+# Example: feat: Add login function
+# Leave a blank line immediately after the title to separate it from the body.
+feat: Add login function
+
+################
+# Write the body (specific details) below the line
+# Use "-" to separate multiple lines (each line should be within 72 characters)
+# Leave a blank line immediately after the body to separate it from the footer.
+- Implement user authentication
+- Add login form with username and password fields
+- Integrate backend API for login requests
+- Handle authentication errors and display messages
+
+################
+# Write the footer (optional, e.g., related issue numbers) below the line
+#closes: Used to indicate that a specific task (feature implementation, overall task completion) is done and no further work is required.
+#fixes: Used when a specific bug or issue has been fixed.
+#resolves: Used when a general issue has been resolved, such as when a feature has been added or improved.
+# Example: Close #45 (Since the login feature is implemented, the related issue #45 is closed)
+Closes #45
+################

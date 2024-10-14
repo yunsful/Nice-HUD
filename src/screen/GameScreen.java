@@ -30,6 +30,7 @@ import java.beans.PropertyChangeListener; // CLOVE
 import java.beans.PropertyChangeSupport; // CLOVE
 import java.util.Timer; // CLOVE
 import java.util.TimerTask; // CLOVE
+import java.util.List;
 
 
 /**
@@ -89,8 +90,6 @@ public class GameScreen extends Screen {
 	private int shipsDestroyed;
 	/** Moment the game starts. */
 	private long gameStartTime;
-	/** Timer for kill streak achievements */
-	private long killStreakTime; // TEAM CLOVER
 	/** Checks if the level is finished. */
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
@@ -147,13 +146,9 @@ public class GameScreen extends Screen {
 
 	// TEAM CLOVER
 	private Statistics statistics; //Team Clove
-	private AchievementConditions achievementConditions;
+	private static AchievementConditions achievementConditions;
 	/** Check kill-streak */
 	private int killCount;
-	private PropertyChangeSupport support;
-	private Timer timer;
-	/** Check if kill is confirmed */
-	private boolean killConfirmed;
 
 	/** CtrlS: Count the number of coin collected in game */
 	private int coinItemsCollected;
@@ -214,27 +209,7 @@ public class GameScreen extends Screen {
 
 		// Dongjun Suh / TEAM CLOVER
 		this.killCount = 0;
-		this.support = new PropertyChangeSupport(this);
-		this.killConfirmed = false;
-	}
-	/** Listner added by TEAM CLOVER */
-	public void addPropertyChangeListener(PropertyChangeListener pcl) {
-		support.addPropertyChangeListener(pcl);
-	}
-	public void removePropertyChangeListener(PropertyChangeListener pcl) {
-		support.removePropertyChangeListener(pcl);
-	}
-	public void incrementKillCount() {
-		int oldCount = this.killCount;
-		this.killCount++;
-		support.firePropertyChange("killCount", oldCount, this.killCount);  // 변수 변화 알림
-		System.out.println("Kill count updated: " + this.killCount);
-	}
-	public void resetKillCount() {
-		int oldCount = this.killCount;
-		this.killCount = 0;
-		support.firePropertyChange("killCount", oldCount, this.killCount);  // 변수 초기화 알림
-		System.out.println("Kill streak reset");
+		bullets = new HashSet<>();
 	}
 
 	/**
@@ -421,7 +396,7 @@ public class GameScreen extends Screen {
 				achievementConditions.onKill();
 				achievementConditions.onStage();
 				achievementConditions.trials();
-				achievementConditions.killStreak();
+				achievementConditions.killStreak(killCount);
 				achievementConditions.accuracy(bulletsShot, hitCount);
 				achievementConditions.score(score);
 
@@ -632,6 +607,9 @@ public class GameScreen extends Screen {
 								hitCount++;
 								bullet.setCheckCount(false);
 								this.logger.info("Hit count!");
+
+								AchievementConditions.incrementKillCount(); // TEAM CLOVER
+
 								processedFireBullet.add(bullet.getFire_id()); // mark this bullet_id is processed.
 							}
 						}

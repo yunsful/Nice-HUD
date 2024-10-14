@@ -12,6 +12,7 @@ import CtrlS.CurrencyManager;
 import CtrlS.RoundState;
 import CtrlS.ReceiptScreen;
 import Sound_Operator.SoundManager;
+import clove.AchievementConditions;
 import clove.AchievementManager;
 import screen.*;
 import twoplayermode.TwoPlayerMode;
@@ -77,6 +78,7 @@ public final class Core {
 	// Sound Operator
 	private static SoundManager sm;
     private static AchievementManager achievementManager; // Team CLOVER
+	private static AchievementConditions achievementConditions;
 
 	/**
 	 * Test implementation.
@@ -105,6 +107,7 @@ public final class Core {
 			System.out.println("Initializing AchievementManager...");
 			achievementManager = new AchievementManager(DrawManager.getInstance());
 			System.out.println("AchievementManager initialized!");
+			achievementConditions = new AchievementConditions();
 
 		} catch (Exception e) {
 			// TODO handle exception

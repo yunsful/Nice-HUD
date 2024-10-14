@@ -115,7 +115,7 @@ public class Achievement {
         System.out.println("Checking killstreak conditions for achievement: " + achievement.getAchievementName());
         if (achievement.getType() == AchievementType.KILLSTREAKS) {
             System.out.println("Current killstreaks: " + currentKillStreak + ", Required killstreaks: " + achievement.getRequiredKillStreaks());
-            return currentKillStreak >= achievement.getRequiredKills();
+            return currentKillStreak >= achievement.getRequiredKillStreaks();
         }
         return false;
     }

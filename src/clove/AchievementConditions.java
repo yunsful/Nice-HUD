@@ -82,17 +82,16 @@ public class AchievementConditions {
         killAchievements.add(new Achievement("Guardian of Universe", "Destroy 500 enemies", 500, Achievement.AchievementType.KILLS));
 
         trialAchievements.add(new Achievement("Welcome Recruit", "Finished first game", 1, Achievement.AchievementType.TRIALS));
-        trialAchievements.add(new Achievement("Skilled Solider", "Finished 10th game", 10, Achievement.AchievementType.TRIALS));
+        trialAchievements.add(new Achievement("Skilled Solider", "Finished 20th game", 20, Achievement.AchievementType.TRIALS));
         trialAchievements.add(new Achievement("Veteran Pilot", "Finished 50th game", 50, Achievement.AchievementType.TRIALS));
 
         accuracyAchievements.add(new Achievement("Gunsliger", "Accuracy of 60%", 60, Achievement.AchievementType.ACCURACY));
         accuracyAchievements.add(new Achievement("Fear the Enemy", "Accuracy of 75%", 75, Achievement.AchievementType.ACCURACY));
         accuracyAchievements.add(new Achievement("Genocide", "Accuracy of 90%", 90, Achievement.AchievementType.ACCURACY));
 
-        // TODO The achievements [streakAchievement] does not work because the current achievement system is only updated at the end of the stage.
         streakAchievements.add(new Achievement("Preheating", "Kill streak of 10", 10, Achievement.AchievementType.KILLSTREAKS));
-        streakAchievements.add(new Achievement("Overheating", "Kill streak of 30", 30, Achievement.AchievementType.KILLSTREAKS));
-        streakAchievements.add(new Achievement("Runaway","Kill streak of 60", 60, Achievement.AchievementType.KILLSTREAKS));
+        streakAchievements.add(new Achievement("Overheating", "Kill streak of 20", 20, Achievement.AchievementType.KILLSTREAKS));
+        streakAchievements.add(new Achievement("Runaway","Kill streak of 40", 40, Achievement.AchievementType.KILLSTREAKS));
 
         scoreAchievements.add(new Achievement("First Milestone", "Reach 6,000 points", 6000, Achievement.AchievementType.SCORE));
         scoreAchievements.add(new Achievement("Score Hunter", "Reach 15,000 points", 15000, Achievement.AchievementType.SCORE));
@@ -167,7 +166,7 @@ public class AchievementConditions {
         System.out.println("Checking No Death achievements. Current lives: " + lives);
         if (lives == Core.MAX_LIVES) {
             for (Achievement achievement : noDeathAchievements) {
-                if (highestLevel==7 && !achievement.isCompleted()) {
+                if (highestLevel==Core.NUM_LEVELS && !achievement.isCompleted()) {
                     completeAchievement(achievement);
                 }
             }
@@ -185,7 +184,7 @@ public class AchievementConditions {
 
     public void accuracy(int bulletsShot, int hitCount) throws IOException {
         float accuracy = ((float) hitCount/ (float) bulletsShot) * 100;
-        System.out.println("Checking killstreak achievements. Checking accuracy: " + accuracy);
+        System.out.println("Checking accuracy achievements. Checking accuracy: " + accuracy);
         for (Achievement achievement : accuracyAchievements) {
             System.out.println("Checking " + achievement.getAchievementName());
             if (accuracy >= achievement.getRequiredAccuracy() && !achievement.isCompleted()) {
@@ -213,12 +212,10 @@ public class AchievementConditions {
         return killCount;
     }
 
-    // TODO function getShipsDestructionStreak not added yet
-    public void killStreak() throws IOException {
-        int count = killCount;
+    public void killStreak(int count) throws IOException {
         for (Achievement achievement : streakAchievements) {
             System.out.println("Checking " + achievement.getAchievementName());
-            if (count >= achievement.getRequiredAccuracy() && !achievement.isCompleted()) {
+            if (killCount >= achievement.getRequiredKillStreaks() && !achievement.isCompleted()) {
                 completeAchievement(achievement);
             }
         }

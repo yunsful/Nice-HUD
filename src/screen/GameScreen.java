@@ -601,15 +601,10 @@ public class GameScreen extends Screen {
 				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-
+						int feverScore = enemyShip.getPointValue(); //TEAM CLOVE
 						if(enemyShip.getHp() <= 0) {
 							//inventory_f fever time is activated, the score is doubled.
-							if(feverTimeItem.isActive()) {
-								this.score += enemyShip.getPointValue()*2;
-							}
-							else{
-								this.score += enemyShip.getPointValue();
-							}
+							if(feverTimeItem.isActive()) { feverScore *= 2; } //TEAM CLOVE
 							this.shipsDestroyed++;
 						}
 						//Drop item when MAGENTA color enemy destroyed
@@ -618,7 +613,7 @@ public class GameScreen extends Screen {
 						}
 						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip, false);    // team Inventory
 						this.shipsDestroyed += CntAndPnt[0];
-                        this.scoreManager.addScore(enemyShip.getPointValue()); //clove
+                        this.scoreManager.addScore(feverScore); //clove
                         this.score += CntAndPnt[1];
 
 						// CtrlS - If collision occur then check the bullet can process
@@ -647,7 +642,7 @@ public class GameScreen extends Screen {
 						if (enemyShip.getColor() == Color.MAGENTA) {
 							this.itemManager.dropItem(enemyShip, 1, 1);
 						}
-						this.score += enemyShip.getPointValue();
+						this.scoreManager.addScore(enemyShip.getPointValue()); //TEAM CLOVE
 						this.shipsDestroyed++;
 						enemyShip.setChainExploded(false); // resets enemy's chain explosion state.
 					}
@@ -655,14 +650,9 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-
+					int feverSpecialScore = enemyShipSpecial.getPointValue();
           // inventory - Score bonus when acquiring fever items
-					if (feverTimeItem.isActive()) {  //inventory
-						this.score += this.enemyShipSpecial.getPointValue() *2;
-					}
-					else {
-						this.score += this.enemyShipSpecial.getPointValue();
-					}
+					if (feverTimeItem.isActive()) { feverSpecialScore *= 2; } //TEAM CLOVE //Team inventory
 
 					// CtrlS - If collision occur then check the bullet can process
 					if (!processedFireBullet.contains(bullet.getFire_id())) {
@@ -674,7 +664,7 @@ public class GameScreen extends Screen {
 						}
 
 					}
-					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue()); //clove
+					this.scoreManager.addScore(feverSpecialScore); //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();

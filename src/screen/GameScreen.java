@@ -503,6 +503,8 @@ public class GameScreen extends Screen {
 				//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
 				bullet.setCheckCount(true);
 				recyclable.add(bullet);
+
+				AchievementConditions.resetKillCount(); // TEAM CLOVER
 			}
 		}
 		this.bullets.removeAll(recyclable);
@@ -588,6 +590,7 @@ public class GameScreen extends Screen {
 			} else {
 				// CtrlS - set fire_id of bullet.
 				bullet.setFire_id(fire_id);
+
 				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
@@ -623,6 +626,7 @@ public class GameScreen extends Screen {
 							recyclable.add(bullet);
 						}
 					}
+
 					// Added by team Enemy.
 					// Enemy killed by Explosive enemy gives points too
 					if (enemyShip.isChainExploded()) {

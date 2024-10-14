@@ -46,8 +46,6 @@ public class AchievementConditions {
     private List<Achievement> allAchievements = new ArrayList<>();
     private List<String> unlockedAchievements = new ArrayList<>();
 
-    private static final int FAST_KILL_TIME = 5;
-
     public AchievementConditions() {
         initializeAchievements();
 
@@ -87,17 +85,17 @@ public class AchievementConditions {
 
         accuracyAchievements.add(new Achievement("Gunsliger", "Accuracy of 60%", 60, Achievement.AchievementType.ACCURACY));
         accuracyAchievements.add(new Achievement("Fear the Enemy", "Accuracy of 75%", 75, Achievement.AchievementType.ACCURACY));
-        accuracyAchievements.add(new Achievement("Genocide", "Accuracy of 90%", 90, Achievement.AchievementType.ACCURACY));
+        accuracyAchievements.add(new Achievement("Genocide", "Accuracy of 85%", 85, Achievement.AchievementType.ACCURACY));
 
-        streakAchievements.add(new Achievement("Preheating", "Kill streak of 10", 10, Achievement.AchievementType.KILLSTREAKS));
-        streakAchievements.add(new Achievement("Overheating", "Kill streak of 20", 20, Achievement.AchievementType.KILLSTREAKS));
-        streakAchievements.add(new Achievement("Runaway","Kill streak of 40", 40, Achievement.AchievementType.KILLSTREAKS));
+        streakAchievements.add(new Achievement("Preheating", "Kill streak of 3", 3, Achievement.AchievementType.KILLSTREAKS));
+        streakAchievements.add(new Achievement("Overheating", "Kill streak of 5", 5, Achievement.AchievementType.KILLSTREAKS));
+        streakAchievements.add(new Achievement("Runaway","Kill streak of 7", 7, Achievement.AchievementType.KILLSTREAKS));
 
         scoreAchievements.add(new Achievement("First Milestone", "Reach 6,000 points", 6000, Achievement.AchievementType.SCORE));
         scoreAchievements.add(new Achievement("Score Hunter", "Reach 15,000 points", 15000, Achievement.AchievementType.SCORE));
         scoreAchievements.add(new Achievement("Score Master", "Reach 30,000 points", 30000, Achievement.AchievementType.SCORE));
 
-        stageAchievements.add(new Achievement("Home Sweet Home","Cleared Final Stage", Core.NUM_LEVELS, Achievement.AchievementType.STAGE));
+        stageAchievements.add(new Achievement("Home Sweet Home","Cleared Final Stage", Core.NUM_LEVELS-1, Achievement.AchievementType.STAGE));
 
         allAchievements.addAll(killAchievements);
         allAchievements.addAll(trialAchievements);
@@ -166,7 +164,7 @@ public class AchievementConditions {
         System.out.println("Checking No Death achievements. Current lives: " + lives);
         if (lives == Core.MAX_LIVES) {
             for (Achievement achievement : noDeathAchievements) {
-                if (highestLevel==Core.NUM_LEVELS && !achievement.isCompleted()) {
+                if (highestLevel==Core.NUM_LEVELS-1 && !achievement.isCompleted()) {
                     completeAchievement(achievement);
                 }
             }

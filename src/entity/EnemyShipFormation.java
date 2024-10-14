@@ -488,9 +488,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	public final boolean isEmpty() {
 		return this.shipCount <= 0;
 	}
-	public final void BecomeCircle(boolean iscircle){
-		this.isCircle=iscircle;
-	}
 
 	/**
 	 * When EnemyShip is hit, its HP decrease by 1, and if the HP reaches 0, the ship is destroyed.

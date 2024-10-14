@@ -139,6 +139,9 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
+				if (this.livesRemaining > 0 && this.level > 7) {
+					saveGem();
+				} // CtrlS
 				saveCoin(); // Team-Ctrl-S(Currency)
 				saveStatistics(); //Team Clove
 				saveRecentScore(); // Team Clove
@@ -149,6 +152,9 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
+				if (this.livesRemaining > 0 && this.level > 7) {
+					saveGem();
+				} // CtrlS
 				saveCoin(); // Team-Ctrl-S(Currency)
 				saveStatistics(); //Team Clove
 				saveRecentScore(); // Team Clove

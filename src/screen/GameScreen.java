@@ -434,9 +434,12 @@ public class GameScreen extends Screen {
 		this.itemManager.drawItems(); //by Enemy team
 
 		// --- OBSTACLES - Draw Obstaacles
-		for (Obstacle obstacle : this.obstacles) {
-			drawManager.drawEntity(obstacle, obstacle.getPositionX(), obstacle.getPositionY());
+		if (!this.levelFinished) {
+			for (Obstacle obstacle : this.obstacles) {
+				drawManager.drawEntity(obstacle, obstacle.getPositionX(), obstacle.getPositionY());
+			}
 		}
+
 
 		// Interface.
 //		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove -> edit by jesung ko - TeamHUD(to udjust score)

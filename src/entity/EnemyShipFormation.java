@@ -41,8 +41,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** Initial position in the y-axis. */
 	private static final int INIT_POS_Y = 100;
 	/** Distance between ships. */
-	private static final int SEPARATION_DISTANCE = 40;
-	private static final int SEPARATION_DISTANCE_CIRCLE = 70;
+	private static final int SEPARATION_DISTANCE = 60;
+	private static final int SEPARATION_DISTANCE_CIRCLE = 90;
 	/** Radius of circle */
 	private int RADIUS=0;
 	private int MINIRADIUS= 0;
@@ -188,15 +188,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 					x = positionX + (SEPARATION_DISTANCE * this.enemyShips.indexOf(column));
 					y = positionY+ i*SEPARATION_DISTANCE;
 				}
-				column.add(new EnemyShip(x, y, spriteType));
+				//column.add(new EnemyShip(x, y, spriteType));
         
 				if(shipCount == nShipsHigh*(nShipsWide/2))
 					hp = 2; // Edited by Enemy, It just an example to insert EnemyShip that hp is 2.
 
-				column.add(new EnemyShip((SEPARATION_DISTANCE
-						* this.enemyShips.indexOf(column))
-								+ positionX, (SEPARATION_DISTANCE * i)
-								+ positionY, spriteType,hp,this.enemyShips.indexOf(column),i));// Edited by Enemy
+				column.add(new EnemyShip(x, y, spriteType,hp,this.enemyShips.indexOf(column),i));// Edited by Enemy
 				this.shipCount++;
 				hp = 1;// Edited by Enemy
 			}
@@ -493,9 +490,6 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	public final boolean isEmpty() {
 		return this.shipCount <= 0;
 	}
-	public final void BecomeCircle(boolean iscircle){
-		this.isCircle=iscircle;
-	}
 
 	/**
 	 * When EnemyShip is hit, its HP decrease by 1, and if the HP reaches 0, the ship is destroyed.
@@ -661,5 +655,8 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		timer.addActionListener(listener);
 		timer.start();
+	}
+	public final void BecomeCircle(boolean iscircle){
+		this.isCircle=iscircle;
 	}
 }

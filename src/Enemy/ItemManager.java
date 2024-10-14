@@ -4,10 +4,10 @@ import engine.Core;
 import entity.EnemyShip;
 import entity.Ship;
 import inventory_develop.Bomb;
+import inventory_develop.FeverTimeItem;
 import screen.GameScreen;
 import engine.DrawManager;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -31,6 +31,7 @@ public class ItemManager {
     private NumberOfBullet numberOfBullet;
     private Ship ship;
     private PlayerGrowth growth;
+    private FeverTimeItem feverTimeItem;
     private CurrencyManager currencyManager;
 
     public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
@@ -41,6 +42,7 @@ public class ItemManager {
         this.ship = gameScreen.getShip();       // Team Inventory
         this.growth = ship.getPlayerGrowth();
         this.Item2 = gameScreen.getItem();
+        this.feverTimeItem = gameScreen.getFeverTimeItem();
         this.numberOfBullet = new NumberOfBullet();
     }
 
@@ -90,17 +92,15 @@ public class ItemManager {
                 case ItemHeart:
                     Item2.activeheart(gameScreen, ship, growth);
                     break;
+                case ItemFeverTime: // 피버타임 아이템일 경우
+                    feverTimeItem.activate();
+                    break;
                 case ItemPierce:
                     numberOfBullet.pierceup();
                     ship.increaseBulletSpeed();
                     break;
                 case ItemCoin:
-                    try {
-                        Core.getCurrencyManager().addCurrency(10);
-                        logger.info("You get coin (10$)");
-                    } catch (IOException e) {
-                        logger.warning("Couldn't load currency!");
-                    }
+                    this.logger.info("You get coin!");
             }
 
             addItemRecycle(item);

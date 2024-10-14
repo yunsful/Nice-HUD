@@ -4,6 +4,7 @@ import engine.Core;
 import entity.EnemyShip;
 import entity.Ship;
 import inventory_develop.Bomb;
+import inventory_develop.FeverTimeItem;
 import screen.GameScreen;
 import engine.DrawManager;
 
@@ -33,6 +34,7 @@ public class ItemManager {
     private NumberOfBullet numberOfBullet;
     private Ship ship;
     private PlayerGrowth growth;
+    private FeverTimeItem feverTimeItem;
     private CurrencyManager currencyManager;
     // Sound Operator
     private static SoundManager sm;
@@ -45,6 +47,7 @@ public class ItemManager {
         this.ship = gameScreen.getShip();       // Team Inventory
         this.growth = ship.getPlayerGrowth();
         this.Item2 = gameScreen.getItem();
+        this.feverTimeItem = gameScreen.getFeverTimeItem();
         this.numberOfBullet = new NumberOfBullet();
     }
 
@@ -102,6 +105,9 @@ public class ItemManager {
                     //Sound_Operator
                     sm = SoundManager.getInstance();
                     sm.playES("get_item");
+                    break;
+                case ItemFeverTime: // 피버타임 아이템일 경우
+                    feverTimeItem.activate();
                     break;
                 case ItemPierce:
                     numberOfBullet.pierceup();

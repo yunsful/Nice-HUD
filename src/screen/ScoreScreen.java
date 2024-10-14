@@ -241,6 +241,19 @@ public class ScoreScreen extends Screen {
     }
 
 	/**
+	 * Saves the gem into currency file
+	 */
+	// CtrlS
+	private void saveGem() {
+		try {
+			Core.getCurrencyManager().addGem(1);
+			logger.info("You eared 1 Gem for Game Clear");
+		} catch (IOException e) {
+			logger.warning("Couldn't load gem!");
+		}
+	}
+
+	/**
 	 * Draws the elements associated with the screen.
 	 */
 	private void draw() {

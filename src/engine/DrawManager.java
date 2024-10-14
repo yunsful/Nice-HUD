@@ -545,7 +545,7 @@ public class DrawManager {
 	}
 
 	/**
-	 * Draws basic content of game clear screen.
+	 * Draws basic content of game end screen.
 	 *
 	 * @param screen
 	 *            Screen to draw on.
@@ -555,46 +555,16 @@ public class DrawManager {
 	 *            If the score is a new high score.
 	 */
 	// CtrlS
-	public void drawGameClear(final Screen screen, final boolean acceptsInput,
-							 final boolean isNewRecord) {
-		String gameClearString = "Game Clear";
+	public void drawGameEnd(final Screen screen, final boolean acceptsInput,
+							 final boolean isNewRecord, boolean isGameClear) {
+		String gameEndString = isGameClear ? "Game Clear" : "Game Over";
 		String continueOrExitString =
 				"Press Space to play again, Escape to exit";
 
 		int height = isNewRecord ? 4 : 2;
 
 		backBufferGraphics.setColor(Color.GREEN);
-		drawCenteredBigString(screen, gameClearString, screen.getHeight()
-				/ height - fontBigMetrics.getHeight() * 2);
-
-		if (acceptsInput)
-			backBufferGraphics.setColor(Color.GREEN);
-		else
-			backBufferGraphics.setColor(Color.GRAY);
-		drawCenteredRegularString(screen, continueOrExitString,
-				screen.getHeight() / 2 + fontRegularMetrics.getHeight() * 10);
-	}
-
-	/**
-	 * Draws basic content of game over screen.
-	 *
-	 * @param screen
-	 *            Screen to draw on.
-	 * @param acceptsInput
-	 *            If the screen accepts input.
-	 * @param isNewRecord
-	 *            If the score is a new high score.
-	 */
-	public void drawGameOver(final Screen screen, final boolean acceptsInput,
-							 final boolean isNewRecord) {
-		String gameOverString = "Game Over";
-		String continueOrExitString =
-				"Press Space to play again, Escape to exit";
-
-		int height = isNewRecord ? 4 : 2;
-
-		backBufferGraphics.setColor(Color.GREEN);
-		drawCenteredBigString(screen, gameOverString, screen.getHeight()
+		drawCenteredBigString(screen, gameEndString, screen.getHeight()
 				/ height - fontBigMetrics.getHeight() * 2);
 
 		if (acceptsInput)

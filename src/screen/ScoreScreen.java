@@ -265,8 +265,13 @@ public class ScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
-				this.isNewRecord);
+		if (this.livesRemaining > 0 && this.level > 7) {
+			drawManager.drawGameClear(this, this.inputDelay.checkFinished(),
+					this.isNewRecord);
+		} else {
+			drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
+					this.isNewRecord);
+		} // CtrlS
 		drawManager.drawResults(this, this.score, this.livesRemaining,
 				this.shipsDestroyed, (float) this.gameState.getHitCount()
 						/ this.bulletsShot, this.isNewRecord, this.gameState);

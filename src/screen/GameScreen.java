@@ -26,6 +26,11 @@ import inventory_develop.*;
 import Sound_Operator.SoundManager;
 import clove.ScoreManager;    // CLOVE
 
+import java.beans.PropertyChangeListener; // CLOVE
+import java.beans.PropertyChangeSupport; // CLOVE
+import java.util.Timer; // CLOVE
+import java.util.TimerTask; // CLOVE
+
 
 /**
  * Implements the game screen, where the action happens.
@@ -84,6 +89,8 @@ public class GameScreen extends Screen {
 	private int shipsDestroyed;
 	/** Moment the game starts. */
 	private long gameStartTime;
+	/** Timer for kill streak achievements */
+	private long killStreakTime; // TEAM CLOVER
 	/** Checks if the level is finished. */
 	private boolean levelFinished;
 	/** Checks if a bonus life is received. */
@@ -138,9 +145,15 @@ public class GameScreen extends Screen {
 	/** Check end-time*/
 	private long endTime;    //clove
 
+	// TEAM CLOVER
 	private Statistics statistics; //Team Clove
 	private AchievementConditions achievementConditions;
-	private int fastKill;
+	/** Check kill-streak */
+	private int killCount;
+	private PropertyChangeSupport support;
+	private Timer timer;
+	/** Check if kill is confirmed */
+	private boolean killConfirmed;
 
 	/** CtrlS: Count the number of coin collected in game */
 	private int coinItemsCollected;
@@ -198,6 +211,30 @@ public class GameScreen extends Screen {
 		this.statistics = new Statistics(); //Team Clove
 		this.achievementConditions = new AchievementConditions();
 		this.coinItemsCollected = gameState.getCoinItemsCollected(); // CtrlS
+
+		// Dongjun Suh / TEAM CLOVER
+		this.killCount = 0;
+		this.support = new PropertyChangeSupport(this);
+		this.killConfirmed = false;
+	}
+	/** Listner added by TEAM CLOVER */
+	public void addPropertyChangeListener(PropertyChangeListener pcl) {
+		support.addPropertyChangeListener(pcl);
+	}
+	public void removePropertyChangeListener(PropertyChangeListener pcl) {
+		support.removePropertyChangeListener(pcl);
+	}
+	public void incrementKillCount() {
+		int oldCount = this.killCount;
+		this.killCount++;
+		support.firePropertyChange("killCount", oldCount, this.killCount);  // 변수 변화 알림
+		System.out.println("Kill count updated: " + this.killCount);
+	}
+	public void resetKillCount() {
+		int oldCount = this.killCount;
+		this.killCount = 0;
+		support.firePropertyChange("killCount", oldCount, this.killCount);  // 변수 초기화 알림
+		System.out.println("Kill streak reset");
 	}
 
 	/**
@@ -385,7 +422,7 @@ public class GameScreen extends Screen {
 				achievementConditions.onStage();
 				achievementConditions.trials();
 				achievementConditions.killStreak();
-				achievementConditions.fastKill(fastKill);
+				achievementConditions.accuracy(bulletsShot, hitCount);
 				achievementConditions.score(score);
 
             } catch (IOException e) {

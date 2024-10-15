@@ -247,14 +247,24 @@ public class DrawManager {
 	 */
 	public void drawEntity(final Entity entity, final int positionX,
 						   final int positionY) {
-		boolean[][] image = spriteMap.get(entity.getSpriteType());
 
-		backBufferGraphics.setColor(entity.getColor());
-		for (int i = 0; i < image.length; i++)
-			for (int j = 0; j < image[i].length; j++)
-				if (image[i][j])
-					backBufferGraphics.drawRect(positionX + i * 2, positionY
-							+ j * 2, 1, 1);
+		try {
+			boolean[][] image = spriteMap.get(entity.getSpriteType());
+
+			backBufferGraphics.setColor(entity.getColor());
+			for (int i = 0; i < image.length; i++)
+				for (int j = 0; j < image[i].length; j++)
+					if (image[i][j])
+						backBufferGraphics.drawRect(positionX + i * 2, positionY
+								+ j * 2, 1, 1);
+
+		} catch(Exception e) {
+
+			System.out.println(e);
+			System.exit(1);
+		}
+
+
 	}
 
 	/**

@@ -178,19 +178,23 @@ public class TitleScreen extends Screen {
 	/**
 	 * Shifts the focus to the next menu item.
 	 */
-	private void testStatUpgrade(){
+	private void testStatUpgrade() throws IOException {
 		// CtrlS: testStatUpgrade should only be called after coins are spent
 		if(this.merchantState == 1) {
-			// this.currentCoin -= 50;
+			Core.getUpgradeManager().addBulletSpeed(-1);
+			Core.getLogger().info("Bullet Speed: " + Core.getUpgradeManager().getBulletSpeed());
 		}
 		else if(this.merchantState == 2) {
-			// this.currentCoin -= 50;
+			Core.getUpgradeManager().addMovementSpeed(1);
+			Core.getLogger().info("Movement Speed: " + Core.getUpgradeManager().getMovementSpeed());
 		}
 		else if(this.merchantState == 3) {
-			// this.currentCoin -= 50;
+			Core.getUpgradeManager().addAttackSpeed(-10);
+			Core.getLogger().info("Attack Speed: " + Core.getUpgradeManager().getAttackSpeed());
 		}
 		else if(this.merchantState == 4) {
-			// this.currentCoin -= 50;
+			Core.getUpgradeManager().addCoinAcquisitionMultiplier(0.1);
+			Core.getLogger().info("Coin Acquisition Multiplier: " + Core.getUpgradeManager().getCoinAcquisitionMultiplier());
 		}
 
 

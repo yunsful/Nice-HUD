@@ -1,5 +1,8 @@
 package Enemy;
 
+import engine.Core;
+import java.io.IOException;
+
 public class PlayerGrowth {
 
     //Player's base stats
@@ -10,6 +13,15 @@ public class PlayerGrowth {
 
     //Constructor to set initial values
     public PlayerGrowth() {//  Base shooting delay is 750ms
+
+        // CtrlS: set player growth based on upgrade_status.properties
+        try {
+            moveSpeed = Core.getUpgradeManager().getMovementSpeed();
+            bulletSpeed = Core.getUpgradeManager().getBulletSpeed();
+            shootingDelay = Core.getUpgradeManager().getAttackSpeed();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Increases health

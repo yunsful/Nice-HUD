@@ -198,15 +198,13 @@ public class Ship extends Entity {
 	}
 
 	/**
-	 * Calculates and returns the bullet speed in Pixels per frame.
+	 * Calculates and returns the attack speed in bullets per second.
 	 *
-	 * @return bullet speed (Pixels per frame).
+	 * @return Attack speed (bullets per second).
 	 */
-	public final int getBulletSpeed() {
-		int speed = growth.getBulletSpeed();
-		if (speed >= 0) return speed;
-		else return speed * (-1);
-	} // by SeungYun TeamHUD
+	public final double getAttackSpeed() {
+		return 1000.0 / growth.getShootingDelay();
+	}
 
 	public PlayerGrowth getPlayerGrowth() {
 		return growth;

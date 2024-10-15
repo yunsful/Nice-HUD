@@ -26,6 +26,12 @@ import inventory_develop.*;
 import Sound_Operator.SoundManager;
 import clove.ScoreManager;    // CLOVE
 
+import java.beans.PropertyChangeListener; // CLOVE
+import java.beans.PropertyChangeSupport; // CLOVE
+import java.util.Timer; // CLOVE
+import java.util.TimerTask; // CLOVE
+import java.util.List;
+
 
 /**
  * Implements the game screen, where the action happens.
@@ -139,9 +145,11 @@ public class GameScreen extends Screen {
 	/** Check end-time*/
 	private long endTime;    //clove
 
+	// TEAM CLOVER
 	private Statistics statistics; //Team Clove
-	private AchievementConditions achievementConditions;
-	private int fastKill;
+	private static AchievementConditions achievementConditions;
+	/** Check kill-streak */
+	private int killCount;
 
 	/** CtrlS: Count the number of coin collected in game */
 	private int coinItemsCollected;
@@ -200,6 +208,10 @@ public class GameScreen extends Screen {
 		this.statistics = new Statistics(); //Team Clove
 		this.achievementConditions = new AchievementConditions();
 		this.coinItemsCollected = gameState.getCoinItemsCollected(); // CtrlS
+
+		// Dongjun Suh / TEAM CLOVER
+		this.killCount = 0;
+		bullets = new HashSet<>();
 	}
 
 	/**
@@ -391,8 +403,8 @@ public class GameScreen extends Screen {
 				achievementConditions.onKill();
 				achievementConditions.onStage();
 				achievementConditions.trials();
-				achievementConditions.killStreak();
-				achievementConditions.fastKill(fastKill);
+				achievementConditions.killStreak(killCount);
+				achievementConditions.accuracy(bulletsShot, hitCount);
 				achievementConditions.score(score);
 
             } catch (IOException e) {
@@ -498,6 +510,8 @@ public class GameScreen extends Screen {
 				//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
 				bullet.setCheckCount(true);
 				recyclable.add(bullet);
+
+				AchievementConditions.resetKillCount(); // TEAM CLOVER
 			}
 		}
 		this.bullets.removeAll(recyclable);
@@ -598,6 +612,7 @@ public class GameScreen extends Screen {
 			} else {
 				// CtrlS - set fire_id of bullet.
 				bullet.setFire_id(fire_id);
+
 				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
@@ -623,6 +638,9 @@ public class GameScreen extends Screen {
 								hitCount++;
 								bullet.setCheckCount(false);
 								this.logger.info("Hit count!");
+
+								AchievementConditions.incrementKillCount(); // TEAM CLOVER
+
 								processedFireBullet.add(bullet.getFire_id()); // mark this bullet_id is processed.
 							}
 						}
@@ -636,6 +654,7 @@ public class GameScreen extends Screen {
 							recyclable.add(bullet);
 						}
 					}
+
 					// Added by team Enemy.
 					// Enemy killed by Explosive enemy gives points too
 					if (enemyShip.isChainExploded()) {

@@ -2,11 +2,13 @@ package screen;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import engine.Cooldown;
 import engine.Core;
 // Sound Operator
 import Sound_Operator.SoundManager;
+import engine.Score;
 
 /**
  * Implements the title screen.
@@ -28,6 +30,8 @@ public class TitleScreen extends Screen {
 	// select One player or Two player
 	private int pnumSelectionCode; //produced by Starter
 	private int merchantState;
+
+	private static ArrayList<Integer> count = new ArrayList<>();
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -140,17 +144,7 @@ public class TitleScreen extends Screen {
 
 			if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
 				if(returnCode == 4) {
-					// CtrlS: Attempt the purchase, apply the upgrade if successful. Log the event if it fails.
-                    try {
-                        if (Core.getCurrencyManager().spendCoin(50)) {
-							testStatUpgrade();
-							this.coin = Core.getCurrencyManager().getCoin(); // CtrlS: After spending coins, update this.coin with the reduced amount
-						} else {
-							Core.getLogger().info("You don't have enough coins!");
-						}
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+					testStatUpgrade();
                     this.selectionCooldown.reset();
 				}
 				else this.isRunning = false;
@@ -179,18 +173,75 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item.
 	 */
 	private void testStatUpgrade(){
+		while (count.size() < 4) {
+			count.add(0);
+		}
 		// CtrlS: testStatUpgrade should only be called after coins are spent
-		if(this.merchantState == 1) {
-			// this.currentCoin -= 50;
+		if(this.merchantState == 1) { // bulletCount
+			try {
+				if (!(count.get(0) % 2 == 0) && Core.getCurrencyManager().spendCoin(50)) {
+					count.set(0, count.get(0) + 1);
+				}
+				else if ((count.get(0) % 2 == 0) && Core.getCurrencyManager().spendGem(count.get(0) + 1)) {
+					count.set(0, count.get(0) + 1);
+				}
+				else {
+					Core.getLogger().info("you don't have enough");
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
-		else if(this.merchantState == 2) {
-			// this.currentCoin -= 50;
+		else if(this.merchantState == 2) { // shipSpeed
+			try {
+				if ((count.get(1) == 0 || !(count.get(1) % 4 == 0))
+						&& Core.getCurrencyManager().spendCoin(50)) {
+					count.set(1, count.get(1) + 1);
+				}
+				else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
+						&& Core.getCurrencyManager().spendGem(count.get(1) + 1)) {
+					count.set(1, count.get(1) + 1);
+				}
+				else {
+					Core.getLogger().info("you don't have enough");
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
-		else if(this.merchantState == 3) {
-			// this.currentCoin -= 50;
+		else if(this.merchantState == 3) { // attackSpeed
+			try {
+				if ((count.get(2) == 0 || !(count.get(2) % 4 == 0))
+						&& Core.getCurrencyManager().spendCoin(50)) {
+					count.set(2, count.get(2) + 1);
+				}
+				else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
+						&& Core.getCurrencyManager().spendGem(count.get(2) + 1)) {
+					count.set(2, count.get(2) + 1);
+				}
+				else {
+					Core.getLogger().info("you don't have enough");
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
-		else if(this.merchantState == 4) {
-			// this.currentCoin -= 50;
+		else if(this.merchantState == 4) { // coinGain
+			try {
+				if ((count.get(3) == 0 || !(count.get(3) % 4 == 0))
+						&& Core.getCurrencyManager().spendCoin(50)) {
+					count.set(3, count.get(3) + 1);
+				}
+				else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
+						&& Core.getCurrencyManager().spendGem(count.get(3) + 1)) {
+					count.set(3, count.get(3) + 1);
+				}
+				else {
+					Core.getLogger().info("you don't have enough");
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
 
 

@@ -66,6 +66,8 @@ public class ScoreScreen extends Screen {
 
 	private GameState gameState; // Team-Ctrl-S(Currency)
 
+	private boolean isGameClear; // CtrlS
+
 	/**
 	 * Constructor, establishes the properties of the screen.
 	 * 
@@ -95,6 +97,7 @@ public class ScoreScreen extends Screen {
 		this.gameState = gameState; // Team-Ctrl-S(Currency)
 		this.level = gameState.getLevel(); //Team Clove
 		this.statistics = new Statistics(); //Team Clove
+		this.isGameClear = this.livesRemaining > 0 && this.level > 7; // CtrlS
 
 		try {
 			this.highScores = Core.getFileManager().loadHighScores();
@@ -139,6 +142,9 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
+				if (this.isGameClear) {
+					saveGem();
+				} // CtrlS
 				saveCoin(); // Team-Ctrl-S(Currency)
 				saveStatistics(); //Team Clove
 				saveRecentScore(); // Team Clove
@@ -149,6 +155,9 @@ public class ScoreScreen extends Screen {
 				if (this.isNewRecord) {
 					saveScore();
 				}
+				if (this.isGameClear) {
+					saveGem();
+				} // CtrlS
 				saveCoin(); // Team-Ctrl-S(Currency)
 				saveStatistics(); //Team Clove
 				saveRecentScore(); // Team Clove
@@ -234,11 +243,24 @@ public class ScoreScreen extends Screen {
 	private void saveCoin() {
 		try {
 			Core.getCurrencyManager().addCoin(coin);
-			logger.info("You eared $" + coin);
+			logger.info("You earned $" + coin);
 		} catch (IOException e) {
 			logger.warning("Couldn't load coin!");
         }
     }
+
+	/**
+	 * Saves the gem into currency file
+	 */
+	// CtrlS
+	private void saveGem() {
+		try {
+			Core.getCurrencyManager().addGem(1);
+			logger.info("You earned 1 Gem for Game Clear");
+		} catch (IOException e) {
+			logger.warning("Couldn't load gem!");
+		}
+	}
 
 	/**
 	 * Draws the elements associated with the screen.
@@ -246,8 +268,8 @@ public class ScoreScreen extends Screen {
 	private void draw() {
 		drawManager.initDrawing(this);
 
-		drawManager.drawGameOver(this, this.inputDelay.checkFinished(),
-				this.isNewRecord);
+		drawManager.drawGameEnd(this, this.inputDelay.checkFinished(),
+				this.isNewRecord, this.isGameClear); // CtrlS
 		drawManager.drawResults(this, this.score, this.livesRemaining,
 				this.shipsDestroyed, (float) this.gameState.getHitCount()
 						/ this.bulletsShot, this.isNewRecord, this.gameState);

@@ -17,7 +17,6 @@ public class PlayerGrowth {
         // CtrlS: set player growth based on upgrade_status.properties
         try {
             moveSpeed = Core.getUpgradeManager().getMovementSpeed();
-            bulletSpeed = Core.getUpgradeManager().getBulletSpeed();
             shootingDelay = Core.getUpgradeManager().getAttackSpeed();
         } catch (IOException e) {
             throw new RuntimeException(e);

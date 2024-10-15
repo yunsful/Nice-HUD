@@ -173,27 +173,24 @@ public class TitleScreen extends Screen {
 	 * Shifts the focus to the next menu item.
 	 */
 	
-	private void testStatUpgrade(){
+	private void testStatUpgrade() {
 		while (count.size() < 4) {
 			count.add(0);
 		}
 		// CtrlS: testStatUpgrade should only be called after coins are spent
-		if(this.merchantState == 1) { // bulletCount
+		if (this.merchantState == 1) { // bulletCount
 			try {
 				if (!(count.get(0) % 2 == 0) && Core.getCurrencyManager().spendCoin(50)) {
 					count.set(0, count.get(0) + 1);
-				}
-				else if ((count.get(0) % 2 == 0) && Core.getCurrencyManager().spendGem(count.get(0) + 1)) {
+				} else if ((count.get(0) % 2 == 0) && Core.getCurrencyManager().spendGem(count.get(0) + 1)) {
 					count.set(0, count.get(0) + 1);
-				}
-				else {
+				} else {
 					Core.getLogger().info("you don't have enough");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		}
-		else if(this.merchantState == 2) { // shipSpeed
+		} else if (this.merchantState == 2) { // shipSpeed
 			try {
 				if ((count.get(1) == 0 || !(count.get(1) % 4 == 0))
 						&& Core.getCurrencyManager().spendCoin(50)) {
@@ -202,19 +199,16 @@ public class TitleScreen extends Screen {
 					Core.getLogger().info("Movement Speed: " + Core.getUpgradeManager().getMovementSpeed());
 					count.set(1, count.get(1) + 1);
 
-				}
-				else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
+				} else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
 						&& Core.getCurrencyManager().spendGem(count.get(1) + 1)) {
 					count.set(1, count.get(1) + 1);
-				}
-				else {
+				} else {
 					Core.getLogger().info("you don't have enough");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		}
-		else if(this.merchantState == 3) { // attackSpeed
+		} else if (this.merchantState == 3) { // attackSpeed
 			try {
 				if ((count.get(2) == 0 || !(count.get(2) % 4 == 0))
 						&& Core.getCurrencyManager().spendCoin(50)) {
@@ -223,19 +217,16 @@ public class TitleScreen extends Screen {
 					Core.getLogger().info("Attack Speed: " + Core.getUpgradeManager().getAttackSpeed());
 					count.set(2, count.get(2) + 1);
 
-				}
-				else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
+				} else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
 						&& Core.getCurrencyManager().spendGem(count.get(2) + 1)) {
 					count.set(2, count.get(2) + 1);
-				}
-				else {
+				} else {
 					Core.getLogger().info("you don't have enough");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		}
-		else if(this.merchantState == 4) { // coinGain
+		} else if (this.merchantState == 4) { // coinGain
 			try {
 				if ((count.get(3) == 0 || !(count.get(3) % 4 == 0))
 						&& Core.getCurrencyManager().spendCoin(50)) {
@@ -244,18 +235,17 @@ public class TitleScreen extends Screen {
 					Core.getLogger().info("CoinBonus: " + Core.getUpgradeManager().getCoinAcquisitionMultiplier());
 					count.set(3, count.get(3) + 1);
 
-				}
-				else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
+				} else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
 						&& Core.getCurrencyManager().spendGem(count.get(3) + 1)) {
 					count.set(3, count.get(3) + 1);
-				}
-				else {
+				} else {
 					Core.getLogger().info("you don't have enough");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
 
+		}
 	}
 	private void nextMenuItem() {
 		if (this.returnCode == 5) // Team Clover changed values because recordMenu added

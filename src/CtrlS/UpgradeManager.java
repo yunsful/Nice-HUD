@@ -31,6 +31,11 @@ public final class UpgradeManager {
     private UpgradeManager() {
         fileManager = Core.getFileManager();
         logger = Core.getLogger();
+        try{
+            Core.getFileManager().saveUpgradeStatus(Core.getFileManager().loadUpgradeStatus());
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -140,20 +145,6 @@ public final class UpgradeManager {
     public int getBulletSpeed() throws IOException {
         Properties properties = fileManager.loadUpgradeStatus();
         return Integer.parseInt(properties.getProperty(BULLET_SPEED, "1"));
-    }
-
-    /**
-     * Add to the current bullet speed.
-     *
-     * @param amount The amount to add.
-     * @throws IOException In case of saving problems.
-     */
-    public void addBulletSpeed(int amount) throws IOException {
-        int currentValue = getBulletSpeed();
-        currentValue += amount;
-        Properties properties = fileManager.loadUpgradeStatus();
-        properties.setProperty(BULLET_SPEED, Integer.toString(currentValue));
-        fileManager.saveUpgradeStatus(properties);
     }
 
     /**

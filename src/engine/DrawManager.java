@@ -837,8 +837,8 @@ public class DrawManager {
 	 */
 	public void drawCurrentCoin(final Screen screen , final int coin) {
 		Coin coinImage = new Coin();
-		int coinX = screen.getWidth() - 60;
-		int coinY = 10;
+		int coinX = 10; // Starter edited
+		int coinY = 7; // Adjust the y position value - Starter
 		drawEntity(coinImage, coinX, coinY);
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
@@ -847,8 +847,8 @@ public class DrawManager {
 
 	public void drawCurrentGem(final Screen screen , final int gem) {
 		Gem gemImage = new Gem();
-		int coinX = screen.getWidth() - 60;
-		int coinY = 25;
+		int coinX = 10; // Starter edited
+		int coinY = 24; // Adjust the y position value - Starter
 		drawEntity(gemImage, coinX, coinY);
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);

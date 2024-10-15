@@ -67,7 +67,7 @@ public class GameScreen extends Screen {
 	/** Time from finishing the level to screen change. */
 	private Cooldown screenFinishedCooldown;
 	/** Set of all bullets fired by on screen ships. */
-	private Set<PiercingBullet> bullets; //by Enemy team
+	public Set<PiercingBullet> bullets; //by Enemy team
 	/** Add an itemManager Instance */
 	private ItemManager itemManager; //by Enemy team
 	/** Shield item */
@@ -449,7 +449,7 @@ public class GameScreen extends Screen {
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
-		DrawManagerImpl.drawBulletSpeed(this, this.ship.getBulletSpeed());
+		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
 		//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD

@@ -31,13 +31,6 @@ public class SoundManager {
 */
 
 
-//  test code
-//    public static void main(String[] args) throws IOException, InterruptedException {
-//        SoundManager sm = SoundManager.getInstance();
-//        sm.playBGM("test");
-//        Thread.sleep(10000);
-//    }
-
     private SoundManager() {
         try {
             BufferedReader br = new BufferedReader(new FileReader("res/sound"));
@@ -84,7 +77,8 @@ public class SoundManager {
 
     public void stopAllBGM() {
         for (Clip c : BGMs.values()) {
-            c.stop();
+            if (c != null)
+                c.stop();
         }
     }
 

@@ -240,13 +240,27 @@ public final class Core {
 				sm.playBGM("inGame_bgm");
 
 				do {
-					// One extra live every few levels.
-					boolean bonusLife = gameState.getLevel() % EXTRA_LIFE_FRECUENCY == 0
-							&& (gameState.getLivesRemaining() < MAX_LIVES || gameState.getLivesTwoRemaining() < MAX_LIVES);
+					if (gameSettings == null || gameSettings.isEmpty()) {
+						gameSettings = new ArrayList<>();
+						gameSettings.add(SETTINGS_LEVEL_1);
+						gameSettings.add(SETTINGS_LEVEL_2);
+						gameSettings.add(SETTINGS_LEVEL_3);
+						gameSettings.add(SETTINGS_LEVEL_4);
+						gameSettings.add(SETTINGS_LEVEL_5);
+						gameSettings.add(SETTINGS_LEVEL_6);
+						gameSettings.add(SETTINGS_LEVEL_7);
+					}
+
+					GameSettings currentGameSettings = gameSettings.get(gameState.getLevel() - 1);
+
+					int fps = FPS;
+					boolean bonusLife = gameState.getLevel() % EXTRA_LIFE_FRECUENCY == 0 &&
+							(gameState.getLivesRemaining() < MAX_LIVES || gameState.getLivesTwoRemaining() < MAX_LIVES);
 
 					GameState prevState = gameState;
 
-					currentScreen = new TwoPlayerMode(gameState);
+					// TwoPlayerMode의 생성자를 호출할 때 필요한 매개변수를 모두 전달
+					currentScreen = new TwoPlayerMode(gameState, currentGameSettings, bonusLife, width, height, fps);
 
 
 
@@ -296,8 +310,7 @@ public final class Core {
 						achievementManager.updateAchievements(currentScreen);
 					}
 
-				} while (gameState.getLivesRemaining() > 0
-						&& gameState.getLevel() <= NUM_LEVELS);
+				} while ((gameState.getLivesRemaining() > 0 || gameState.getLivesTwoRemaining() > 0) && gameState.getLevel() <= NUM_LEVELS);
 
 				LOGGER.info("Stop InGameBGM");
 				// Sound Operator

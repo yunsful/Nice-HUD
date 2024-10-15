@@ -200,7 +200,7 @@ public class TitleScreen extends Screen {
 					count.set(1, count.get(1) + 1);
 
 				} else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
-						&& Core.getCurrencyManager().spendGem(count.get(1) + 1)) {
+						&& Core.getCurrencyManager().spendGem((count.get(1) / 4) + 2)) {
 					count.set(1, count.get(1) + 1);
 				} else {
 					Core.getLogger().info("you don't have enough");
@@ -210,15 +210,18 @@ public class TitleScreen extends Screen {
 			}
 		} else if (this.merchantState == 3) { // attackSpeed
 			try {
-				if ((count.get(2) == 0 || !(count.get(2) % 4 == 0))
+				if (){
+
+				}
+				else if ((count.get(2) == 0 || !(count.get(2) % 4 == 0))
 						&& Core.getCurrencyManager().spendCoin(50)) {
 
 					Core.getUpgradeManager().addAttackSpeed(-10);
 					Core.getLogger().info("Attack Speed: " + Core.getUpgradeManager().getAttackSpeed());
 					count.set(2, count.get(2) + 1);
 
-				} else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
-						&& Core.getCurrencyManager().spendGem(count.get(2) + 1)) {
+				} else if (!(count.get(2) == 0 || !(count.get(2) % 4 == 0))
+						&& Core.getCurrencyManager().spendGem((count.get(2) / 4) + 2)) {
 					count.set(2, count.get(2) + 1);
 				} else {
 					Core.getLogger().info("you don't have enough");
@@ -235,8 +238,8 @@ public class TitleScreen extends Screen {
 					Core.getLogger().info("CoinBonus: " + Core.getUpgradeManager().getCoinAcquisitionMultiplier());
 					count.set(3, count.get(3) + 1);
 
-				} else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
-						&& Core.getCurrencyManager().spendGem(count.get(3) + 1)) {
+				} else if (!(count.get(3) == 0 || !(count.get(3) % 4 == 0))
+						&& Core.getCurrencyManager().spendGem((count.get(3) / 4) + 2)) {
 					count.set(3, count.get(3) + 1);
 				} else {
 					Core.getLogger().info("you don't have enough");

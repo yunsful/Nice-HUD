@@ -20,7 +20,14 @@ public final class UpgradeManager {
     private static final String COIN_ACQUISITION_MULTIPLIER = "coin_acquisition_multiplier";
     private static final String ATTACK_SPEED = "attack_speed";
     private static final String MOVEMENT_SPEED = "movement_speed";
-    private static final String BULLET_SPEED = "bullet_speed";
+    private static final String BULLET_NUM = "bullet_num";
+
+    // inventory, Upgrade count
+    private static final String Speed_Count = "speed_LevelCount";
+    private static final String Attack_Count = "attack_LevelCount";
+    private static final String Coin_Count = "Coin_LevelCount";
+    private static final String Bullet_Count = "bullet_LevelCount";
+
 
     /** Decimal format to ensure values have one decimal place. */
     private static final DecimalFormat decimalFormat = new DecimalFormat("#.#");
@@ -144,7 +151,7 @@ public final class UpgradeManager {
      */
     public int getBulletSpeed() throws IOException {
         Properties properties = fileManager.loadUpgradeStatus();
-        return Integer.parseInt(properties.getProperty(BULLET_SPEED, "1"));
+        return Integer.parseInt(properties.getProperty(BULLET_NUM, "1"));
     }
 
     /**
@@ -156,4 +163,54 @@ public final class UpgradeManager {
         Properties properties = fileManager.loadDefaultUpgradeStatus();
         fileManager.saveUpgradeStatus(properties);
     }
+
+    // produce inventory team
+
+    public int getSpeedCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Speed_Count, "1"));
+    }
+    public int getAttackCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Attack_Count, "1"));
+    }
+    public int getBulletCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Bullet_Count, "1"));
+    }
+    public int getCoinCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Coin_Count, "1"));
+    }
+
+
+    public void addSpeedCount() throws IOException {
+        int currentValue = getSpeedCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Speed_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+    public void addAttackCount() throws IOException {
+        int currentValue = getAttackCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Attack_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+    public void addBulletCount() throws IOException {
+        int currentValue = getBulletCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Bullet_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+    public void addCoinCount() throws IOException {
+        int currentValue = getCoinCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Coin_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+
 }

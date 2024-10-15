@@ -137,7 +137,6 @@ public class GameScreen extends Screen {
 	private long startTime;    //clove
 	/** Check end-time*/
 	private long endTime;    //clove
-
 	private Statistics statistics; //Team Clove
 	private AchievementConditions achievementConditions;
 	private int fastKill;

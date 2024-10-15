@@ -78,7 +78,7 @@ public class GameScreen extends Screen {
 	/** Player lives left. */
 	private int lives;
 	/** player2 lives left.*/
-	private int livestwo;
+	public int livestwo;
 	/** Total bullets shot by the player. */
 	private int bulletsShot;
 	/** Total ships destroyed by the player. */
@@ -261,7 +261,7 @@ public class GameScreen extends Screen {
 	/**
 	 * Updates the elements on screen and checks for events.
 	 */
-	protected final void update() {
+	protected void update() {
 		super.update();
 
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
@@ -406,7 +406,7 @@ public class GameScreen extends Screen {
 	/**
 	 * Draws the elements associated with the screen.
 	 */
-	private void draw() {
+	public void draw() {
 		drawManager.initDrawing(this);
 
 		/** ### TEAM INTERNATIONAL ### */
@@ -740,7 +740,7 @@ public class GameScreen extends Screen {
 	 *            Second entity, the ship.
 	 * @return Result of the collision test.
 	 */
-	private boolean checkCollision(final Entity a, final Entity b) {
+	public boolean checkCollision(final Entity a, final Entity b) {
 		// Calculate center point of the entities in both axis.
 		int centerAX = a.getPositionX() + a.getWidth() / 2;
 		int centerAY = a.getPositionY() + a.getHeight() / 2;

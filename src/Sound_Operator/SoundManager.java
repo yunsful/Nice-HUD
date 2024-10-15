@@ -242,4 +242,17 @@ public class SoundManager {
             return 0;
         }
     }
+
+    // ksm
+    public void playShipDieSounds() {
+        playES("ally_airship_destroy_explosion");
+        new Thread(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                logger.info(String.valueOf(e));
+            }
+            playES("ally_airship_destroy_die");
+        }).start();
+    }
 }

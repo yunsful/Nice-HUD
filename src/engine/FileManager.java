@@ -15,19 +15,18 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 import CtrlS.EncryptionSupport;
 import engine.DrawManager.SpriteType;
 
+import clove.Statistics; //Team Clove
+
 /**
  * Manages files used in the application.
- *
+ * 
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- *
+ * 
  */
 public final class FileManager {
 
@@ -37,6 +36,8 @@ public final class FileManager {
 	private static Logger logger;
 	/** Max number of high scores. */
 	private static final int MAX_SCORES = 7;
+	/** Max number of recent recorded scores / Team Clove */
+	private static final int MAX_RECORD = 10;
 
 	/**
 	 * private constructor.
@@ -47,7 +48,7 @@ public final class FileManager {
 
 	/**
 	 * Returns shared instance of FileManager.
-	 *
+	 * 
 	 * @return Shared instance of FileManager.
 	 */
 	protected static FileManager getInstance() {
@@ -58,7 +59,7 @@ public final class FileManager {
 
 	/**
 	 * Loads sprites from disk.
-	 *
+	 * 
 	 * @param spriteMap
 	 *            Mapping of sprite type and empty boolean matrix that will
 	 *            contain the image.
@@ -100,7 +101,7 @@ public final class FileManager {
 
 	/**
 	 * Loads a font of a given size.
-	 *
+	 * 
 	 * @param size
 	 *            Point size of the font.
 	 * @return New font.
@@ -135,7 +136,7 @@ public final class FileManager {
 	/**
 	 * Returns the application default scores if there is no user high scores
 	 * file.
-	 *
+	 * 
 	 * @return Default high scores.
 	 * @throws IOException
 	 *             In case of loading problems.
@@ -171,7 +172,7 @@ public final class FileManager {
 	/**
 	 * Loads high scores from file, and returns a sorted list of pairs score -
 	 * value.
-	 *
+	 * 
 	 * @return Sorted list of scores - players.
 	 * @throws IOException
 	 *             In case of loading problems.
@@ -224,7 +225,7 @@ public final class FileManager {
 
 	/**
 	 * Saves user high scores to disk.
-	 *
+	 * 
 	 * @param highScores
 	 *            High scores to save.
 	 * @throws IOException
@@ -274,18 +275,66 @@ public final class FileManager {
 	}
 
 	/**
-	 * Saves user currency to disk.
+	 * Returns the application default scores if there is no user recent scores
+	 * file.
 	 *
-	 * @param currency
-	 *            amount of user currency to save.
+	 * @return Default recent scores.
 	 * @throws IOException
-	 *             In case of saving problems.
+	 *             In case of loading problems.
+	 * Method for implement Recent score
+	 * Team Clover
 	 */
-
-	public void saveCurrency(final int currency) throws IOException {
+	private List<Score> loadDefaultRecentScores() throws IOException {
+		List<Score> recentScores = new ArrayList<Score>();
 		InputStream inputStream = null;
-		OutputStream outputStream = null;
-		BufferedWriter bufferedWriter = null;
+		BufferedReader reader = null;
+
+		try {
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("recent");
+			reader = new BufferedReader(new InputStreamReader(inputStream));
+
+			Score recentScore;
+			String date = reader.readLine();
+			String score = reader.readLine();
+			String highestLevel = reader.readLine();
+			String totalShipDestroyed = reader.readLine();
+			String clearAchievementNumber = reader.readLine();
+			String name = null;
+
+			while ((date != null) && (score != null)) {
+				recentScore = new Score(name, Integer.parseInt(score), date, Integer.parseInt(highestLevel),
+						Integer.parseInt(totalShipDestroyed), Integer.parseInt(clearAchievementNumber));
+				recentScores.add(recentScore);
+				date = reader.readLine();
+				score = reader.readLine();
+				highestLevel = reader.readLine();
+				totalShipDestroyed = reader.readLine();
+				clearAchievementNumber = reader.readLine();
+			}
+
+		} finally {
+			if (inputStream != null)
+				inputStream.close();
+		}
+
+		return recentScores;
+	}
+	/**
+	 * Loads recent scores from file, and returns a sorted list of pairs score -
+	 * value.
+	 *
+	 * @return Sorted list of Recent scores - players.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 *
+	 * Method for implement Recent score
+	 * Team Clove
+	 */
+	public List<Score> loadRecentScores() throws IOException {
+
+		List<Score> recentScores = new ArrayList<Score>();
+		InputStream inputStream = null;
 		BufferedReader bufferedReader = null;
 
 		try {
@@ -293,123 +342,359 @@ public final class FileManager {
 					.getCodeSource().getLocation().getPath();
 			jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-			//Choose File root
-			String currencyPath = new File(jarPath).getParent();
-			currencyPath += File.separator;
-			currencyPath += "currency";
+			String scoresPath = new File(jarPath).getParent();
+			scoresPath += File.separator;
+			scoresPath += "recent";
 
-			File currencyFile = new File(currencyPath);
-			//create File If there is no currencyFile
-			if (!currencyFile.exists())
-				currencyFile.createNewFile();
+			System.out.print(scoresPath);
 
-			List<String> lines = new ArrayList<>();
-			inputStream = new FileInputStream(currencyFile);
-			outputStream = new FileOutputStream(currencyFile);
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
-					outputStream, Charset.forName("UTF-8")));
+			File scoresFile = new File(scoresPath);
+			inputStream = new FileInputStream(scoresFile);
 			bufferedReader = new BufferedReader(new InputStreamReader(
 					inputStream, Charset.forName("UTF-8")));
 
-			// Read the file's current content
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				lines.add(line);
+			logger.info("Loading user recent scores.");
+
+			Score recentScore;
+			String date = bufferedReader.readLine();
+			String score = bufferedReader.readLine();
+			String highestLevel = bufferedReader.readLine();
+			String totalShipDestroyed = bufferedReader.readLine();
+			String clearAchievementNumber = bufferedReader.readLine();
+			String name = null;
+
+			while ((date != null) && (score != null)) {
+				recentScore = new Score(name, Integer.parseInt(score), date, Integer.parseInt(highestLevel),
+						Integer.parseInt(totalShipDestroyed), Integer.parseInt(clearAchievementNumber));
+				recentScores.add(recentScore);
+				date = bufferedReader.readLine();
+				score = bufferedReader.readLine();
+				highestLevel = bufferedReader.readLine();
+				totalShipDestroyed = bufferedReader.readLine();
+				clearAchievementNumber = bufferedReader.readLine();
+
 			}
 
-			// Modify the first line (currency)
-			if (!lines.isEmpty()) {
-				lines.set(0, EncryptionSupport.encrypt(Integer.toString(currency)));
-			} else {
-				// If the file was empty, add the new currency as the first line and the new gem as the second line
-				lines.add(EncryptionSupport.encrypt(Integer.toString(currency)));
-				lines.add(EncryptionSupport.encrypt("0"));
-			}
-
-			// Write back the modified content
-			for (String l : lines) {
-				bufferedWriter.write(l);
-				bufferedWriter.newLine();
-			}
-
-			logger.info("Saving user's currency.");
-
+		} catch (FileNotFoundException e) {
+			// loads default if there's no user scores.
+			logger.info("Loading default high scores.");
+			recentScores = loadDefaultRecentScores();
 		} finally {
 			if (bufferedReader != null)
 				bufferedReader.close();
+		}
 
+		Collections.sort(recentScores);
+		return recentScores;
+	}
+
+	/**
+	 * Saves user recent scores to disk.
+	 *
+	 * @param recentScores
+	 *            High scores to save.
+	 * @throws IOException
+	 *             In case of loading problems.
+	 * Method for implement Recent score
+	 * Team Clove
+	 */
+
+	public void saveRecentScores(final List<Score> recentScores)
+			throws IOException {
+		OutputStream outputStream = null;
+		BufferedWriter bufferedWriter = null;
+
+		try {
+			String jarPath = FileManager.class.getProtectionDomain()
+					.getCodeSource().getLocation().getPath();
+			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+			String scoresPath = new File(jarPath).getParent();
+			scoresPath += File.separator;
+			scoresPath += "recent";
+
+			File scoresFile = new File(scoresPath);
+
+			if (!scoresFile.exists())
+				scoresFile.createNewFile();
+
+			outputStream = new FileOutputStream(scoresFile);
+			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					outputStream, Charset.forName("UTF-8")));
+
+			Statistics stat = new Statistics();
+			stat = stat.loadUserData(stat);
+
+			logger.info("Saving user recent scores.");
+
+			// Saves 10 or less scores.
+			int savedCount = 0;
+			for (Score score : recentScores) {
+				if (savedCount >= MAX_RECORD)
+					break;
+				bufferedWriter.write(score.getDate());
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getScore()));
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getHighestLevel()));
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getShipDestroyed()));
+				bufferedWriter.newLine();
+				bufferedWriter.write(Integer.toString(score.getClearAchievementNumber()));
+				bufferedWriter.newLine();
+				savedCount++;
+			}
+			stat.resetStatistics();
+
+		} finally {
 			if (bufferedWriter != null)
 				bufferedWriter.close();
 		}
 	}
 
 	/**
-	 * Loads user currency from file, and returns current currency.
+	 *  save userData(Statistics) to disk
 	 *
-	 * @return amount of current currency.
+	 * @param playerStatistics
+	 * 				Player's Statistics list to save.
 	 * @throws IOException
-	 *             In case of loading problems.
+	 * 				In case of saving problems.
+	 *
 	 */
-	public int loadCurrency() throws IOException {
-		int currency;
-		InputStream inputStream = null;
-		BufferedReader bufferedReader = null;
+	//Team Clove
+    public void saveUserData(final List<Statistics> playerStatistics) throws IOException {
+		Properties properties = new Properties();
+		OutputStream outputStream = null;
 
-		try {
+        try {
+            String jarPath = FileManager.class.getProtectionDomain()
+                    .getCodeSource().getLocation().getPath();
+            jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+            String staticsPath = new File(jarPath).getParent();
+            staticsPath += File.separator;
+			staticsPath += "Statistic.properties";
+
+            File staticsFile = new File(staticsPath);
+
+			logger.info("Saving Player Statistic.");
+
+            if (!staticsFile.exists())
+				staticsFile.createNewFile();
+
+			if(!playerStatistics.isEmpty()){
+				Statistics stat = playerStatistics.get(0);
+				properties.setProperty("highestLevel", String.valueOf(stat.getHighestLevel()));
+				properties.setProperty("totalBulletsShot", String.valueOf(stat.getTotalBulletsShot()));
+				properties.setProperty("totalShipsDestroyed", String.valueOf(stat.getTotalShipsDestroyed()));
+				properties.setProperty("shipsDestructionStreak", String.valueOf(stat.getShipsDestructionStreak()));
+				properties.setProperty("playedGameNumber", String.valueOf(stat.getPlayedGameNumber()));
+				properties.setProperty("clearAchievementNumber", String.valueOf(stat.getClearAchievementNumber()));
+				properties.setProperty("totalPlaytime", String.valueOf(stat.getTotalPlaytime()));
+			}
+			outputStream = new FileOutputStream(staticsFile);
+			properties.store(new OutputStreamWriter(outputStream, Charset.forName("UTF-8")),
+					"PlayerGameStatistics");
+
+
+        } finally {
+            if (outputStream != null)
+                outputStream.close();
+        }
+    }
+
+	/**
+	 *
+	 * load userData(Statistics) from file, and return userData(Statistics)
+	 *
+	 * @return Player's Statistics
+	 * @throws IOException
+	 * 				In case of loading problems.
+	 */
+	//Team Clove
+	public Statistics loadUserData() throws IOException {
+		Properties properties = new Properties();
+		InputStream inputStream = null;
+
+		Statistics stat;
+
+		try{
 			String jarPath = FileManager.class.getProtectionDomain()
 					.getCodeSource().getLocation().getPath();
 			jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-			String currencyPath = new File(jarPath).getParent();
-			currencyPath += File.separator;
-			currencyPath += "currency";
+			String staticsPath = new File(jarPath).getParent();
+			staticsPath += File.separator;
+			staticsPath += "Statistic.properties";
 
-			File currencyFile = new File(currencyPath);
-			inputStream = new FileInputStream(currencyFile);
-			bufferedReader = new BufferedReader(new InputStreamReader(
-					inputStream, Charset.forName("UTF-8")));
+			File staticsFile = new File(staticsPath);
 
-			logger.info("Loading user's currency.");
+			inputStream = new FileInputStream(staticsFile);
+			properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
 
-			String amount = bufferedReader.readLine();
-			currency = Integer.parseInt(EncryptionSupport.decrypt(amount));
-		} catch (FileNotFoundException e) {
-			// loads default if there's no user currency.
-			logger.info("Loading default currency.");
-			currency = loadDefaultCurrency();
+			logger.info("Loading Player Statistic.");
+
+			int highestLevel = Integer.parseInt(properties.getProperty("highestLevel"));
+			int totalBulletsShot = Integer.parseInt(properties.getProperty("totalBulletsShot"));
+			int totalShipsDestroyed = Integer.parseInt(properties.getProperty("totalShipsDestroyed"));
+			int shipsDestructionStreak = Integer.parseInt(properties.getProperty("shipsDestructionStreak"));
+			int playedGameNumber = Integer.parseInt(properties.getProperty("playedGameNumber"));
+			int clearAchievementNumber = Integer.parseInt(properties.getProperty("clearAchievementNumber"));
+			long totalPlaytime = Integer.parseInt(properties.getProperty("totalPlaytime"));
+
+			stat = new Statistics(highestLevel, totalBulletsShot, totalShipsDestroyed, shipsDestructionStreak,
+					playedGameNumber, clearAchievementNumber, totalPlaytime);
+
+		} catch (FileNotFoundException e){
+			logger.info("Loading default user statistics.");
+			stat = loadDefaultUserData();
 		} finally {
-			if (bufferedReader != null)
-				bufferedReader.close();
+			if(inputStream != null){
+				inputStream.close();
+			}
+
 		}
 
-		return currency;
+		return stat;
 	}
 
 	/**
-	 * Returns the application default currency if there is no user currency files.
+	 * Returns the application default userData(Statistics)
+	 * if there is no Statistic.properties file.
 	 *
-	 * @return Default currency.
+	 *
+	 * @return Default Player's Statistics
+	 * @throws IOException
+	 * 				In case of loading problems.
+	 */
+	//Team Clove
+	public Statistics loadDefaultUserData() throws IOException {
+		Properties properties = new Properties();
+		InputStream inputStream = null;
+
+		Statistics stat;
+
+		try{
+			inputStream = FileManager.class.getClassLoader()
+					.getResourceAsStream("Statistic.properties");
+
+			properties.load(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+
+			int highestLevel = Integer.parseInt(properties.getProperty("highestLevel"));
+			int totalBulletsShot = Integer.parseInt(properties.getProperty("totalBulletsShot"));
+			int totalShipsDestroyed = Integer.parseInt(properties.getProperty("totalShipsDestroyed"));
+			int shipsDestructionStreak = Integer.parseInt(properties.getProperty("shipsDestructionStreak"));
+			int playedGameNumber = Integer.parseInt(properties.getProperty("playedGameNumber"));
+			int clearAchievementNumber = Integer.parseInt(properties.getProperty("clearAchievementNumber"));
+			long totalPlaytime = Integer.parseInt(properties.getProperty("totalPlaytime"));
+
+			stat = new Statistics(highestLevel, totalBulletsShot, totalShipsDestroyed, shipsDestructionStreak,
+					playedGameNumber, clearAchievementNumber, totalPlaytime);
+
+		} finally {
+			if(inputStream != null){
+				inputStream.close();
+			}
+		}
+		return stat;
+	}
+
+	/**
+	 * Saves user coin to disk.
+	 *
+	 * @param coin
+	 *            amount of user coin to save.
+	 * @throws IOException
+	 *             In case of saving problems.
+	 */
+
+	public void saveCoin(final int coin) throws IOException {
+		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarPath = URLDecoder.decode(jarPath, "UTF-8");
+
+		//Choose File root
+		String currencyPath = new File(jarPath).getParent();
+		currencyPath += File.separator;
+		currencyPath += "currency";
+
+		File currencyFile = new File(currencyPath);
+
+		//create File If there is no currencyFile
+		if (!currencyFile.exists())
+			currencyFile.createNewFile();
+
+		List<String> lines = new ArrayList<>();
+		String line;
+
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(currencyFile), Charset.forName("UTF-8")))) {
+			// Read the file's current content
+			while ((line = bufferedReader.readLine()) != null) {
+				lines.add(line);
+			}
+		}
+
+		// Modify the first line (coin)
+		if (!lines.isEmpty()) {
+			lines.set(0, EncryptionSupport.encrypt(Integer.toString(coin)));
+		} else {
+			// If the file was empty, add the new coin as the first line and the new gem as the second line
+			lines.add(EncryptionSupport.encrypt(Integer.toString(coin)));
+			lines.add(EncryptionSupport.encrypt("0"));
+		}
+
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(currencyFile), Charset.forName("UTF-8")))) {
+			// Write back the modified content
+			for (String l : lines) {
+				bufferedWriter.write(l);
+				bufferedWriter.newLine();
+			}
+			logger.info("Saving user's coin.");
+		}
+	}
+
+	/**
+	 * Loads user coin from file, and returns current coin.
+	 *
+	 * @return amount of current coin.
 	 * @throws IOException
 	 *             In case of loading problems.
 	 */
-	private int loadDefaultCurrency() throws IOException {
-		int currency;
-		InputStream inputStream = null;
-		BufferedReader reader = null;
+	public int loadCoin() throws IOException {
+		int coin;
+		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-		try {
-			inputStream = FileManager.class.getClassLoader()
-					.getResourceAsStream("currency");
-			reader = new BufferedReader(new InputStreamReader(inputStream));
+		String currencyPath = new File(jarPath).getParent();
+		currencyPath += File.separator;
+		currencyPath += "currency";
 
-			String amount = reader.readLine();
-			currency = Integer.parseInt(amount);
-		} finally {
-			if (inputStream != null)
-				inputStream.close();
+		File currencyFile = new File(currencyPath);
+
+		// create File If there is no currencyFile
+		if (!currencyFile.exists())
+			currencyFile.createNewFile();
+
+		// If the file was empty, add the new coin as the first line and the new gem as the second line
+		if (currencyFile.length() == 0) {
+			try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(currencyFile), Charset.forName("UTF-8")))) {
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+			}
 		}
 
-		return currency;
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(currencyFile), Charset.forName("UTF-8")))) {
+			logger.info("Loading user's coin.");
+			String amount = bufferedReader.readLine();
+			coin = Integer.parseInt(EncryptionSupport.decrypt(amount));
+		}
+
+		return coin;
 	}
 
 	/**
@@ -422,63 +707,48 @@ public final class FileManager {
 	 */
 	// Team-Ctrl-S(Currency)
 	public void saveGem(final int gem) throws IOException {
-		InputStream inputStream = null;
-		OutputStream outputStream = null;
-		BufferedWriter bufferedWriter = null;
-		BufferedReader bufferedReader = null;
+		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-		try {
-			String jarPath = FileManager.class.getProtectionDomain()
-					.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+		//Choose File root
+		String currencyPath = new File(jarPath).getParent();
+		currencyPath += File.separator;
+		currencyPath += "currency";
 
-			//Choose File root
-			String gemPath = new File(jarPath).getParent();
-			gemPath += File.separator;
-			gemPath += "currency";
+		File currencyFile = new File(currencyPath);
 
-			File gemFile = new File(gemPath);
-			//create File If there is no gemFile
-			if (!gemFile.exists())
-				gemFile.createNewFile();
+		//create File If there is no currencyFile
+		if (!currencyFile.exists())
+			currencyFile.createNewFile();
 
-			List<String> lines = new ArrayList<>();
-			inputStream = new FileInputStream(gemFile);
-			outputStream = new FileOutputStream(gemFile);
-			bufferedWriter = new BufferedWriter(new OutputStreamWriter(
-					outputStream, Charset.forName("UTF-8")));
-			bufferedReader = new BufferedReader(new InputStreamReader(
-					inputStream, Charset.forName("UTF-8")));
+		List<String> lines = new ArrayList<>();
+		String line;
 
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(currencyFile), Charset.forName("UTF-8")))) {
 			// Read the file's current content
-			String line;
 			while ((line = bufferedReader.readLine()) != null) {
 				lines.add(line);
 			}
+		}
 
-			// Modify the second line (gem)
-			if (!lines.isEmpty()) {
-				lines.set(1, EncryptionSupport.encrypt(Integer.toString(gem)));
-			} else {
-				// If the file was empty, add the new currency as the first line and the new gem as the second line
-				lines.add(EncryptionSupport.encrypt("0"));
-				lines.add(EncryptionSupport.encrypt(Integer.toString(gem)));
-			}
+		// Modify the second line (gem)
+		if (!lines.isEmpty()) {
+			lines.set(1, EncryptionSupport.encrypt(Integer.toString(gem)));
+		} else {
+			// If the file was empty, add the new coin as the first line and the new gem as the second line
+			lines.add(EncryptionSupport.encrypt("0"));
+			lines.add(EncryptionSupport.encrypt(Integer.toString(gem)));
+		}
 
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(currencyFile), Charset.forName("UTF-8")))) {
 			// Write back the modified content
 			for (String l : lines) {
 				bufferedWriter.write(l);
 				bufferedWriter.newLine();
 			}
-
 			logger.info("Saving user's gem.");
-
-		} finally {
-			if (bufferedReader != null)
-				bufferedReader.close();
-
-			if (bufferedWriter != null)
-				bufferedWriter.close();
 		}
 	}
 
@@ -492,64 +762,37 @@ public final class FileManager {
 	// Team-Ctrl-S(Currency)
 	public int loadGem() throws IOException {
 		int gem;
-		InputStream inputStream = null;
-		BufferedReader bufferedReader = null;
+		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-		try {
-			String jarPath = FileManager.class.getProtectionDomain()
-					.getCodeSource().getLocation().getPath();
-			jarPath = URLDecoder.decode(jarPath, "UTF-8");
+		String currencyPath = new File(jarPath).getParent();
+		currencyPath += File.separator;
+		currencyPath += "currency";
 
-			String gemPath = new File(jarPath).getParent();
-			gemPath += File.separator;
-			gemPath += "currency";
+		File currencyFile = new File(currencyPath);
 
-			File gemFile = new File(gemPath);
-			inputStream = new FileInputStream(gemFile);
-			bufferedReader = new BufferedReader(new InputStreamReader(
-					inputStream, Charset.forName("UTF-8")));
+		//create File If there is no currencyFile
+		if (!currencyFile.exists())
+			currencyFile.createNewFile();
 
-			logger.info("Loading user's gem.");
-
-			bufferedReader.readLine(); // Ignore first(currency) line
-			String amount = bufferedReader.readLine();
-			gem = Integer.parseInt(EncryptionSupport.decrypt(amount));
-		} catch (FileNotFoundException e) {
-			// loads default if there's no user gem.
-			logger.info("Loading default gem.");
-			gem = loadDefaultGem();
-		} finally {
-			if (bufferedReader != null)
-				bufferedReader.close();
+		// If the file was empty, add the new coin as the first line and the new gem as the second line
+		if (currencyFile.length() == 0) {
+			try (BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(currencyFile), Charset.forName("UTF-8")))) {
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+				bufferedWriter.write(EncryptionSupport.encrypt("0"));
+				bufferedWriter.newLine();
+			}
 		}
 
-		return gem;
-	}
+		try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+				new FileInputStream(currencyFile), Charset.forName("UTF-8")))) {
+			logger.info("Loading user's gem.");
 
-	/**
-	 * Returns the application default gem if there is no user gem files.
-	 *
-	 * @return Default gem.
-	 * @throws IOException
-	 * 			   In case of loading problems.
-	 */
-	// Team-Ctrl-S(Currency)
-	private int loadDefaultGem() throws IOException {
-		int gem;
-		InputStream inputStream = null;
-		BufferedReader reader = null;
-
-		try {
-			inputStream = FileManager.class.getClassLoader()
-					.getResourceAsStream("currency");
-			reader = new BufferedReader(new InputStreamReader(inputStream));
-
-			reader.readLine(); //Ignore first(currency) line
-			String amount = reader.readLine();
-			gem = Integer.parseInt(amount);
-		} finally {
-			if (inputStream != null)
-				inputStream.close();
+			bufferedReader.readLine(); // Ignore first(coin) line
+			String amount = bufferedReader.readLine();
+			gem = Integer.parseInt(EncryptionSupport.decrypt(amount));
 		}
 
 		return gem;

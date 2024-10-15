@@ -7,28 +7,35 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
 import CtrlS.RoundState;
+import CtrlS.Gem;
 import entity.AddSign;
 import entity.Coin;
+import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
 import entity.Ship;
 
+import level_design.Background;
+
+import javax.imageio.ImageIO;
+
 /**
- * Manages screen drawing.
- *
- * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- *
- */
+* Manages screen drawing.
+*
+* @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
+*
+*/
 public class DrawManager {
 
 	/** Singleton instance of the class. */
-	private static DrawManager instance;
+	public static DrawManager instance;
 	/** Current frame. */
 	private static Frame frame;
 	/** FileManager instance. */
@@ -49,6 +56,10 @@ public class DrawManager {
 	private static Font fontBig;
 	/** Big sized font properties. */
 	private static FontMetrics fontBigMetrics;
+
+	/** ###TEAM INTERNATIONAL ### */
+	private Background background;
+	private BufferedImage backgroundImage;
 
 	/** Sprite types mapped to their images. */
 	private static Map<SpriteType, boolean[][]> spriteMap;
@@ -75,6 +86,10 @@ public class DrawManager {
 		EnemyShipC1,
 		/** Third enemy ship - second form. */
 		EnemyShipC2,
+		/** First explosive enemy ship - first form. */
+		ExplosiveEnemyShip1, //Edited by Enemy
+		/** First explosive enemy ship - second form. */
+		ExplosiveEnemyShip2, //Edited by Enemy
 		/** Bonus ship. */
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
@@ -83,27 +98,35 @@ public class DrawManager {
 		Heart, //Please have the Nice HUD team fix it. - Enemy team
 		/**Item*/
 		Item, //by enemy team
+		/**Boss*/
+		Boss, //by enemy team
 		/** Player Lives. */
 		/** Item */
-    ItemHeart,
+    	ItemHeart,
 		ShipBarrierStatus,
 		ItemCoin,
 		ItemPierce,
 		ItemBomb,
 		ItemBarrier,
-    //Produced by Starter Team
+		ItemFeverTime,
+		//Produced by Starter Team
+
+        //Produced by Starter Team
 		/** coin */
 		Coin,
 		/** add sign */
-		AddSign
+		AddSign,
+		/** Gem - Added by CtrlS */
+		Gem,
+		Obstacle
 	};
 
 	/**
-	 * Private constructor.
-	 *
-	 * Modifying Access Restrictor to public
-	 * - HUDTeam - LeeHyunWoo
-	 */
+	* Private constructor.
+	*
+	* Modifying Access Restrictor to public
+	* - HUDTeam - LeeHyunWoo
+	*/
 	public DrawManager() {
 		fileManager = Core.getFileManager();
 		logger = Core.getLogger();
@@ -111,7 +134,7 @@ public class DrawManager {
 
 		try {
 			spriteMap = new LinkedHashMap<SpriteType, boolean[][]>();
-
+			spriteMap.put(SpriteType.Obstacle, new boolean[12][12]); //by Level Design Team
 			spriteMap.put(SpriteType.Ship, new boolean[13][8]);
 			spriteMap.put(SpriteType.ShipDestroyed, new boolean[13][8]);
 			spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
@@ -122,17 +145,22 @@ public class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipB2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
+			spriteMap.put(SpriteType.ExplosiveEnemyShip1, new boolean[12][8]); //Edited by Enemy
+			spriteMap.put(SpriteType.ExplosiveEnemyShip2, new boolean[12][8]); //Edited by Enemy
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
+			spriteMap.put(SpriteType.Boss, new boolean[24][16]); //by Enemy team
 			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
 			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
+			spriteMap.put(SpriteType.Gem, new boolean[7][6]); // CtrlS: res/graphics, line 20
 			//by Item team
 			spriteMap.put(SpriteType.ItemHeart, new boolean[7][5]);
 			spriteMap.put(SpriteType.ItemBarrier, new boolean[9][10]);
 			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
 			spriteMap.put(SpriteType.ShipBarrierStatus, new boolean[13][8]);	// temporary
 			spriteMap.put(SpriteType.ItemCoin, new boolean[7][7]);
+			spriteMap.put(SpriteType.ItemFeverTime, new boolean[9][9]);
 			spriteMap.put(SpriteType.ItemPierce, new boolean[7][7]);
 
 			fileManager.loadSprite(spriteMap);
@@ -155,7 +183,7 @@ public class DrawManager {
 	 *
 	 * @return Shared instance of DrawManager.
 	 */
-	static DrawManager getInstance() {
+	public static DrawManager getInstance() {
 		if (instance == null)
 			instance = new DrawManager();
 		return instance;
@@ -219,14 +247,24 @@ public class DrawManager {
 	 */
 	public void drawEntity(final Entity entity, final int positionX,
 						   final int positionY) {
-		boolean[][] image = spriteMap.get(entity.getSpriteType());
 
-		backBufferGraphics.setColor(entity.getColor());
-		for (int i = 0; i < image.length; i++)
-			for (int j = 0; j < image[i].length; j++)
-				if (image[i][j])
-					backBufferGraphics.drawRect(positionX + i * 2, positionY
-							+ j * 2, 1, 1);
+		try {
+			boolean[][] image = spriteMap.get(entity.getSpriteType());
+
+			backBufferGraphics.setColor(entity.getColor());
+			for (int i = 0; i < image.length; i++)
+				for (int j = 0; j < image[i].length; j++)
+					if (image[i][j])
+						backBufferGraphics.drawRect(positionX + i * 2, positionY
+								+ j * 2, 1, 1);
+
+		} catch(Exception e) {
+
+			System.out.println(e);
+			System.exit(1);
+		}
+
+
 	}
 
 	/**
@@ -338,23 +376,35 @@ public class DrawManager {
 	 * @param option
 	 *            Option selected.
 	 */
-	public void drawMenu(final Screen screen, final int option) {
+	public void drawMenu(final Screen screen, final int option, final int option2, final int option3) {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
+		String mode = onePlayerModeString;
+		String RecentRecord = "Recent Records";
 		String playString = "Play";
 		String highScoresString = "High scores";
 		String exitString = "exit";
 		String merchant = "Merchant";
-		AddSign addSign = new AddSign();
+		String bulletCountString = "bullet count up";
+		String shipSpeedString = "ship speed up";
+		String attackSpeedString = "attack speed up";
+		String coinGainString = "coin gain up";
+		String merchantState = merchant;
+
+        AddSign addSign = new AddSign();
 
 
 		// Play (starter)
-		if (option == 2)
-			backBufferGraphics.setColor(Color.GREEN);
+		if (option == 2 && option2 == 0)
+			backBufferGraphics.setColor(Color.CYAN);
+		else if (option == 2 && option2 == 1)
+			backBufferGraphics.setColor(Color.MAGENTA);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, playString,
-				screen.getHeight() / 4 * 2); // adjusted Height
+		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (starter), default: 1 player mode
+		if (option == 2) {mode = "<- " + mode + " ->";}
+		drawCenteredRegularString(screen, mode, screen.getHeight()
+				/ 4 * 2); // adjusted Height
 
 		// High scores (starter)
 		if (option == 3)
@@ -364,33 +414,33 @@ public class DrawManager {
 		drawCenteredRegularString(screen, highScoresString, screen.getHeight()
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 2); // adjusted Height
 
-		// 1 player mode (starter)
-		if (option == 4)
+		if (option3 == 0) {merchantState = merchant;}
+		if (option3 == 1) {merchantState = bulletCountString;}
+		if (option3 == 2) {merchantState = shipSpeedString;}
+		if (option3 == 3) {merchantState = attackSpeedString;}
+		if (option3 == 4) {merchantState = coinGainString;}
+		if (option == 4) {merchantState = "<- " + merchantState + " ->";}
+		if (option == 4 && option3 == 0)
 			backBufferGraphics.setColor(Color.GREEN);
+		else if (option == 4 && option3 != 0)
+			backBufferGraphics.setColor(Color.CYAN);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, onePlayerModeString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 4); // adjusted Height
 
-		// 2 player mode (starter)
-		if (option == 5)
-			backBufferGraphics.setColor(Color.GREEN);
-		else
-			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, twoPlayerModeString, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
+		drawCenteredRegularString(screen, merchantState, screen.getHeight()
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 4);
+		/*drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
+				/ 4 * 2 + fontRegularMetrics.getHeight() * 6 - 12);*/
 
-		if (option == 6)
-			backBufferGraphics.setColor(Color.GREEN);
-		else
-			backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredRegularString(screen, merchant, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 8);
-		drawEntity(addSign, screen.getWidth()/2 + 50, screen.getHeight()
-				/ 4 * 2 + fontRegularMetrics.getHeight() * 8 - 12);
+        // Record scores (Team Clove)
+        if (option == 5)
+            backBufferGraphics.setColor(Color.GREEN);
+        else
+            backBufferGraphics.setColor(Color.WHITE);
+        drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
+                / 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
 
-
-		// Exit (starter)
+        // Exit (starter)
 		if (option == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
@@ -416,7 +466,7 @@ public class DrawManager {
 	 *            If the score is a new high score.
 	 */
 
-	//Ctrl S - add Currency String
+	//Ctrl S - add Coin String
 	public void drawResults(final Screen screen, final int score,
 							final int livesRemaining, final int shipsDestroyed,
 							final float accuracy, final boolean isNewRecord, final GameState gameState) {
@@ -425,7 +475,7 @@ public class DrawManager {
 		String shipsDestroyedString = "enemies destroyed " + shipsDestroyed;
 		String accuracyString = String
 				.format("accuracy %.2f%%", accuracy * 100);
-		String currencyString = "Earned  $ " + gameState.getCurrency() + "  Coins!";
+		String coinString = "Earned  $ " + gameState.getCoin() + "  Coins!";
 
 		int height = isNewRecord ? 4 : 2;
 
@@ -440,7 +490,7 @@ public class DrawManager {
 						* 4);
 		drawCenteredRegularString(screen, accuracyString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight() * 6);
-		drawCenteredRegularString(screen, currencyString, screen.getHeight()
+		drawCenteredRegularString(screen, coinString, screen.getHeight()
 				/ height + fontRegularMetrics.getHeight() * 8);
 	}
 
@@ -543,6 +593,25 @@ public class DrawManager {
 	}
 
 	/**
+	 * Draws recent score(record) screen title and instructions.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * Team Clove
+	 */
+	public void drawRecordMenu(final Screen screen) {
+		String recentScoreString = "Recent Records";
+		String instructionsString = "Press Space to return";
+
+		backBufferGraphics.setColor(Color.GREEN);
+		drawCenteredBigString(screen, recentScoreString, screen.getHeight() / 8);
+
+		backBufferGraphics.setColor(Color.GRAY);
+		drawCenteredRegularString(screen, instructionsString,
+				screen.getHeight() / 5);
+	}
+
+	/**
 	 * Draws high scores.
 	 *
 	 * @param screen
@@ -563,6 +632,61 @@ public class DrawManager {
 					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
 			i++;
 		}
+	}
+
+	/**
+	 * Draws recent scores.
+	 *
+	 * @param screen
+	 *            Screen to draw on.
+	 * @param recentScores
+	 *            List of recent scores.
+	 * Team Clove
+	 */
+	public void drawRecentScores(final Screen screen,
+								 final List<Score> recentScores) {
+		backBufferGraphics.setColor(Color.WHITE);
+		int i = 0;
+		boolean isFirstLine = true;
+		String scoreString = "";
+
+		for (Score score : recentScores) {
+			if (isFirstLine) { // Create Header
+				scoreString = String.format("           Date                           " +
+						" Score       Level       Destroy       Achievement");
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				isFirstLine = false;
+				i++;
+			} else {
+				scoreString = String.format("   %s                      %04d         %04d             %04d         " +
+								"             %04d",
+						score.getDate(), score.getScore(), score.getHighestLevel(),
+						score.getShipDestroyed(), score.getClearAchievementNumber());
+				drawRightedRegularString(screen, scoreString, screen.getHeight()
+						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+				i++;
+			}
+		}
+	}
+
+
+	/**
+	 * Draws a righted string on regular font
+	 *
+	 * @param screen
+	 * 				Screen to draw on.
+	 * @param string
+	 * 				String to draw.
+	 * @param height
+	 * 				Height of the drawing.
+	 *
+	 * 		//Clove
+	 */
+	public void drawRightedRegularString(final Screen screen,
+										 final String string, final int height) {
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.drawString(string, 0, height);
 	}
 
 	/**
@@ -620,7 +744,11 @@ public class DrawManager {
 				rectWidth, rectHeight);
 		backBufferGraphics.setColor(Color.GREEN);
 		if (number >= 4)
-			if (!bonusLife) {
+			// Adjust the numbers here to match the appropriate boss levels.
+			if (level == 3) { // Edited by team Enemy // ex) (level == 3 || level == 6 || level == 9)
+				drawCenteredBigString(screen, "BOSS",
+						screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+			} else if (!bonusLife) {
 				drawCenteredBigString(screen, "Level " + level,
 						screen.getHeight() / 2
 								+ fontBigMetrics.getHeight() / 3);
@@ -666,7 +794,7 @@ public class DrawManager {
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageCoinString, screen.getHeight() / 3);
 		backBufferGraphics.setColor(Color.WHITE);
-		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCurrency()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
+		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCoin()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
 
 		//draw HitRate Bonus part
 		float hitRate = roundState.getRoundHitRate(); // Calculate HitRate
@@ -725,5 +853,84 @@ public class DrawManager {
 		backBufferGraphics.setFont(fontRegular);
 		backBufferGraphics.setColor(Color.WHITE);
 		backBufferGraphics.drawString(Integer.toString(coin), coinX + coinImage.getWidth() + 10, 20);
+	}
+
+	public void drawCurrentGem(final Screen screen , final int gem) {
+		Gem gemImage = new Gem();
+		int coinX = screen.getWidth() - 60;
+		int coinY = 25;
+		drawEntity(gemImage, coinX, coinY);
+		backBufferGraphics.setFont(fontRegular);
+		backBufferGraphics.setColor(Color.WHITE);
+		backBufferGraphics.drawString(Integer.toString(gem), coinX + gemImage.getWidth() + 10, 35);
+	}
+	/**
+	* ### TEAM INTERNATIONAL ###
+	* Background draw and update method
+	*/
+
+	public void loadBackground(int levelNumber) {
+		background = Background.getInstance();
+		// I still have no clue how relative pathing or class pathing works
+		InputStream imageStream = Background.getBackgroundImageStream(levelNumber);
+		try {
+			assert imageStream != null;
+			backgroundImage = ImageIO.read(imageStream);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void drawBackground(boolean backgroundMoveRight, boolean backgroundMoveLeft) {
+		int verticalOffset = background.getVerticalOffset();
+		int horizontalOffset = background.getHorizontalOffset(backgroundMoveRight, backgroundMoveLeft);
+
+		backBufferGraphics.drawImage(backgroundImage, horizontalOffset, verticalOffset, null);
+	}
+
+	/**
+	* ### TEAM INTERNATIONAL ###
+	*
+	* Wave draw method
+	* **/
+	public void drawWave(final Screen screen, final int wave, final int number) {
+
+		int rectWidth = screen.getWidth();
+		int rectHeight = screen.getHeight() / 6;
+		backBufferGraphics.setColor(Color.BLACK);
+		backBufferGraphics.fillRect(0, screen.getHeight() / 2 - rectHeight / 2,
+		rectWidth, rectHeight);
+		backBufferGraphics.setColor(Color.GREEN);
+		if (number >= 4)
+
+		drawCenteredBigString(screen, "Wave " + wave,
+		screen.getHeight() / 2
+		+ fontBigMetrics.getHeight() / 3);
+
+		else if (number != 0)
+		drawCenteredBigString(screen, Integer.toString(number),
+		screen.getHeight() / 2 + fontBigMetrics.getHeight() / 3);
+		else
+		drawCenteredBigString(screen, "GO!", screen.getHeight() / 2
+		+ fontBigMetrics.getHeight() / 3);
+	}
+
+
+	/**
+	 * Draw the item that player got
+	 *
+	 * @param screen
+	 *			  Screen to draw on.
+	 *
+	 * HUD Team - Jo Minseo
+	 */
+	public void drawItem(final Screen screen){
+		//Bomb
+		Entity itemBomb = new Entity(0, 0, 13 * 2, 8 * 2, Color.gray);
+		itemBomb.setSpriteType(DrawManager.SpriteType.ItemBomb);
+
+		if(Bomb.getIsBomb() && Bomb.getCanShoot()){
+			drawEntity(itemBomb, screen.getWidth() / 5, screen.getHeight() - 50);
+		}
 	}
 }

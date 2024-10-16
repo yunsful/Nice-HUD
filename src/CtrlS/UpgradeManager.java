@@ -141,19 +141,6 @@ public final class UpgradeManager {
         fileManager.saveUpgradeStatus(properties);
     }
 
-    // Methods for bullet speed
-
-    /**
-     * Get the current bullet speed value.
-     *
-     * @return The current bullet speed.
-     * @throws IOException In case of loading problems.
-     */
-    public int getBulletSpeed() throws IOException {
-        Properties properties = fileManager.loadUpgradeStatus();
-        return Integer.parseInt(properties.getProperty(BULLET_NUM, "1"));
-    }
-
     /**
      * Reset all upgrades to their default values.
      *
@@ -164,7 +151,23 @@ public final class UpgradeManager {
         fileManager.saveUpgradeStatus(properties);
     }
 
-    // produce inventory team
+    // produce inventory team ---
+
+    // Methods for bullet Number
+
+    public int getBulletNum() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(BULLET_NUM, "1"));
+    }
+
+    public void addBulletNum() throws IOException {
+        int currentValue = getBulletNum();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(BULLET_NUM, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+
 
     public int getSpeedCount() throws IOException {
         Properties properties = fileManager.loadUpgradeStatus();

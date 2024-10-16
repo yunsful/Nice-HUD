@@ -3,6 +3,7 @@ package screen;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import
 
 import engine.Cooldown;
 import engine.Core;
@@ -30,8 +31,6 @@ public class TitleScreen extends Screen {
 	// select One player or Two player
 	private int pnumSelectionCode; //produced by Starter
 	private int merchantState;
-
-	private static ArrayList<Integer> count = new ArrayList<>();
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -174,73 +173,92 @@ public class TitleScreen extends Screen {
 	 */
 	
 	private void testStatUpgrade() {
-		while (count.size() < 4) {
-			count.add(0);
-		}
 		// CtrlS: testStatUpgrade should only be called after coins are spent
 		if (this.merchantState == 1) { // bulletCount
 			try {
-				if (!(count.get(0) % 2 == 0) && Core.getCurrencyManager().spendCoin(50)) {
-					count.set(0, count.get(0) + 1);
-				} else if ((count.get(0) % 2 == 0) && Core.getCurrencyManager().spendGem(count.get(0) + 1)) {
-					count.set(0, count.get(0) + 1);
+				if (!(Core.getUpgradeManager().getBulletCount() % 2 == 0)
+						&& Core.getCurrencyManager().spendCoin(50)) {
+
+					Core.getUpgradeManager().addBulletNum();
+					Core.getLogger().info("Bullet Number: " + Core.getUpgradeManager().getBulletNum());
+
+					Core.getUpgradeManager().addBulletCount();
+
+				} else if ((Core.getUpgradeManager().getBulletCount() % 2 == 0)
+						&& Core.getCurrencyManager().spendGem(Core.getUpgradeManager().getBulletCount() + 1)) {
+
+					Core.getUpgradeManager().addBulletCount();
+					Core.getLogger().info("Upgrade has been unlocked");
+
 				} else {
 					Core.getLogger().info("you don't have enough");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+
 		} else if (this.merchantState == 2) { // shipSpeed
 			try {
-				if ((count.get(1) == 0 || !(count.get(1) % 4 == 0))
+				if (!(Core.getUpgradeManager().getSpeedCount() % 4 == 0)
 						&& Core.getCurrencyManager().spendCoin(50)) {
 
 					Core.getUpgradeManager().addMovementSpeed(1);
 					Core.getLogger().info("Movement Speed: " + Core.getUpgradeManager().getMovementSpeed());
-					count.set(1, count.get(1) + 1);
 
-				} else if (!(count.get(1) == 0 || !(count.get(1) % 4 == 0))
-						&& Core.getCurrencyManager().spendGem((count.get(1) / 4) + 2)) {
-					count.set(1, count.get(1) + 1);
+					Core.getUpgradeManager().addSpeedCount();
+
+				} else if ((Core.getUpgradeManager().getSpeedCount() % 4 == 0)
+						&& Core.getCurrencyManager().spendGem((Core.getUpgradeManager().getSpeedCount() / 4) + 2)) {
+
+					Core.getUpgradeManager().addSpeedCount();
+					Core.getLogger().info("Upgrade has been unlocked");
+
 				} else {
 					Core.getLogger().info("you don't have enough");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+
 		} else if (this.merchantState == 3) { // attackSpeed
 			try {
-				if (){
-
-				}
-				else if ((count.get(2) == 0 || !(count.get(2) % 4 == 0))
+				if (!(Core.getUpgradeManager().getAttackCount() % 4 == 0)
 						&& Core.getCurrencyManager().spendCoin(50)) {
 
 					Core.getUpgradeManager().addAttackSpeed(-10);
 					Core.getLogger().info("Attack Speed: " + Core.getUpgradeManager().getAttackSpeed());
-					count.set(2, count.get(2) + 1);
 
-				} else if (!(count.get(2) == 0 || !(count.get(2) % 4 == 0))
-						&& Core.getCurrencyManager().spendGem((count.get(2) / 4) + 2)) {
-					count.set(2, count.get(2) + 1);
+					Core.getUpgradeManager().addAttackCount();
+
+				} else if ((Core.getUpgradeManager().getAttackCount() % 4 == 0)
+						&& Core.getCurrencyManager().spendGem((Core.getUpgradeManager().getAttackCount() / 4) + 2)) {
+
+					Core.getUpgradeManager().addAttackCount();
+					Core.getLogger().info("Upgrade has been unlocked");
+
 				} else {
 					Core.getLogger().info("you don't have enough");
 				}
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
+
 		} else if (this.merchantState == 4) { // coinGain
 			try {
-				if ((count.get(3) == 0 || !(count.get(3) % 4 == 0))
+				if (!(Core.getUpgradeManager().getCoinCount() % 4 == 0)
 						&& Core.getCurrencyManager().spendCoin(50)) {
 
 					Core.getUpgradeManager().addCoinAcquisitionMultiplier(0.1);
 					Core.getLogger().info("CoinBonus: " + Core.getUpgradeManager().getCoinAcquisitionMultiplier());
-					count.set(3, count.get(3) + 1);
 
-				} else if (!(count.get(3) == 0 || !(count.get(3) % 4 == 0))
-						&& Core.getCurrencyManager().spendGem((count.get(3) / 4) + 2)) {
-					count.set(3, count.get(3) + 1);
+					Core.getUpgradeManager().addCoinCount();
+
+				} else if ((Core.getUpgradeManager().getCoinCount() % 4 == 0)
+						&& Core.getCurrencyManager().spendGem((Core.getUpgradeManager().getCoinCount() / 4) + 2)) {
+
+					Core.getUpgradeManager().addCoinCount();
+					Core.getLogger().info("Upgrade has been unlocked");
+
 				} else {
 					Core.getLogger().info("you don't have enough");
 				}

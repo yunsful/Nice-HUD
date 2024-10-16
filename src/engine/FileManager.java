@@ -891,10 +891,10 @@ public final class FileManager {
 				defaultProperties.setProperty("bullet_num", "1");
 
 				//inventory team
-				defaultProperties.setProperty("speed_LevelCount", "0");
+				defaultProperties.setProperty("speed_LevelCount", "1");
+				defaultProperties.setProperty("Coin_LevelCount", "1");
+				defaultProperties.setProperty("attack_LevelCount", "1");
 				defaultProperties.setProperty("bullet_LevelCount", "0");
-				defaultProperties.setProperty("Coin_LevelCount", "0");
-				defaultProperties.setProperty("attack_LevelCount", "0");
 			}
 		} finally {
 			if (inputStream != null) {

@@ -158,4 +158,9 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawLine(0, positionY + 1, screen.getWidth(),
                 positionY + 1);
     }
+
+    public static void drawRect(final int x, final int y, final int width, final int height, final Color color) {
+        backBufferGraphics.setColor(color);
+        backBufferGraphics.fillRect(x, y, width, height);
+    } // by Saeum Jung - TeamHUD
 }

@@ -116,6 +116,10 @@ public final class Core {
 			// CtrlS: Make instance of Upgrade Manager
 			Core.getUpgradeManager();
 
+			//After Game Start, reset Player Statistics
+			Statistics statistics = new Statistics();
+			statistics.resetStatistics();
+
 		} catch (Exception e) {
 			// TODO handle exception
 			e.printStackTrace();

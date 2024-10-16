@@ -116,9 +116,10 @@ public final class Core {
 			// CtrlS: Make instance of Upgrade Manager
 			Core.getUpgradeManager();
 
-			//After Game Start, reset Player Statistics
+			//Clove. Reset Player Statistics After the Game Starts
 			Statistics statistics = new Statistics();
 			statistics.resetStatistics();
+			LOGGER.info("Reset Player Statistics");
 
 		} catch (Exception e) {
 			// TODO handle exception

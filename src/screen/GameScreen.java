@@ -710,18 +710,19 @@ public class GameScreen extends Screen {
 
 		for (Obstacle obstacle : this.obstacles) {
 			if (!obstacle.isDestroyed() && checkCollision(this.ship, obstacle)) {
-				this.lives--;
-				obstacle.destroy();  // Destroy obstacle
-				this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
-				// Sound Operator
-				if (this.lives == 0){
-					sm = SoundManager.getInstance();
-					sm.playShipDieSounds();
+				//Obstacles ignored when barrier activated_team inventory
+				if (!this.item.isbarrierActive()) {
+					this.lives--;
+					if (!this.ship.isDestroyed()) {
+						this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
+					}
+					obstacle.destroy();  // Destroy obstacle
+					this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
+				} else {
+					obstacle.destroy();  // Destroy obstacle
+					this.logger.info("Shield blocked the hit from an obstacle, " + this.lives + " lives remaining.");
 				}
 
-				else{
-					this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
-				}
 				break;  // Stop further collisions if the ship is destroyed.
 			}
 		}

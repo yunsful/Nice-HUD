@@ -12,6 +12,8 @@ import engine.Cooldown;
 import engine.Core;
 import engine.GameState;
 import engine.Score;
+import Enemy.PlayerGrowth;
+import inventory_develop.NumberOfBullet;
 
 /**
  * Implements the score screen.
@@ -67,6 +69,10 @@ public class ScoreScreen extends Screen {
 	private GameState gameState; // Team-Ctrl-S(Currency)
 
 	private boolean isGameClear; // CtrlS
+
+	private PlayerGrowth growth = new PlayerGrowth();
+	private NumberOfBullet numberOfBullet = new NumberOfBullet();
+
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -189,6 +195,8 @@ public class ScoreScreen extends Screen {
 					this.selectionCooldown.reset();
 				}
 			}
+			numberOfBullet.ResetPierceLevel();
+			growth.ResetBulletSpeed();
 		}
 	}
 

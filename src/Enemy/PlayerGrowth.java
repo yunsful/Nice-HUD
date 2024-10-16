@@ -17,7 +17,6 @@ public class PlayerGrowth {
         // CtrlS: set player growth based on upgrade_status.properties
         try {
             moveSpeed = Core.getUpgradeManager().getMovementSpeed();
-            bulletSpeed = Core.getUpgradeManager().getBulletSpeed();
             shootingDelay = Core.getUpgradeManager().getAttackSpeed();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -45,6 +44,12 @@ public class PlayerGrowth {
         if (this.shootingDelay < 100) {
             this.shootingDelay = 100; // Minimum shooting delay is 100ms
         }
+    }
+
+    // reset bullet speed
+    //Edit by inventory
+    public void ResetBulletSpeed(){
+        bulletSpeed = -4;
     }
 
     // Returns current health

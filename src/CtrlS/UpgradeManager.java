@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Properties;
 import java.util.logging.Logger;
+import inventory_develop.ShipStatus;
 
 public final class UpgradeManager {
 
@@ -27,6 +28,8 @@ public final class UpgradeManager {
     private static final String Attack_Count = "attack_LevelCount";
     private static final String Coin_Count = "Coin_LevelCount";
     private static final String Bullet_Count = "bullet_LevelCount";
+    // load stat increase data
+    private ShipStatus shipStatus;
 
 
     /** Decimal format to ensure values have one decimal place. */
@@ -43,6 +46,9 @@ public final class UpgradeManager {
         } catch (IOException e){
             throw new RuntimeException(e);
         }
+        // load stat increase data
+        shipStatus = new ShipStatus();
+        shipStatus.loadStatus();
     }
 
     /**
@@ -72,12 +78,12 @@ public final class UpgradeManager {
     /**
      * Add to the current coin acquisition multiplier.
      *
-     * @param amount The amount to add.
+     *
      * @throws IOException In case of saving problems.
      */
-    public void addCoinAcquisitionMultiplier(double amount) throws IOException {
+    public void addCoinAcquisitionMultiplier() throws IOException {
         double currentValue = getCoinAcquisitionMultiplier();
-        currentValue += amount;
+        currentValue += shipStatus.getCoinIn();
 
         // Format the value to one decimal place
         String formattedValue = decimalFormat.format(currentValue);
@@ -103,12 +109,12 @@ public final class UpgradeManager {
     /**
      * Add to the current attack speed.
      *
-     * @param amount The amount to add.
+     *
      * @throws IOException In case of saving problems.
      */
-    public void addAttackSpeed(int amount) throws IOException {
+    public void addAttackSpeed() throws IOException {
         int currentValue = getAttackSpeed();
-        currentValue += amount;
+        currentValue += shipStatus.getSuootingInIn();
         Properties properties = fileManager.loadUpgradeStatus();
         properties.setProperty(ATTACK_SPEED, Integer.toString(currentValue));
         fileManager.saveUpgradeStatus(properties);
@@ -130,12 +136,12 @@ public final class UpgradeManager {
     /**
      * Add to the current movement speed.
      *
-     * @param amount The amount to add.
+     *
      * @throws IOException In case of saving problems.
      */
-    public void addMovementSpeed(int amount) throws IOException {
+    public void addMovementSpeed() throws IOException {
         int currentValue = getMovementSpeed();
-        currentValue += amount;
+        currentValue += shipStatus.getSpeedIn();
         Properties properties = fileManager.loadUpgradeStatus();
         properties.setProperty(MOVEMENT_SPEED, Integer.toString(currentValue));
         fileManager.saveUpgradeStatus(properties);
@@ -151,7 +157,7 @@ public final class UpgradeManager {
         fileManager.saveUpgradeStatus(properties);
     }
 
-    // produce inventory team ---
+    // --- produce inventory team ---
 
     // Methods for bullet Number
 

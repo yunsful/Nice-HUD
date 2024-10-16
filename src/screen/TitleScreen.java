@@ -202,7 +202,7 @@ public class TitleScreen extends Screen {
 				if (!(Core.getUpgradeManager().getSpeedCount() % 4 == 0)
 						&& Core.getCurrencyManager().spendCoin(50)) {
 
-					Core.getUpgradeManager().addMovementSpeed(1);
+					Core.getUpgradeManager().addMovementSpeed();
 					Core.getLogger().info("Movement Speed: " + Core.getUpgradeManager().getMovementSpeed());
 
 					Core.getUpgradeManager().addSpeedCount();
@@ -225,7 +225,7 @@ public class TitleScreen extends Screen {
 				if (!(Core.getUpgradeManager().getAttackCount() % 4 == 0)
 						&& Core.getCurrencyManager().spendCoin(50)) {
 
-					Core.getUpgradeManager().addAttackSpeed(-10);
+					Core.getUpgradeManager().addAttackSpeed();
 					Core.getLogger().info("Attack Speed: " + Core.getUpgradeManager().getAttackSpeed());
 
 					Core.getUpgradeManager().addAttackCount();
@@ -248,7 +248,7 @@ public class TitleScreen extends Screen {
 				if (!(Core.getUpgradeManager().getCoinCount() % 4 == 0)
 						&& Core.getCurrencyManager().spendCoin(50)) {
 
-					Core.getUpgradeManager().addCoinAcquisitionMultiplier(0.1);
+					Core.getUpgradeManager().addCoinAcquisitionMultiplier();
 					Core.getLogger().info("CoinBonus: " + Core.getUpgradeManager().getCoinAcquisitionMultiplier());
 
 					Core.getUpgradeManager().addCoinCount();

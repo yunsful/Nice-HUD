@@ -29,7 +29,7 @@ public final class UpgradeManager {
     private static final String Coin_Count = "Coin_LevelCount";
     private static final String Bullet_Count = "bullet_LevelCount";
     // load stat increase data
-    private ShipStatus shipStatus;
+    private static ShipStatus shipStatus;
 
 
     /** Decimal format to ensure values have one decimal place. */
@@ -49,6 +49,7 @@ public final class UpgradeManager {
         // load stat increase data
         shipStatus = new ShipStatus();
         shipStatus.loadStatus();
+        shipStatus.loadPrice();
     }
 
     /**
@@ -220,6 +221,82 @@ public final class UpgradeManager {
         Properties properties = fileManager.loadUpgradeStatus();
         properties.setProperty(Coin_Count, Integer.toString(currentValue));
         fileManager.saveUpgradeStatus(properties);
+    }
+
+    public int Price(int i){
+        try {
+            switch (i) {
+                case 1:  // bullet price
+                    if (getBulletCount() % 2 != 0){
+                        return shipStatus.getBullet_price() * getBulletCount();
+                    }
+                    else {
+                        return getBulletCount() + 1;
+                    }
+
+                case 2:  // speed price
+                    if (getSpeedCount() % 4 != 0){
+                        return PriceCalculation(shipStatus.getSpeed_price(), getSpeedCount());
+                    }
+                    else {
+                        return getSpeedCount() / 4 ;
+                    }
+
+                case 3:  // attack price
+                    if (getAttackCount() % 4 != 0){
+                        return PriceCalculation(shipStatus.getAttack_price(), getAttackCount());
+                    }
+                    else {
+                        return getAttackCount() / 4 ;
+                    }
+
+                case 4:  // CoinBonus price
+                    if (getCoinCount() % 4 != 0){
+                        return PriceCalculation(shipStatus.getCoinBonus_price(), getCoinCount());
+                    }
+                    else {
+                        return getCoinCount() / 4 ;
+                    }
+            }
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+        Core.getLogger().warning("Can not Calculate Price");
+        return 0;
+    }
+
+    public int PriceCalculation(int basic_price, int count){
+        basic_price += basic_price * LevelCalculation(count);
+        return basic_price;
+    }
+
+    public int LevelCalculation(int level){
+        int Level = (level - (level / 4) - 1) ;
+        if (Level < 1){
+            return 0;
+        }
+        else {
+            return Level;
+        }
+    }
+
+    public String whatMoney(int count, int i){
+        if (i == 0) {
+            if (count % 2 == 0){
+                return "GEM";
+            }
+            else {
+                return "COIN";
+            }
+        }
+        else {
+            if (count % 4 == 0) {
+                return "GEM";
+            }
+            else {
+                return "COIN";
+            }
+        }
     }
 
 }

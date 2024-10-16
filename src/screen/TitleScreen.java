@@ -182,7 +182,7 @@ public class TitleScreen extends Screen {
 		if (this.merchantState == 1) { // bulletCount
 			try {
 				if (!(Core.getUpgradeManager().getBulletCount() % 2 == 0)
-						&& Core.getCurrencyManager().spendCoin(shipStatus.getBullet_price() * Core.getUpgradeManager().getBulletCount())) {
+						&& Core.getCurrencyManager().spendCoin(Core.getUpgradeManager().Price(1))) {
 
 					Core.getUpgradeManager().addBulletNum();
 					Core.getLogger().info("Bullet Number: " + Core.getUpgradeManager().getBulletNum());
@@ -205,7 +205,7 @@ public class TitleScreen extends Screen {
 		} else if (this.merchantState == 2) { // shipSpeed
 			try {
 				if (!(Core.getUpgradeManager().getSpeedCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendCoin(PriceCalculation(shipStatus.getSpeed_price(), Core.getUpgradeManager().getSpeedCount()))) {
+						&& Core.getCurrencyManager().spendCoin(Core.getUpgradeManager().Price(2))) {
 
 					Core.getUpgradeManager().addMovementSpeed();
 					Core.getLogger().info("Movement Speed: " + Core.getUpgradeManager().getMovementSpeed());
@@ -213,7 +213,7 @@ public class TitleScreen extends Screen {
 					Core.getUpgradeManager().addSpeedCount();
 
 				} else if ((Core.getUpgradeManager().getSpeedCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendGem((Core.getUpgradeManager().getSpeedCount() / 4) + 2)) {
+						&& Core.getCurrencyManager().spendGem(Core.getUpgradeManager().getSpeedCount() / 4)) {
 
 					Core.getUpgradeManager().addSpeedCount();
 					Core.getLogger().info("Upgrade has been unlocked");
@@ -228,7 +228,7 @@ public class TitleScreen extends Screen {
 		} else if (this.merchantState == 3) { // attackSpeed
 			try {
 				if (!(Core.getUpgradeManager().getAttackCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendCoin(PriceCalculation(shipStatus.getAttack_price(), Core.getUpgradeManager().getAttackCount()))) {
+						&& Core.getCurrencyManager().spendCoin(Core.getUpgradeManager().Price(3))) {
 
 					Core.getUpgradeManager().addAttackSpeed();
 					Core.getLogger().info("Attack Speed: " + Core.getUpgradeManager().getAttackSpeed());
@@ -236,7 +236,7 @@ public class TitleScreen extends Screen {
 					Core.getUpgradeManager().addAttackCount();
 
 				} else if ((Core.getUpgradeManager().getAttackCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendGem((Core.getUpgradeManager().getAttackCount() / 4) + 2)) {
+						&& Core.getCurrencyManager().spendGem(Core.getUpgradeManager().getAttackCount() / 4)) {
 
 					Core.getUpgradeManager().addAttackCount();
 					Core.getLogger().info("Upgrade has been unlocked");
@@ -251,7 +251,7 @@ public class TitleScreen extends Screen {
 		} else if (this.merchantState == 4) { // coinGain
 			try {
 				if (!(Core.getUpgradeManager().getCoinCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendCoin(PriceCalculation(shipStatus.getCoinBonus_price(), Core.getUpgradeManager().getCoinCount()))) {
+						&& Core.getCurrencyManager().spendCoin(Core.getUpgradeManager().Price(4))) {
 
 					Core.getUpgradeManager().addCoinAcquisitionMultiplier();
 					Core.getLogger().info("CoinBonus: " + Core.getUpgradeManager().getCoinAcquisitionMultiplier());
@@ -259,7 +259,7 @@ public class TitleScreen extends Screen {
 					Core.getUpgradeManager().addCoinCount();
 
 				} else if ((Core.getUpgradeManager().getCoinCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendGem((Core.getUpgradeManager().getCoinCount() / 4) + 2)) {
+						&& Core.getCurrencyManager().spendGem(Core.getUpgradeManager().getCoinCount() / 4)) {
 
 					Core.getUpgradeManager().addCoinCount();
 					Core.getLogger().info("Upgrade has been unlocked");
@@ -347,11 +347,6 @@ public class TitleScreen extends Screen {
 
 		super.drawPost();
 		drawManager.completeDrawing(this);
-	}
-
-	private int PriceCalculation(int basic_price, int level){
-		basic_price += basic_price * (level - (level / 4) - 1);
-		return basic_price;
 	}
 
 }

@@ -635,7 +635,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			public void actionPerformed(ActionEvent e) {
 
 
-				if(enemyShips.size() > index_x+i[0] && enemyShips.get(index_x+i[0]).size() > y){ // right
+				if(enemyShips.size() > index_x+i[0] && index_x + i[0] >= 0 && enemyShips.get(index_x+i[0]).size() > y){ // right
 					EnemyShip targetShip = enemyShips.get(index_x+i[0]).get(y);
 					if (targetShip.getX() == x+i[0] && targetShip.getY() ==y){
 						_destroy(bullet,targetShip,true);

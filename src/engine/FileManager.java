@@ -888,7 +888,13 @@ public final class FileManager {
 				defaultProperties.setProperty("coin_acquisition_multiplier", "1.0");
 				defaultProperties.setProperty("attack_speed", "750");
 				defaultProperties.setProperty("movement_speed", "2");
-				defaultProperties.setProperty("bullet_speed", "-4");
+				defaultProperties.setProperty("bullet_num", "1");
+
+				//inventory team
+				defaultProperties.setProperty("speed_LevelCount", "1");
+				defaultProperties.setProperty("Coin_LevelCount", "1");
+				defaultProperties.setProperty("attack_LevelCount", "1");
+				defaultProperties.setProperty("bullet_LevelCount", "0");
 			}
 		} finally {
 			if (inputStream != null) {

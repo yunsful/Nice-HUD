@@ -415,11 +415,34 @@ public class DrawManager {
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 2); // adjusted Height
 
 		if (option3 == 0) {merchantState = merchant;}
-		if (option3 == 1) {merchantState = bulletCountString;}
-		if (option3 == 2) {merchantState = shipSpeedString;}
-		if (option3 == 3) {merchantState = attackSpeedString;}
-		if (option3 == 4) {merchantState = coinGainString;}
-		if (option == 4) {merchantState = "<- " + merchantState + " ->";}
+		try {
+			if (option3 == 1) {
+				merchantState = bulletCountString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getBulletCount()) + "   " + Core.getUpgradeManager().Price(1) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getBulletCount(),1);
+			}
+			if (option3 == 2) {
+				merchantState = shipSpeedString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getSpeedCount()) + "   " + Core.getUpgradeManager().Price(2) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getSpeedCount(),0);
+			}
+			if (option3 == 3) {
+				merchantState = attackSpeedString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getAttackCount()) + "   " + Core.getUpgradeManager().Price(3) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getAttackCount(),0);
+			}
+			if (option3 == 4) {
+				merchantState = coinGainString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getCoinCount()) + "   " + Core.getUpgradeManager().Price(4) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getCoinCount(),0);
+			}
+			if (option == 4) {
+				merchantState = "<- " + merchantState + " ->";
+			}
+		} catch (IOException e){
+			throw new RuntimeException(e);
+		}
+
 		if (option == 4 && option3 == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else if (option == 4 && option3 != 0)

@@ -71,4 +71,7 @@ public class NumberOfBullet{
         }
     }
 
+    public void ResetPierceLevel(){
+        piercingbulletLevel = 1;
+    }
 }

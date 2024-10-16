@@ -46,6 +46,12 @@ public class PlayerGrowth {
         }
     }
 
+    // reset bullet speed
+    //Edit by inventory
+    public void ResetBulletSpeed(){
+        bulletSpeed = -4;
+    }
+
     // Returns current health
     public int getHealth() {
         return this.health;

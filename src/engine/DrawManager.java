@@ -415,11 +415,34 @@ public class DrawManager {
 				/ 4 * 2 + fontRegularMetrics.getHeight() * 2); // adjusted Height
 
 		if (option3 == 0) {merchantState = merchant;}
-		if (option3 == 1) {merchantState = bulletCountString;}
-		if (option3 == 2) {merchantState = shipSpeedString;}
-		if (option3 == 3) {merchantState = attackSpeedString;}
-		if (option3 == 4) {merchantState = coinGainString;}
-		if (option == 4) {merchantState = "<- " + merchantState + " ->";}
+		try {
+			if (option3 == 1) {
+				merchantState = bulletCountString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getBulletCount()) + "   " + Core.getUpgradeManager().Price(1) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getBulletCount(),1);
+			}
+			if (option3 == 2) {
+				merchantState = shipSpeedString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getSpeedCount()) + "   " + Core.getUpgradeManager().Price(2) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getSpeedCount(),0);
+			}
+			if (option3 == 3) {
+				merchantState = attackSpeedString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getAttackCount()) + "   " + Core.getUpgradeManager().Price(3) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getAttackCount(),0);
+			}
+			if (option3 == 4) {
+				merchantState = coinGainString + " +" + Core.getUpgradeManager().LevelCalculation
+						(Core.getUpgradeManager().getCoinCount()) + "   " + Core.getUpgradeManager().Price(4) + " "
+						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getCoinCount(),0);
+			}
+			if (option == 4) {
+				merchantState = "<- " + merchantState + " ->";
+			}
+		} catch (IOException e){
+			throw new RuntimeException(e);
+		}
+
 		if (option == 4 && option3 == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else if (option == 4 && option3 != 0)
@@ -632,8 +655,8 @@ public class DrawManager {
 		String scoreString = "";
 
 		for (Score score : highScores) {
-			scoreString = String.format("%s        %04d", score.getName(),
-					score.getScore());
+			scoreString = String.format("%s        %04d           %04d", score.getName(),
+					score.getScore(), score.getPlayTime());
 			drawCenteredRegularString(screen, scoreString, screen.getHeight()
 					/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
 			i++;
@@ -654,25 +677,33 @@ public class DrawManager {
 		backBufferGraphics.setColor(Color.WHITE);
 		int i = 0;
 		boolean isFirstLine = true;
-		String scoreString = "";
+		int[] attributeXPosition = {50, 200, 295, 380, 480};
+		int[] instanceXPostition = {25, 205, 300, 400, 515};
+
+		if (isFirstLine) { // Create Header
+			String[] Attribute = {"Date", "Score", "Level", "Destroy", "Achievement"};
+			for(int k=0; k<5; k++){
+				drawRightedRegularString(screen, Attribute[k], attributeXPosition[k],
+						screen.getHeight() / 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
+			}
+			isFirstLine = false;
+
+			i++;
+		}
 
 		for (Score score : recentScores) {
-			if (isFirstLine) { // Create Header
-				scoreString = String.format("           Date                           " +
-						" Score       Level       Destroy       Achievement");
-				drawRightedRegularString(screen, scoreString, screen.getHeight()
-						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
-				isFirstLine = false;
-				i++;
-			} else {
-				scoreString = String.format("   %s                      %04d         %04d             %04d         " +
-								"             %04d",
-						score.getDate(), score.getScore(), score.getHighestLevel(),
-						score.getShipDestroyed(), score.getClearAchievementNumber());
-				drawRightedRegularString(screen, scoreString, screen.getHeight()
-						/ 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
-				i++;
+			String[] Instance = new String[5];
+			Instance[0] = String.format("%s",score.getDate());
+			Instance[1] = String.format("%04d",score.getScore());
+			Instance[2] = String.format("%04d",score.getHighestLevel());
+			Instance[3] = String.format("%04d", score.getShipDestroyed());
+			Instance[4] = String.format("%04d", score.getClearAchievementNumber());
+
+			for(int k=0; k<5; k++){
+				drawRightedRegularString(screen, Instance[k], instanceXPostition[k],
+						screen.getHeight() / 4 + fontRegularMetrics.getHeight() * (i + 1) * 2);
 			}
+			i++;
 		}
 	}
 
@@ -690,9 +721,9 @@ public class DrawManager {
 	 * 		//Clove
 	 */
 	public void drawRightedRegularString(final Screen screen,
-										 final String string, final int height) {
+										 final String string, final int width, final int height) {
 		backBufferGraphics.setFont(fontRegular);
-		backBufferGraphics.drawString(string, 0, height);
+		backBufferGraphics.drawString(string, width, height);
 	}
 
 	/**

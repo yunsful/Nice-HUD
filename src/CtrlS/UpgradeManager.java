@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Properties;
 import java.util.logging.Logger;
+import inventory_develop.ShipStatus;
 
 public final class UpgradeManager {
 
@@ -20,7 +21,16 @@ public final class UpgradeManager {
     private static final String COIN_ACQUISITION_MULTIPLIER = "coin_acquisition_multiplier";
     private static final String ATTACK_SPEED = "attack_speed";
     private static final String MOVEMENT_SPEED = "movement_speed";
-    private static final String BULLET_SPEED = "bullet_speed";
+    private static final String BULLET_NUM = "bullet_num";
+
+    // inventory, Upgrade count
+    private static final String Speed_Count = "speed_LevelCount";
+    private static final String Attack_Count = "attack_LevelCount";
+    private static final String Coin_Count = "Coin_LevelCount";
+    private static final String Bullet_Count = "bullet_LevelCount";
+    // load stat increase data
+    private static ShipStatus shipStatus;
+
 
     /** Decimal format to ensure values have one decimal place. */
     private static final DecimalFormat decimalFormat = new DecimalFormat("#.#");
@@ -31,6 +41,15 @@ public final class UpgradeManager {
     private UpgradeManager() {
         fileManager = Core.getFileManager();
         logger = Core.getLogger();
+        try{
+            Core.getFileManager().saveUpgradeStatus(Core.getFileManager().loadUpgradeStatus());
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+        // load stat increase data
+        shipStatus = new ShipStatus();
+        shipStatus.loadStatus();
+        shipStatus.loadPrice();
     }
 
     /**
@@ -60,12 +79,12 @@ public final class UpgradeManager {
     /**
      * Add to the current coin acquisition multiplier.
      *
-     * @param amount The amount to add.
+     *
      * @throws IOException In case of saving problems.
      */
-    public void addCoinAcquisitionMultiplier(double amount) throws IOException {
+    public void addCoinAcquisitionMultiplier() throws IOException {
         double currentValue = getCoinAcquisitionMultiplier();
-        currentValue += amount;
+        currentValue += shipStatus.getCoinIn();
 
         // Format the value to one decimal place
         String formattedValue = decimalFormat.format(currentValue);
@@ -91,12 +110,12 @@ public final class UpgradeManager {
     /**
      * Add to the current attack speed.
      *
-     * @param amount The amount to add.
+     *
      * @throws IOException In case of saving problems.
      */
-    public void addAttackSpeed(int amount) throws IOException {
+    public void addAttackSpeed() throws IOException {
         int currentValue = getAttackSpeed();
-        currentValue += amount;
+        currentValue += shipStatus.getSuootingInIn();
         Properties properties = fileManager.loadUpgradeStatus();
         properties.setProperty(ATTACK_SPEED, Integer.toString(currentValue));
         fileManager.saveUpgradeStatus(properties);
@@ -118,41 +137,14 @@ public final class UpgradeManager {
     /**
      * Add to the current movement speed.
      *
-     * @param amount The amount to add.
+     *
      * @throws IOException In case of saving problems.
      */
-    public void addMovementSpeed(int amount) throws IOException {
+    public void addMovementSpeed() throws IOException {
         int currentValue = getMovementSpeed();
-        currentValue += amount;
+        currentValue += shipStatus.getSpeedIn();
         Properties properties = fileManager.loadUpgradeStatus();
         properties.setProperty(MOVEMENT_SPEED, Integer.toString(currentValue));
-        fileManager.saveUpgradeStatus(properties);
-    }
-
-    // Methods for bullet speed
-
-    /**
-     * Get the current bullet speed value.
-     *
-     * @return The current bullet speed.
-     * @throws IOException In case of loading problems.
-     */
-    public int getBulletSpeed() throws IOException {
-        Properties properties = fileManager.loadUpgradeStatus();
-        return Integer.parseInt(properties.getProperty(BULLET_SPEED, "1"));
-    }
-
-    /**
-     * Add to the current bullet speed.
-     *
-     * @param amount The amount to add.
-     * @throws IOException In case of saving problems.
-     */
-    public void addBulletSpeed(int amount) throws IOException {
-        int currentValue = getBulletSpeed();
-        currentValue += amount;
-        Properties properties = fileManager.loadUpgradeStatus();
-        properties.setProperty(BULLET_SPEED, Integer.toString(currentValue));
         fileManager.saveUpgradeStatus(properties);
     }
 
@@ -165,4 +157,146 @@ public final class UpgradeManager {
         Properties properties = fileManager.loadDefaultUpgradeStatus();
         fileManager.saveUpgradeStatus(properties);
     }
+
+    // --- produce inventory team ---
+
+    // Methods for bullet Number
+
+    public int getBulletNum() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(BULLET_NUM, "1"));
+    }
+
+    public void addBulletNum() throws IOException {
+        int currentValue = getBulletNum();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(BULLET_NUM, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+
+
+    public int getSpeedCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Speed_Count, "1"));
+    }
+    public int getAttackCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Attack_Count, "1"));
+    }
+    public int getBulletCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Bullet_Count, "1"));
+    }
+    public int getCoinCount() throws IOException {
+        Properties properties = fileManager.loadUpgradeStatus();
+        return Integer.parseInt(properties.getProperty(Coin_Count, "1"));
+    }
+
+
+    public void addSpeedCount() throws IOException {
+        int currentValue = getSpeedCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Speed_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+    public void addAttackCount() throws IOException {
+        int currentValue = getAttackCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Attack_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+    public void addBulletCount() throws IOException {
+        int currentValue = getBulletCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Bullet_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+    public void addCoinCount() throws IOException {
+        int currentValue = getCoinCount();
+        currentValue += 1;
+        Properties properties = fileManager.loadUpgradeStatus();
+        properties.setProperty(Coin_Count, Integer.toString(currentValue));
+        fileManager.saveUpgradeStatus(properties);
+    }
+
+    public int Price(int i){
+        try {
+            switch (i) {
+                case 1:  // bullet price
+                    if (getBulletCount() % 2 != 0){
+                        return shipStatus.getBullet_price() * getBulletCount();
+                    }
+                    else {
+                        return getBulletCount() + 1;
+                    }
+
+                case 2:  // speed price
+                    if (getSpeedCount() % 4 != 0){
+                        return PriceCalculation(shipStatus.getSpeed_price(), getSpeedCount());
+                    }
+                    else {
+                        return getSpeedCount() / 4 ;
+                    }
+
+                case 3:  // attack price
+                    if (getAttackCount() % 4 != 0){
+                        return PriceCalculation(shipStatus.getAttack_price(), getAttackCount());
+                    }
+                    else {
+                        return getAttackCount() / 4 ;
+                    }
+
+                case 4:  // CoinBonus price
+                    if (getCoinCount() % 4 != 0){
+                        return PriceCalculation(shipStatus.getCoinBonus_price(), getCoinCount());
+                    }
+                    else {
+                        return getCoinCount() / 4 ;
+                    }
+            }
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+        Core.getLogger().warning("Can not Calculate Price");
+        return 0;
+    }
+
+    public int PriceCalculation(int basic_price, int count){
+        basic_price += (basic_price / 2) * LevelCalculation(count);
+        return basic_price;
+    }
+
+    public int LevelCalculation(int level){
+        int Level = (level - ((level - 1) / 4) - 1) ;
+        if (Level < 1){
+            return 0;
+        }
+        else {
+            return Level;
+        }
+    }
+
+    public String whatMoney(int count, int i){
+        if (i == 0) {
+            if (count % 2 == 0){
+                return "GEM";
+            }
+            else {
+                return "COIN";
+            }
+        }
+        else {
+            if (count % 4 == 0) {
+                return "GEM";
+            }
+            else {
+                return "COIN";
+            }
+        }
+    }
+
 }

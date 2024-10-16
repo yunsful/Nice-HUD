@@ -22,7 +22,7 @@ public class ShipStatus {
 
     private int Speed_price;
     private int num_Bullet_price;
-    private int Bullet_Speed_price;
+    private int Attack_Speed_price;
     private int Coin_Bonus_price;
 
     private NumberOfBullet numberOfBullet;
@@ -87,7 +87,7 @@ public class ShipStatus {
 
             Speed_price = Integer.parseInt(properties.getProperty("Speed.price"));
             num_Bullet_price = Integer.parseInt(properties.getProperty("bullet_number.price"));
-            Bullet_Speed_price = Integer.parseInt(properties.getProperty("SHOOTING_INTERVAL.price"));
+            Attack_Speed_price = Integer.parseInt(properties.getProperty("SHOOTING_INTERVAL.price"));
             Coin_Bonus_price = Integer.parseInt(properties.getProperty("CoinBonus.price"));
 
 
@@ -123,6 +123,21 @@ public class ShipStatus {
         return bomb_probability;
     }
     public Double getFeverTimeProbability() { return feverTime_probability; }
+
+    public final int getSpeed_price(){
+        return Speed_price;
+    }
+    public final int getCoinBonus_price(){
+        return Coin_Bonus_price;
+    }
+    public final int getAttack_price(){
+        return Attack_Speed_price;
+    }
+    public final int getBullet_price(){
+        return num_Bullet_price;
+    }
+
+
 
 
 

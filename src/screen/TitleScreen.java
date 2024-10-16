@@ -9,6 +9,7 @@ import engine.Core;
 // Sound Operator
 import Sound_Operator.SoundManager;
 import engine.Score;
+import inventory_develop.ShipStatus;
 
 /**
  * Implements the title screen.
@@ -30,6 +31,8 @@ public class TitleScreen extends Screen {
 	// select One player or Two player
 	private int pnumSelectionCode; //produced by Starter
 	private int merchantState;
+	//inventory
+	private ShipStatus shipStatus;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -62,6 +65,9 @@ public class TitleScreen extends Screen {
         // Sound Operator
 		SoundManager.getInstance().playBGM("mainMenu_bgm");
 
+		// inventory load upgrade price
+		shipStatus = new ShipStatus();
+		shipStatus.loadPrice();
 	}
 
 	/**
@@ -176,7 +182,7 @@ public class TitleScreen extends Screen {
 		if (this.merchantState == 1) { // bulletCount
 			try {
 				if (!(Core.getUpgradeManager().getBulletCount() % 2 == 0)
-						&& Core.getCurrencyManager().spendCoin(50)) {
+						&& Core.getCurrencyManager().spendCoin(shipStatus.getBullet_price() * Core.getUpgradeManager().getBulletCount())) {
 
 					Core.getUpgradeManager().addBulletNum();
 					Core.getLogger().info("Bullet Number: " + Core.getUpgradeManager().getBulletNum());
@@ -199,7 +205,7 @@ public class TitleScreen extends Screen {
 		} else if (this.merchantState == 2) { // shipSpeed
 			try {
 				if (!(Core.getUpgradeManager().getSpeedCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendCoin(50)) {
+						&& Core.getCurrencyManager().spendCoin(PriceCalculation(shipStatus.getSpeed_price(), Core.getUpgradeManager().getSpeedCount()))) {
 
 					Core.getUpgradeManager().addMovementSpeed();
 					Core.getLogger().info("Movement Speed: " + Core.getUpgradeManager().getMovementSpeed());
@@ -222,7 +228,7 @@ public class TitleScreen extends Screen {
 		} else if (this.merchantState == 3) { // attackSpeed
 			try {
 				if (!(Core.getUpgradeManager().getAttackCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendCoin(50)) {
+						&& Core.getCurrencyManager().spendCoin(PriceCalculation(shipStatus.getAttack_price(), Core.getUpgradeManager().getAttackCount()))) {
 
 					Core.getUpgradeManager().addAttackSpeed();
 					Core.getLogger().info("Attack Speed: " + Core.getUpgradeManager().getAttackSpeed());
@@ -245,7 +251,7 @@ public class TitleScreen extends Screen {
 		} else if (this.merchantState == 4) { // coinGain
 			try {
 				if (!(Core.getUpgradeManager().getCoinCount() % 4 == 0)
-						&& Core.getCurrencyManager().spendCoin(50)) {
+						&& Core.getCurrencyManager().spendCoin(PriceCalculation(shipStatus.getCoinBonus_price(), Core.getUpgradeManager().getCoinCount()))) {
 
 					Core.getUpgradeManager().addCoinAcquisitionMultiplier();
 					Core.getLogger().info("CoinBonus: " + Core.getUpgradeManager().getCoinAcquisitionMultiplier());
@@ -341,6 +347,11 @@ public class TitleScreen extends Screen {
 
 		super.drawPost();
 		drawManager.completeDrawing(this);
+	}
+
+	private int PriceCalculation(int basic_price, int level){
+		basic_price += basic_price * (level - (level / 4) - 1);
+		return basic_price;
 	}
 
 }

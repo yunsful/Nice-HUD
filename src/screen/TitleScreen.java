@@ -272,6 +272,13 @@ public class TitleScreen extends Screen {
 			}
 
 		}
+		try{
+			this.coin = Core.getCurrencyManager().getCoin();
+			this.gem = Core.getCurrencyManager().getGem();
+
+		} catch (IOException e){
+			throw new RuntimeException(e);
+		}
 	}
 	private void nextMenuItem() {
 		if (this.returnCode == 5) // Team Clover changed values because recordMenu added

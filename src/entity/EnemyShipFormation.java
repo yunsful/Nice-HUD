@@ -659,7 +659,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 
 		do{
 
-			if(enemyShips.size() > index_x+i && enemyShips.get(index_x+i).size() > y){ // right
+			if(index_x+i >= 0 && enemyShips.size() > index_x+i && enemyShips.get(index_x+i).size() > y){ // right
 				EnemyShip targetShip = enemyShips.get(index_x+i).get(y);
 				if (!targetShip.isDestroyed()) {
 					if (targetShip.getX() == x + i && targetShip.getY() == y) {

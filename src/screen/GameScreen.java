@@ -223,12 +223,14 @@ public class GameScreen extends Screen {
 		drawManager.loadBackground(this.level);
 
 		enemyShipFormation = new EnemyShipFormation(this.gameSettings);
+		enemyShipFormation.setScoreManager(this.scoreManager);//add by team Enemy
 		enemyShipFormation.attach(this);
 		this.ship = new Ship(this.width / 2, this.height - 30);
 
 		/** initialize itemManager */
 		this.itemManager = new ItemManager(this.height, drawManager, this); //by Enemy team
 		this.itemManager.initialize(); //by Enemy team
+		enemyShipFormation.setItemManager(this.itemManager);//add by team Enemy
 
 		// Appears each 10-30 seconds.
 		this.enemyShipSpecialCooldown = Core.getVariableCooldown(

@@ -158,4 +158,23 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawLine(0, positionY + 1, screen.getWidth(),
                 positionY + 1);
     }
+
+    /**
+     * Draws a filled rectangle with specified color at given coordinates.
+     *
+     * @param x
+     *            The x-coordinate of the rectangle's top-left corner.
+     * @param y
+     *            The y-coordinate of the rectangle's top-left corner.
+     * @param width
+     *            The width of the rectangle.
+     * @param height
+     *            The height of the rectangle.
+     * @param color
+     *            The color to fill the rectangle.
+     */
+    public static void drawRect(final int x, final int y, final int width, final int height, final Color color) {
+        backBufferGraphics.setColor(color);
+        backBufferGraphics.fillRect(x, y, width, height);
+    } // by Saeum Jung - TeamHUD
 }

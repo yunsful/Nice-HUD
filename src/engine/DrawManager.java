@@ -417,24 +417,16 @@ public class DrawManager {
 		if (option3 == 0) {merchantState = merchant;}
 		try {
 			if (option3 == 1) {
-				merchantState = bulletCountString + " +" + Core.getUpgradeManager().LevelCalculation
-						(Core.getUpgradeManager().getBulletCount()) + "   " + Core.getUpgradeManager().Price(1) + " "
-						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getBulletCount(),1);
+				merchantState = bulletCountString + MerchantTxt(Core.getUpgradeManager().getBulletCount(),1);
 			}
 			if (option3 == 2) {
-				merchantState = shipSpeedString + " +" + Core.getUpgradeManager().LevelCalculation
-						(Core.getUpgradeManager().getSpeedCount()) + "   " + Core.getUpgradeManager().Price(2) + " "
-						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getSpeedCount(),0);
+				merchantState = shipSpeedString + MerchantTxt(Core.getUpgradeManager().getSpeedCount(),2);
 			}
 			if (option3 == 3) {
-				merchantState = attackSpeedString + " +" + Core.getUpgradeManager().LevelCalculation
-						(Core.getUpgradeManager().getAttackCount()) + "   " + Core.getUpgradeManager().Price(3) + " "
-						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getAttackCount(),0);
+				merchantState = attackSpeedString + MerchantTxt(Core.getUpgradeManager().getAttackCount(),3);
 			}
 			if (option3 == 4) {
-				merchantState = coinGainString + " +" + Core.getUpgradeManager().LevelCalculation
-						(Core.getUpgradeManager().getCoinCount()) + "   " + Core.getUpgradeManager().Price(4) + " "
-						+ Core.getUpgradeManager().whatMoney(Core.getUpgradeManager().getCoinCount(),0);
+				merchantState = coinGainString + MerchantTxt(Core.getUpgradeManager().getCoinCount(),4);
 			}
 			if (option == 4) {
 				merchantState = "<- " + merchantState + " ->";
@@ -958,6 +950,18 @@ public class DrawManager {
 
 		if(Bomb.getIsBomb() && Bomb.getCanShoot()){
 			drawEntity(itemBomb, screen.getWidth() / 5, screen.getHeight() - 50);
+		}
+	}
+
+	public String MerchantTxt(int count, int number){
+		if ((number == 1 && count > 3) ||
+				(count != 0 && Core.getUpgradeManager().LevelCalculation(count) > 9)){
+			return " max";
+		}
+		else {
+			return " +" + Core.getUpgradeManager().LevelCalculation
+					(count) + "   " + Core.getUpgradeManager().Price(number) + " "
+					+ Core.getUpgradeManager().whatMoney(count,number);
 		}
 	}
 }

@@ -461,7 +461,7 @@ public final class FileManager {
 	 * 				In case of saving problems.
 	 *
 	 */
-	//Team Clove
+	// Team Clove
     public void saveUserData(final List<Statistics> playerStatistics) throws IOException {
 		Properties properties = new Properties();
 		OutputStream outputStream = null;
@@ -511,7 +511,7 @@ public final class FileManager {
 	 * @throws IOException
 	 * 				In case of loading problems.
 	 */
-	//Team Clove
+	// Team Clove
 	public Statistics loadUserData() throws IOException {
 		Properties properties = new Properties();
 		InputStream inputStream = null;
@@ -567,7 +567,7 @@ public final class FileManager {
 	 * @throws IOException
 	 * 				In case of loading problems.
 	 */
-	//Team Clove
+	// Team Clove
 	public Statistics loadDefaultUserData() throws IOException {
 		Properties properties = new Properties();
 		InputStream inputStream = null;
@@ -619,7 +619,7 @@ public final class FileManager {
 
 		File currencyFile = new File(currencyPath);
 
-		//create File If there is no currencyFile
+		// create File If there is no currencyFile
 		if (!currencyFile.exists())
 			currencyFile.createNewFile();
 
@@ -710,14 +710,14 @@ public final class FileManager {
 		String jarPath = FileManager.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		jarPath = URLDecoder.decode(jarPath, "UTF-8");
 
-		//Choose File root
+		// Choose File root
 		String currencyPath = new File(jarPath).getParent();
 		currencyPath += File.separator;
 		currencyPath += "currency";
 
 		File currencyFile = new File(currencyPath);
 
-		//create File If there is no currencyFile
+		// create File If there is no currencyFile
 		if (!currencyFile.exists())
 			currencyFile.createNewFile();
 
@@ -771,7 +771,7 @@ public final class FileManager {
 
 		File currencyFile = new File(currencyPath);
 
-		//create File If there is no currencyFile
+		// create File If there is no currencyFile
 		if (!currencyFile.exists())
 			currencyFile.createNewFile();
 

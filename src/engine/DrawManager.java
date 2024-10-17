@@ -20,7 +20,6 @@ import entity.Coin;
 import inventory_develop.Bomb;
 import screen.Screen;
 import entity.Entity;
-import entity.Ship;
 
 import level_design.Background;
 
@@ -87,19 +86,19 @@ public class DrawManager {
 		/** Third enemy ship - second form. */
 		EnemyShipC2,
 		/** First explosive enemy ship - first form. */
-		ExplosiveEnemyShip1, //Edited by Enemy
+		ExplosiveEnemyShip1, // Edited by Enemy
 		/** First explosive enemy ship - second form. */
-		ExplosiveEnemyShip2, //Edited by Enemy
+		ExplosiveEnemyShip2, // Edited by Enemy
 		/** Bonus ship. */
 		EnemyShipSpecial,
 		/** Destroyed enemy ship. */
 		Explosion,
 		/**HEART Graphics Produced by Nice HUD Team*/
-		Heart, //Please have the Nice HUD team fix it. - Enemy team
+		Heart, // Please have the Nice HUD team fix it. - Enemy team
 		/**Item*/
-		Item, //by enemy team
+		Item, // by enemy team
 		/**Boss*/
-		Boss, //by enemy team
+		Boss, // by enemy team
 		/** Player Lives. */
 		/** Item */
     	ItemHeart,
@@ -109,9 +108,9 @@ public class DrawManager {
 		ItemBomb,
 		ItemBarrier,
 		ItemFeverTime,
-		//Produced by Starter Team
+		// Produced by Starter Team
 
-        //Produced by Starter Team
+        // Produced by Starter Team
 		/** coin */
 		Coin,
 		/** add sign */
@@ -134,7 +133,7 @@ public class DrawManager {
 
 		try {
 			spriteMap = new LinkedHashMap<SpriteType, boolean[][]>();
-			spriteMap.put(SpriteType.Obstacle, new boolean[12][12]); //by Level Design Team
+			spriteMap.put(SpriteType.Obstacle, new boolean[12][12]); // by Level Design Team
 			spriteMap.put(SpriteType.Ship, new boolean[13][8]);
 			spriteMap.put(SpriteType.ShipDestroyed, new boolean[13][8]);
 			spriteMap.put(SpriteType.Bullet, new boolean[3][5]);
@@ -145,16 +144,16 @@ public class DrawManager {
 			spriteMap.put(SpriteType.EnemyShipB2, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC1, new boolean[12][8]);
 			spriteMap.put(SpriteType.EnemyShipC2, new boolean[12][8]);
-			spriteMap.put(SpriteType.ExplosiveEnemyShip1, new boolean[12][8]); //Edited by Enemy
-			spriteMap.put(SpriteType.ExplosiveEnemyShip2, new boolean[12][8]); //Edited by Enemy
+			spriteMap.put(SpriteType.ExplosiveEnemyShip1, new boolean[12][8]); // Edited by Enemy
+			spriteMap.put(SpriteType.ExplosiveEnemyShip2, new boolean[12][8]); // Edited by Enemy
 			spriteMap.put(SpriteType.EnemyShipSpecial, new boolean[16][7]);
 			spriteMap.put(SpriteType.Explosion, new boolean[13][7]);
 			spriteMap.put(SpriteType.Heart, new boolean[13][8]);
-			spriteMap.put(SpriteType.Boss, new boolean[24][16]); //by Enemy team
-			spriteMap.put(SpriteType.Coin, new boolean[5][5]); //by Starter Team
-			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); //by Starter Team
+			spriteMap.put(SpriteType.Boss, new boolean[24][16]); // by Enemy team
+			spriteMap.put(SpriteType.Coin, new boolean[5][5]); // by Starter Team
+			spriteMap.put(SpriteType.AddSign, new boolean[5][5]); // by Starter Team
 			spriteMap.put(SpriteType.Gem, new boolean[7][6]); // CtrlS: res/graphics, line 20
-			//by Item team
+			// by Item team
 			spriteMap.put(SpriteType.ItemHeart, new boolean[7][5]);
 			spriteMap.put(SpriteType.ItemBarrier, new boolean[9][10]);
 			spriteMap.put(SpriteType.ItemBomb, new boolean[7][9]);
@@ -371,12 +370,11 @@ public class DrawManager {
 	/**
 	 * Draws main menu.
 	 *
-	 * @param screen
-	 *            Screen to draw on.
-	 * @param option
-	 *            Option selected.
+	 * @param screen Screen to draw on.
+	 * @param option Option selected.
+	 * @param stats
 	 */
-	public void drawMenu(final Screen screen, final int option, final int option2, final int option3) {
+	public void drawMenu(final Screen screen, final int option, final int option2, final int option3, final Stats stats) {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
 		String mode = onePlayerModeString;
@@ -385,28 +383,28 @@ public class DrawManager {
 		String highScoresString = "High scores";
 		String exitString = "exit";
 		String merchant = "Merchant";
-		String bulletCountString = "bullet count up";
-		String shipSpeedString = "ship speed up";
-		String attackSpeedString = "attack speed up";
-		String coinGainString = "coin gain up";
+		String bulletCountString = String.format("bullet count up (Lv.%d) - 500 coins", stats.getBulletCountLevel()); // Starter
+		String shipSpeedString = String.format("ship speed up (Lv.%d) - 500 coins", stats.getShipSpeedLevel()); // Starter
+		String attackSpeedString = String.format("attack speed up (Lv.%d) - 500 coins", stats.getAttackSpeedLevel()); // Starter
+		String coinGainString = String.format("coin gain up (Lv.%d) - 500 coins", stats.getCoinGainLevel()); // Starter
 		String merchantState = merchant;
 
         AddSign addSign = new AddSign();
 
 
-		// Play (starter)
+		// Play (Starter)
 		if (option == 2 && option2 == 0)
 			backBufferGraphics.setColor(Color.CYAN);
 		else if (option == 2 && option2 == 1)
 			backBufferGraphics.setColor(Color.MAGENTA);
 		else
 			backBufferGraphics.setColor(Color.WHITE);
-		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (starter), default: 1 player mode
+		if (option2 == 1) {mode = twoPlayerModeString;} // 2 player mode (Starter), default: 1 player mode
 		if (option == 2) {mode = "<- " + mode + " ->";}
 		drawCenteredRegularString(screen, mode, screen.getHeight()
 				/ 4 * 2); // adjusted Height
 
-		// High scores (starter)
+		// High scores (Starter)
 		if (option == 3)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
@@ -440,7 +438,7 @@ public class DrawManager {
         drawCenteredRegularString(screen, RecentRecord, screen.getHeight()
                 / 4 * 2 + fontRegularMetrics.getHeight() * 6); // adjusted Height
 
-        // Exit (starter)
+        // Exit (Starter)
 		if (option == 0)
 			backBufferGraphics.setColor(Color.GREEN);
 		else
@@ -466,7 +464,7 @@ public class DrawManager {
 	 *            If the score is a new high score.
 	 */
 
-	//Ctrl S - add Coin String
+	// Ctrl S - add Coin String
 	public void drawResults(final Screen screen, final int score,
 							final int livesRemaining, final int shipsDestroyed,
 							final float accuracy, final boolean isNewRecord, final GameState gameState) {
@@ -766,7 +764,7 @@ public class DrawManager {
 					+ fontBigMetrics.getHeight() / 3);
 	}
 
-	//Ctrl-S
+	// Ctrl-S
 	/**
 	 * Show ReceiptScreen
 	 *
@@ -783,20 +781,20 @@ public class DrawManager {
 		String instructionsString = "Press Space to Continue to get more coin!";
 		String hitrateBonusString = "Hitrate Bonus!! : +30%";
 		String timeBonusString = "Time Bonus!!";
-		//draw Score part
+		// draw Score part
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageScoreString, screen.getHeight() / 8);
 		backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredBigString(screen, Integer.toString(roundState.getRoundScore()), screen.getHeight() / 8 + fontBigMetrics.getHeight() / 2 * 3);
 		backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredRegularString(screen, totalScoreString + gameState.getScore(), screen.getHeight() / 8 + fontRegularMetrics.getHeight() / 2 * 7);
-		//draw Coin part
+		// draw Coin part
 		backBufferGraphics.setColor(Color.GREEN);
 		drawCenteredBigString(screen, stageCoinString, screen.getHeight() / 3);
 		backBufferGraphics.setColor(Color.WHITE);
 		drawCenteredBigString(screen, Integer.toString(roundState.getRoundCoin()), screen.getHeight() / 3 + fontBigMetrics.getHeight() / 2 * 3);
 
-		//draw HitRate Bonus part
+		// draw HitRate Bonus part
 		float hitRate = roundState.getRoundHitRate(); // Calculate HitRate
 		if (hitRate > 0.9) {
 			backBufferGraphics.setColor(Color.LIGHT_GRAY);
@@ -807,7 +805,7 @@ public class DrawManager {
 			backBufferGraphics.setColor(Color.LIGHT_GRAY);
 			drawCenteredRegularString(screen, hitrateBonusString, screen.getHeight() / 3 + fontRegularMetrics.getHeight() / 2 * 7);
 		}
-		//draw Time Bonus part
+		// draw Time Bonus part
 		long time = roundState.getRoundTime();
 		int num = (time <= 50) ? 0 : (time <= 80) ? 1 : (time <= 100) ? 2 : 3;
 		switch (num) {
@@ -925,7 +923,7 @@ public class DrawManager {
 	 * HUD Team - Jo Minseo
 	 */
 	public void drawItem(final Screen screen){
-		//Bomb
+		// Bomb
 		Entity itemBomb = new Entity(0, 0, 13 * 2, 8 * 2, Color.gray);
 		itemBomb.setSpriteType(DrawManager.SpriteType.ItemBomb);
 

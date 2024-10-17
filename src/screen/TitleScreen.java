@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import engine.Cooldown;
 import engine.Core;
+import engine.Stats;
 // Sound Operator
 import Sound_Operator.SoundManager;
 
@@ -25,9 +26,13 @@ public class TitleScreen extends Screen {
 	// CtrlS
 	private int coin;
 	private int gem;
+
 	// select One player or Two player
 	private int pnumSelectionCode; //produced by Starter
 	private int merchantState;
+
+	// Starter
+	private Stats stats;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -48,6 +53,9 @@ public class TitleScreen extends Screen {
 		this.returnCode = 2;
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
+
+		// Starter
+		this.stats = new Stats();
 
 		// CtrlS: Set user's coin, gem
         try {
@@ -70,7 +78,7 @@ public class TitleScreen extends Screen {
 	public final int run() {
 		super.run();
 
-		//produced by starter team
+		// produced by Starter
 		if (this.pnumSelectionCode == 1 && this.returnCode == 2){
 			return 4; //return 4 instead of 2
 		}
@@ -178,30 +186,32 @@ public class TitleScreen extends Screen {
 	/**
 	 * Shifts the focus to the next menu item.
 	 */
-	private void testStatUpgrade(){
+	private void testStatUpgrade() {
 		// CtrlS: testStatUpgrade should only be called after coins are spent
-		if(this.merchantState == 1) {
-			// this.currentCoin -= 50;
-		}
-		else if(this.merchantState == 2) {
-			// this.currentCoin -= 50;
-		}
-		else if(this.merchantState == 3) {
-			// this.currentCoin -= 50;
-		}
-		else if(this.merchantState == 4) {
-			// this.currentCoin -= 50;
+		switch (this.merchantState) {
+			case 1:
+				stats.levelUpBulletCount();
+				break;
+			case 2:
+				stats.levelUpShipSpeed();
+				break;
+			case 3:
+				stats.levelUpAttackSpeed();
+				break;
+			case 4:
+				stats.levelUpCoinGain();
+				break;
 		}
 
 
 	}
 	private void nextMenuItem() {
 		if (this.returnCode == 5) // Team Clover changed values because recordMenu added
-			this.returnCode = 0; // from '2 player mode' to 'Exit' (starter)
+			this.returnCode = 0; // from '2 player mode' to 'Exit' (Starter)
 		else if (this.returnCode == 0)
-			this.returnCode = 2; // from 'Exit' to 'Play' (starter)
+			this.returnCode = 2; // from 'Exit' to 'Play' (Starter)
 		else
-			this.returnCode++; // go next (starter)
+			this.returnCode++; // go next (Starter)
 	}
 
 	/**
@@ -210,11 +220,11 @@ public class TitleScreen extends Screen {
 	private void previousMenuItem() {
 		this.merchantState =0;
 		if (this.returnCode == 0)
-			this.returnCode = 5; // from 'Exit' to '2 player mode' (starter) // Team Clover changed values because recordMenu added
+			this.returnCode = 5; // from 'Exit' to '2 player mode' (Starter) // Team Clover changed values because recordMenu added
 		else if (this.returnCode == 2)
-			this.returnCode = 0; // from 'Play' to 'Exit' (starter)
+			this.returnCode = 0; // from 'Play' to 'Exit' (Starter)
 		else
-			this.returnCode--; // go previous (starter)
+			this.returnCode--; // go previous (Starter)
 	}
 
 	// left and right move -- produced by Starter
@@ -262,7 +272,7 @@ public class TitleScreen extends Screen {
 		drawManager.initDrawing(this);
 
 		drawManager.drawTitle(this);
-		drawManager.drawMenu(this, this.returnCode, this.pnumSelectionCode, this.merchantState);
+		drawManager.drawMenu(this, this.returnCode, this.pnumSelectionCode, this.merchantState, this.stats);
 		// CtrlS
 		drawManager.drawCurrentCoin(this, coin);
 		drawManager.drawCurrentGem(this, gem);

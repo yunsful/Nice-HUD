@@ -22,13 +22,13 @@ public class Bullet extends Entity {
 	 * positive is down.
 	 */
 	private int speed;
-	//Ctrl S
+	// Ctrl S
 	/**
 	 * Check if there is count on the bullet.
 	 * if hit occur then checkCount will be false
 	 */
 	protected boolean checkCount;
-	//Ctrl S
+	// Ctrl S
 	/**
 	 * give unique id for certain shot of bullets
 	 */
@@ -46,9 +46,9 @@ public class Bullet extends Entity {
 	 */
 	public Bullet(final int positionX, final int positionY, final int speed) {
 		super(positionX, positionY, 3 * 2, 5 * 2, Color.WHITE);
-		//CtrlS
+		// CtrlS
 		this.checkCount = true;
-		//CtrlS
+		// CtrlS
 		this.speed = speed;
 		setSprite();
 	}

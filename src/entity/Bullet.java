@@ -137,4 +137,9 @@ public class Bullet extends Entity {
 			AchievementConditions.resetKillCount();
 		}
 	}
+
+	@Override
+	public void move(int distanceX, int distanceY) {
+
+	}
 }

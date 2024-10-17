@@ -28,6 +28,8 @@ public class ShipStatus {
     private NumberOfBullet numberOfBullet;
     private PlayerGrowth playerGrowth;
 
+    private Double speedUp_probability;
+    private Double speedSlow_probability;
 
 
     Properties properties = new Properties();
@@ -49,6 +51,8 @@ public class ShipStatus {
             BULLET_SPEED_increase = Integer.parseInt(properties.getProperty("BULLET_SPEED.increase"));
             coin_increase = Double.parseDouble(properties.getProperty("CoinBonus.increase"));
             //feverTime_score_increase = Integer.parseInt(properties.getProperty("feverTime.scoreMultiplier"));
+            speedUp_probability = Double.parseDouble(properties.getProperty("SpeedUp.probability")); // SpeedUp 확률 로드
+            speedSlow_probability = Double.parseDouble(properties.getProperty("SpeedSlow.probability")); // SpeedSlow 확률 로드
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,6 +73,8 @@ public class ShipStatus {
             bomb_probability = Double.parseDouble(properties.getProperty("bomb.probability"));
             shield_probability = Double.parseDouble(properties.getProperty("shield.probability"));
             feverTime_probability = Double.parseDouble(properties.getProperty("feverTime.probability"));
+            speedUp_probability = Double.parseDouble(properties.getProperty("SpeedUp.probability"));
+            speedSlow_probability = Double.parseDouble(properties.getProperty("SpeedSlow.probability"));
 
 
         } catch (IOException e) {
@@ -123,6 +129,8 @@ public class ShipStatus {
         return bomb_probability;
     }
     public Double getFeverTimeProbability() { return feverTime_probability; }
+    public final double getSpeedUpProbability() {return speedUp_probability;}
+    public final double getSpeedSlowProbability() {return speedSlow_probability;}
 
     public final int getSpeed_price(){
         return Speed_price;
@@ -136,11 +144,4 @@ public class ShipStatus {
     public final int getBullet_price(){
         return num_Bullet_price;
     }
-
-
-
-
-
-
-
 }

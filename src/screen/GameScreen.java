@@ -26,12 +26,6 @@ import inventory_develop.*;
 import Sound_Operator.SoundManager;
 import clove.ScoreManager;    // CLOVE
 
-import java.beans.PropertyChangeListener; // CLOVE
-import java.beans.PropertyChangeSupport; // CLOVE
-import java.util.Timer; // CLOVE
-import java.util.TimerTask; // CLOVE
-import java.util.List;
-
 
 /**
  * Implements the game screen, where the action happens.
@@ -145,11 +139,9 @@ public class GameScreen extends Screen {
 	/** Check end-time*/
 	private long endTime;    //clove
 
-	// TEAM CLOVER
 	private Statistics statistics; //Team Clove
-	private static AchievementConditions achievementConditions;
-	/** Check kill-streak */
-	private int killCount;
+	private AchievementConditions achievementConditions;
+	private int fastKill;
 
 	/** CtrlS: Count the number of coin collected in game */
 	private int coinItemsCollected;
@@ -208,10 +200,6 @@ public class GameScreen extends Screen {
 		this.statistics = new Statistics(); //Team Clove
 		this.achievementConditions = new AchievementConditions();
 		this.coinItemsCollected = gameState.getCoinItemsCollected(); // CtrlS
-
-		// Dongjun Suh / TEAM CLOVER
-		this.killCount = 0;
-		bullets = new HashSet<>();
 	}
 
 	/**
@@ -403,8 +391,8 @@ public class GameScreen extends Screen {
 				achievementConditions.onKill();
 				achievementConditions.onStage();
 				achievementConditions.trials();
-				achievementConditions.killStreak(killCount);
-				achievementConditions.accuracy(bulletsShot, hitCount);
+				achievementConditions.killStreak();
+				achievementConditions.fastKill(fastKill);
 				achievementConditions.score(score);
 
             } catch (IOException e) {
@@ -461,7 +449,7 @@ public class GameScreen extends Screen {
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
-		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
+		DrawManagerImpl.drawBulletSpeed(this, (int)this.ship.getAttackSpeed());
 		//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
@@ -513,8 +501,6 @@ public class GameScreen extends Screen {
 				//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
 				bullet.setCheckCount(true);
 				recyclable.add(bullet);
-
-				AchievementConditions.resetKillCount(); // TEAM CLOVER
 			}
 		}
 		this.bullets.removeAll(recyclable);
@@ -598,31 +584,27 @@ public class GameScreen extends Screen {
 								+ " lives remaining.");
 
 						// Sound Operator
-						if (this.lives == 0) {
+						if (this.lives == 0){
 							sm = SoundManager.getInstance();
-							sm.playES("ally_airship_destroy_explosion");
-							new Thread(() -> {
-								try {
-									Thread.sleep(1000);
-								} catch (InterruptedException e) {
-									throw new RuntimeException(e);
-								}
-								sm.playES("ally_airship_destroy_die");
-							}).start();
+							sm.playShipDieSounds();
 						}
 					}
 				}
 			} else {
 				// CtrlS - set fire_id of bullet.
 				bullet.setFire_id(fire_id);
-
 				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						int feverScore = enemyShip.getPointValue(); //TEAM CLOVE
+
 						if(enemyShip.getHp() <= 0) {
 							//inventory_f fever time is activated, the score is doubled.
-							if(feverTimeItem.isActive()) { feverScore *= 2; } //TEAM CLOVE
+							if(feverTimeItem.isActive()) {
+								this.score += enemyShip.getPointValue()*2;
+							}
+							else{
+								this.score += enemyShip.getPointValue();
+							}
 							this.shipsDestroyed++;
 						}
 						//Drop item when MAGENTA color enemy destroyed
@@ -631,7 +613,7 @@ public class GameScreen extends Screen {
 						}
 						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip, false);    // team Inventory
 						this.shipsDestroyed += CntAndPnt[0];
-                        this.scoreManager.addScore(feverScore); //clove
+                        this.scoreManager.addScore(enemyShip.getPointValue()); //clove
                         this.score += CntAndPnt[1];
 
 						// CtrlS - If collision occur then check the bullet can process
@@ -641,9 +623,6 @@ public class GameScreen extends Screen {
 								hitCount++;
 								bullet.setCheckCount(false);
 								this.logger.info("Hit count!");
-
-								AchievementConditions.incrementKillCount(); // TEAM CLOVER
-
 								processedFireBullet.add(bullet.getFire_id()); // mark this bullet_id is processed.
 							}
 						}
@@ -657,14 +636,13 @@ public class GameScreen extends Screen {
 							recyclable.add(bullet);
 						}
 					}
-
 					// Added by team Enemy.
 					// Enemy killed by Explosive enemy gives points too
 					if (enemyShip.isChainExploded()) {
 						if (enemyShip.getColor() == Color.MAGENTA) {
 							this.itemManager.dropItem(enemyShip, 1, 1);
 						}
-						this.scoreManager.addScore(enemyShip.getPointValue()); //TEAM CLOVE
+						this.score += enemyShip.getPointValue();
 						this.shipsDestroyed++;
 						enemyShip.setChainExploded(false); // resets enemy's chain explosion state.
 					}
@@ -672,9 +650,14 @@ public class GameScreen extends Screen {
 				if (this.enemyShipSpecial != null
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
-					int feverSpecialScore = enemyShipSpecial.getPointValue();
+
           // inventory - Score bonus when acquiring fever items
-					if (feverTimeItem.isActive()) { feverSpecialScore *= 2; } //TEAM CLOVE //Team inventory
+					if (feverTimeItem.isActive()) {  //inventory
+						this.score += this.enemyShipSpecial.getPointValue() *2;
+					}
+					else {
+						this.score += this.enemyShipSpecial.getPointValue();
+					}
 
 					// CtrlS - If collision occur then check the bullet can process
 					if (!processedFireBullet.contains(bullet.getFire_id())) {
@@ -686,7 +669,7 @@ public class GameScreen extends Screen {
 						}
 
 					}
-					this.scoreManager.addScore(feverSpecialScore); //clove
+					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue()); //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();
@@ -708,18 +691,29 @@ public class GameScreen extends Screen {
 					if (!obstacle.isDestroyed() && checkCollision(bullet, obstacle)) {
 						obstacle.destroy();  // Destroy obstacle
 						recyclable.add(bullet);  // Remove bullet
+
+						// Sound Operator
+						sm = SoundManager.getInstance();
+						sm.playES("obstacle_explosion");
 					}
 				}
 			}
 
 		for (Obstacle obstacle : this.obstacles) {
 			if (!obstacle.isDestroyed() && checkCollision(this.ship, obstacle)) {
-				this.lives--;
-				obstacle.destroy();  // Destroy obstacle
-				this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
-				if (!this.ship.isDestroyed()) {
-					this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
+				//Obstacles ignored when barrier activated_team inventory
+				if (!this.item.isbarrierActive()) {
+					this.lives--;
+					if (!this.ship.isDestroyed()) {
+						this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
+					}
+					obstacle.destroy();  // Destroy obstacle
+					this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
+				} else {
+					obstacle.destroy();  // Destroy obstacle
+					this.logger.info("Shield blocked the hit from an obstacle, " + this.lives + " lives remaining.");
 				}
+
 				break;  // Stop further collisions if the ship is destroyed.
 			}
 		}
@@ -737,6 +731,8 @@ public class GameScreen extends Screen {
 			}
 		}
 		itemManager.removeAllReItems();
+
+
 	}
 
 

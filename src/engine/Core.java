@@ -1,5 +1,6 @@
 package engine;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.ConsoleHandler;
@@ -11,9 +12,12 @@ import java.util.logging.Logger;
 import CtrlS.CurrencyManager;
 import CtrlS.RoundState;
 import CtrlS.ReceiptScreen;
+import CtrlS.UpgradeManager;
 import Sound_Operator.SoundManager;
 import level_design.Background;
-import clove.AchievementConditions;
+import CtrlS.RoundState;
+import CtrlS.ReceiptScreen;
+import Sound_Operator.SoundManager;
 import clove.AchievementManager;
 import screen.*;
 import twoplayermode.TwoPlayerMode;
@@ -79,7 +83,6 @@ public final class Core {
 	// Sound Operator
 	private static SoundManager sm;
     private static AchievementManager achievementManager; // Team CLOVER
-	private static AchievementConditions achievementConditions;
 
 	/**
 	 * Test implementation.
@@ -87,7 +90,6 @@ public final class Core {
 	 * @param args
 	 *            Program args, ignored.
 	 */
-
 	public static void main(final String[] args) {
 		try {
 			LOGGER.setUseParentHandlers(false);
@@ -108,7 +110,9 @@ public final class Core {
 			System.out.println("Initializing AchievementManager...");
 			achievementManager = new AchievementManager(DrawManager.getInstance());
 			System.out.println("AchievementManager initialized!");
-			achievementConditions = new AchievementConditions();
+
+			// CtrlS: Make instance of Upgrade Manager
+			Core.getUpgradeManager();
 
 		} catch (Exception e) {
 			// TODO handle exception
@@ -145,7 +149,7 @@ public final class Core {
 			switch (returnCode) {
 			case 1:
 				// Main menu.
-				currentScreen = new TitleScreen(width, height, FPS);
+                currentScreen = new TitleScreen(width, height, FPS);
 				LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
 						+ " title screen at " + FPS + " fps.");
 				returnCode = frame.setScreen(currentScreen);
@@ -426,5 +430,15 @@ public final class Core {
 	// Team-Ctrl-S(Currency)
 	public static CurrencyManager getCurrencyManager() {
 		return CurrencyManager.getInstance();
+	}
+
+	/**
+	 * Controls access to the currency manager.
+	 *
+	 * @return Application currency manager.
+	 */
+	// Team-Ctrl-S(Currency)
+	public static UpgradeManager getUpgradeManager() {
+		return UpgradeManager.getInstance();
 	}
 }

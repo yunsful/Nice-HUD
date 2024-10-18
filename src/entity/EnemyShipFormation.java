@@ -21,6 +21,8 @@ import engine.DrawManager.SpriteType;
 import engine.GameSettings;
 import static java.lang.Math.*;
 import Enemy.PiercingBulletPool;
+//Sound_Operator
+import Sound_Operator.SoundManager;
 /**
  * Groups enemy ships into a formation that moves together.
  * 
@@ -535,6 +537,13 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 						switch (destroyedShip.spriteType){
 							case ExplosiveEnemyShip1:
 							case ExplosiveEnemyShip2:
+								HpEnemyShip.hit(destroyedShip);
+								//Sound_Operator
+								if (destroyedShip.isDestroyed()) {
+
+									sm = SoundManager.getInstance();
+									sm.playES("enemy_explosion");
+								}
 								destroyedShip.chainExplode(); // Edited by team Enemy
 								explosive(destroyedShip.getX(), destroyedShip.getY(),this.enemyShips.indexOf(column),i); //Add by team Enemy
 								// HpEnemyShip.hit(destroyedShip);

@@ -1,20 +1,26 @@
 package Enemy;
 
+import engine.Core;
+import java.io.IOException;
+
 public class PlayerGrowth {
 
     //Player's base stats
     private int health;          //Health
-    private int moveSpeed;       //Movement speed
-    private int bulletSpeed;     // Bullet speed
-    private int shootingDelay;   // Shooting delay
+    private static int moveSpeed = 2;       //Movement speed
+    private static int bulletSpeed = -4;     // Bullet speed
+    private static int shootingDelay = 750;   // Shooting delay
 
     //Constructor to set initial values
-    public PlayerGrowth() {
-        //  Base stat values
-        this.health = 3;          //  Base health is 3
-        this.moveSpeed = 2;       // Base movement speed is 2
-        this.bulletSpeed = -8;    //  Base bullet speed is -6
-        this.shootingDelay = 750; //  Base shooting delay is 750ms
+    public PlayerGrowth() {//  Base shooting delay is 750ms
+
+        // CtrlS: set player growth based on upgrade_status.properties
+        try {
+            moveSpeed = Core.getUpgradeManager().getMovementSpeed();
+            shootingDelay = Core.getUpgradeManager().getAttackSpeed();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Increases health
@@ -38,6 +44,12 @@ public class PlayerGrowth {
         if (this.shootingDelay < 100) {
             this.shootingDelay = 100; // Minimum shooting delay is 100ms
         }
+    }
+
+    // reset bullet speed
+    //Edit by inventory
+    public void ResetBulletSpeed(){
+        bulletSpeed = -4;
     }
 
     // Returns current health

@@ -1,14 +1,15 @@
 package HUDTeam;
 
-public class Achievement {
+// Sound Operator
+import Sound_Operator.SoundManager;
 
-    static int timer;
-    static String achievementText;
+public class DrawAchievementHud {
+    // Sound Operator
+    private static SoundManager sm;
+    static int timer = 100;
+    static String achievementText = null;
 
-    public Achievement() {
-        timer = 100;
-        achievementText = null;
-    }
+    public DrawAchievementHud() {}
 
     public static int getTimer(){return timer;}
 
@@ -25,5 +26,8 @@ public class Achievement {
     public static void achieve(String Text){
         timer = 0;
         achievementText = Text;
+        // Sound Operator
+        sm = SoundManager.getInstance();
+        sm.playES("achievement");
     }
 }

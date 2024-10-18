@@ -2,6 +2,7 @@ package CtrlS;
 
 import engine.Core;
 import engine.FileManager;
+import engine.GameState;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -36,22 +37,22 @@ public final class CurrencyManager {
     }
 
     /**
-     * Add an amount of money to the current currency.
+     * Add an amount of money to the current coin.
      */
-    public void addCurrency(int amount) throws IOException {
-        int current_currency = fileManager.loadCurrency();
-        amount += current_currency;
-        fileManager.saveCurrency(amount);
+    public void addCoin(int amount) throws IOException {
+        int current_coin = fileManager.loadCoin();
+        amount += current_coin;
+        fileManager.saveCoin(amount);
     }
 
     /**
-     * Consume as much money as the amount you have (cannot spend more than you currently have).
+     * Consume as much coin as the amount you have (cannot spend more than you currently have).
      */
-    public boolean spendCurrency(int amount) throws IOException {
-        int current_currency = fileManager.loadCurrency();
-        if (amount <= current_currency) {
-            current_currency -= amount;
-            fileManager.saveCurrency(current_currency);
+    public boolean spendCoin(int amount) throws IOException {
+        int current_coin = fileManager.loadCoin();
+        if (amount <= current_coin) {
+            current_coin -= amount;
+            fileManager.saveCoin(current_coin);
             return true;
         }
         else {
@@ -59,28 +60,39 @@ public final class CurrencyManager {
         }
     }
 
-    public int calculateCurrency(int score, float hitRate, int
-            clearTime, int maxTime) {
-        //
-
-        int currency = score / 10;
-        //
-
-        if (hitRate > 0.8) {
-            currency += (int) (currency * 0.2); // 20% 보너스 지급
-            Core.getLogger().info("hitRate bonus occurs.");
-        }
-        //
-
-        int timeBonus = (maxTime - clearTime) / 10;
-        if (timeBonus > 0) {
-            currency += timeBonus;
-        }
-        return currency;
+    public int getCoin() throws IOException {
+        return fileManager.loadCoin();
     }
 
-
-    public int getCurrency() throws IOException {
-        return fileManager.loadCurrency();
+    /**
+     * Add an amount of gem to the current gem.
+     */
+    // Team-Ctrl-S(Currency)
+    public void addGem(int amount) throws IOException {
+        int current_gem = fileManager.loadGem();
+        amount += current_gem;
+        fileManager.saveGem(amount);
     }
+
+    /**
+     * Consume as much gem as the amount you have (cannot spend more than you currently have).
+     */
+    // Team-Ctrl-S(Currency)
+    public boolean spendGem(int amount) throws IOException {
+        int current_gem = fileManager.loadGem();
+        if (amount <= current_gem) {
+            current_gem -= amount;
+            fileManager.saveGem(current_gem);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    // Team-Ctrl-S(Currency)
+    public int getGem() throws IOException {
+        return fileManager.loadGem();
+    }
+
 }

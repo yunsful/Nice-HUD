@@ -372,9 +372,8 @@ public class DrawManager {
 	 *
 	 * @param screen Screen to draw on.
 	 * @param option Option selected.
-	 * @param stats
 	 */
-	public void drawMenu(final Screen screen, final int option, final int option2, final int option3, final Stats stats) {
+	public void drawMenu(final Screen screen, final int option, final int option2, final int option3) {
 		String onePlayerModeString = "1 player mode";
 		String twoPlayerModeString = "2 player mode";
 		String mode = onePlayerModeString;
@@ -383,10 +382,10 @@ public class DrawManager {
 		String highScoresString = "High scores";
 		String exitString = "exit";
 		String merchant = "Merchant";
-		String bulletCountString = String.format("bullet count up (Lv.%d) - 500 coins", stats.getBulletCountLevel()); // Starter
-		String shipSpeedString = String.format("ship speed up (Lv.%d) - 500 coins", stats.getShipSpeedLevel()); // Starter
-		String attackSpeedString = String.format("attack speed up (Lv.%d) - 500 coins", stats.getAttackSpeedLevel()); // Starter
-		String coinGainString = String.format("coin gain up (Lv.%d) - 500 coins", stats.getCoinGainLevel()); // Starter
+		String bulletCountString = String.format("bullet count up"); // Starter
+		String shipSpeedString = String.format("ship speed up"); // Starter
+		String attackSpeedString = String.format("attack speed up"); // Starter
+		String coinGainString = String.format("coin gain up"); // Starter
 		String merchantState = merchant;
 
         AddSign addSign = new AddSign();

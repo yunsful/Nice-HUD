@@ -461,7 +461,7 @@ public class GameScreen extends Screen {
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
-		DrawManagerImpl.drawAttackSpeed(this, this.ship.getAttackSpeed());
+		DrawManagerImpl.drawBulletSpeed(this, (int)this.ship.getAttackSpeed());
 		//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
@@ -598,17 +598,9 @@ public class GameScreen extends Screen {
 								+ " lives remaining.");
 
 						// Sound Operator
-						if (this.lives == 0) {
+						if (this.lives == 0){
 							sm = SoundManager.getInstance();
-							sm.playES("ally_airship_destroy_explosion");
-							new Thread(() -> {
-								try {
-									Thread.sleep(1000);
-								} catch (InterruptedException e) {
-									throw new RuntimeException(e);
-								}
-								sm.playES("ally_airship_destroy_die");
-							}).start();
+							sm.playShipDieSounds();
 						}
 					}
 				}
@@ -708,18 +700,29 @@ public class GameScreen extends Screen {
 					if (!obstacle.isDestroyed() && checkCollision(bullet, obstacle)) {
 						obstacle.destroy();  // Destroy obstacle
 						recyclable.add(bullet);  // Remove bullet
+
+						// Sound Operator
+						sm = SoundManager.getInstance();
+						sm.playES("obstacle_explosion");
 					}
 				}
 			}
 
 		for (Obstacle obstacle : this.obstacles) {
 			if (!obstacle.isDestroyed() && checkCollision(this.ship, obstacle)) {
-				this.lives--;
-				obstacle.destroy();  // Destroy obstacle
-				this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
-				if (!this.ship.isDestroyed()) {
-					this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
+				//Obstacles ignored when barrier activated_team inventory
+				if (!this.item.isbarrierActive()) {
+					this.lives--;
+					if (!this.ship.isDestroyed()) {
+						this.ship.destroy();  // Optionally, destroy the ship or apply other effects.
+					}
+					obstacle.destroy();  // Destroy obstacle
+					this.logger.info("Ship hit an obstacle, " + this.lives + " lives remaining.");
+				} else {
+					obstacle.destroy();  // Destroy obstacle
+					this.logger.info("Shield blocked the hit from an obstacle, " + this.lives + " lives remaining.");
 				}
+
 				break;  // Stop further collisions if the ship is destroyed.
 			}
 		}
@@ -737,6 +740,8 @@ public class GameScreen extends Screen {
 			}
 		}
 		itemManager.removeAllReItems();
+
+
 	}
 
 

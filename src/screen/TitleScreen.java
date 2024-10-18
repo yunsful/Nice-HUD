@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import engine.Cooldown;
 import engine.Core;
-import engine.Stats;
 // Sound Operator
 import Sound_Operator.SoundManager;
 import engine.Score;
@@ -36,8 +35,6 @@ public class TitleScreen extends Screen {
 	//inventory
 	private ShipStatus shipStatus;
 
-	// Starter
-	private Stats stats;
 
 	/**
 	 * Constructor, establishes the properties of the screen.
@@ -59,8 +56,6 @@ public class TitleScreen extends Screen {
 		this.selectionCooldown = Core.getCooldown(SELECTION_TIME);
 		this.selectionCooldown.reset();
 
-		// Starter
-		this.stats = new Stats();
 
 		// CtrlS: Set user's coin, gem
         try {
@@ -371,7 +366,7 @@ public class TitleScreen extends Screen {
 		drawManager.initDrawing(this);
 
 		drawManager.drawTitle(this);
-		drawManager.drawMenu(this, this.returnCode, this.pnumSelectionCode, this.merchantState, this.stats);
+		drawManager.drawMenu(this, this.returnCode, this.pnumSelectionCode, this.merchantState);
 		// CtrlS
 		drawManager.drawCurrentCoin(this, coin);
 		drawManager.drawCurrentGem(this, gem);

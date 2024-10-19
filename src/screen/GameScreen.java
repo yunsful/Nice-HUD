@@ -58,6 +58,7 @@ public class GameScreen extends Screen {
 	private EnemyShipFormation enemyShipFormation;
 	/** Player's ship. */
 	private Ship ship;
+	public Ship player2;
 	/** Bonus enemy ship that appears sometimes. */
 	private EnemyShip enemyShipSpecial;
 	/** Minimum time between bonus ship appearances. */
@@ -69,7 +70,7 @@ public class GameScreen extends Screen {
 	/** Set of all bullets fired by on screen ships. */
 	public Set<PiercingBullet> bullets; //by Enemy team
 	/** Add an itemManager Instance */
-	private ItemManager itemManager; //by Enemy team
+	public ItemManager itemManager; //by Enemy team
 	/** Shield item */
 	private ItemBarrierAndHeart item;	// team Inventory
 	private FeverTimeItem feverTimeItem;
@@ -106,7 +107,7 @@ public class GameScreen extends Screen {
 
 
 	// --- OBSTACLES
-	private Set<Obstacle> obstacles; // Store obstacles
+	public Set<Obstacle> obstacles; // Store obstacles
 	private Cooldown obstacleSpawnCooldown; //control obstacle spawn speed
 	/** Shield item */
 
@@ -208,7 +209,7 @@ public class GameScreen extends Screen {
 	/**
 	 * Initializes basic screen properties, and adds necessary elements.
 	 */
-	public final void initialize() {
+	public void initialize() {
 		super.initialize();
 		/** initialize background **/
 		drawManager.loadBackground(this.level);
@@ -222,6 +223,7 @@ public class GameScreen extends Screen {
 		this.itemManager = new ItemManager(this.height, drawManager, this); //by Enemy team
 		this.itemManager.initialize(); //by Enemy team
 		enemyShipFormation.setItemManager(this.itemManager);//add by team Enemy
+		this.player2=null;
 
 		// Appears each 10-30 seconds.
 		this.enemyShipSpecialCooldown = Core.getVariableCooldown(
@@ -311,7 +313,7 @@ public class GameScreen extends Screen {
 					this.ship.moveLeft();
 					this.backgroundMoveLeft = true;
 				}
-				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
+				if (inputManager.isKeyDown(KeyEvent.VK_ENTER))
 					if (this.ship.shoot(this.bullets)) {
 						this.bulletsShot++;
 						this.fire_id++;
@@ -421,6 +423,9 @@ public class GameScreen extends Screen {
 
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
 				this.ship.getPositionY());
+		if (player2 != null) {
+			drawManager.drawEntity(player2, player2.getPositionX(), player2.getPositionY());
+		}
 		if (this.enemyShipSpecial != null)
 			drawManager.drawEntity(this.enemyShipSpecial,
 					this.enemyShipSpecial.getPositionX(),
@@ -576,7 +581,7 @@ public class GameScreen extends Screen {
 	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
 	 */
 	//by Enemy team
-	private void manageCollisions_add_item() {
+	public void manageCollisions_add_item() {
 		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
 		for (PiercingBullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {

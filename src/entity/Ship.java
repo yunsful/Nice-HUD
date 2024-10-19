@@ -50,8 +50,8 @@ public class Ship extends Entity {
 	 *            Initial position of the ship in the Y axis.
 	 */
 	//Edit by Enemy
-	public Ship(final int positionX, final int positionY) {
-		super(positionX, positionY - 50, 13 * 2, 8 * 2, Color.GREEN);
+	public Ship(final int positionX, final int positionY, final Color color) {
+		super(positionX, positionY - 50, 13 * 2, 8 * 2, color);
 
 		this.spriteType = SpriteType.Ship;
 

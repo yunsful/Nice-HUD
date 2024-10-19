@@ -10,4 +10,6 @@ public class Coin extends Entity {
 
         this.spriteType = DrawManager.SpriteType.ItemCoin; //Change Coin to ItemCoin - Starter
     }
+
+
 }

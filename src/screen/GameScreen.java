@@ -79,6 +79,8 @@ public class GameScreen extends Screen {
 	/** Shield item */
 	private ItemBarrierAndHeart item;	// team Inventory
 	private FeverTimeItem feverTimeItem;
+	/** Speed item */
+	private SpeedItem speedItem;
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -189,6 +191,7 @@ public class GameScreen extends Screen {
 		this.shipsDestroyed = gameState.getShipsDestroyed();
 		this.item = new ItemBarrierAndHeart();	// team Inventory
 		this.feverTimeItem = new FeverTimeItem(); // team Inventory
+
 		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 		this.hitCount = gameState.getHitCount(); //CtrlS
@@ -665,7 +668,7 @@ public class GameScreen extends Screen {
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
 					int feverSpecialScore = enemyShipSpecial.getPointValue();
-          // inventory - Score bonus when acquiring fever items
+          			// inventory - Score bonus when acquiring fever items
 					if (feverTimeItem.isActive()) { feverSpecialScore *= 2; } //TEAM CLOVE //Team inventory
 
 					// CtrlS - If collision occur then check the bullet can process
@@ -822,4 +825,9 @@ public class GameScreen extends Screen {
 		}
 		return remainingEnemies;
 	} // by HUD team SeungYun
+
+
+	public SpeedItem getSpeedItem() {
+		return this.speedItem;
+	}
 }

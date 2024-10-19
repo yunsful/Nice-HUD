@@ -61,7 +61,7 @@ public class GameScreen extends Screen {
 	private EnemyShipFormation enemyShipFormation;
 	/** Player's ship. */
 	private Ship ship;
-	public static Ship player2;
+	public Ship player2;
 	/** Bonus enemy ship that appears sometimes. */
 	private EnemyShip enemyShipSpecial;
 	/** Minimum time between bonus ship appearances. */
@@ -374,11 +374,11 @@ public class GameScreen extends Screen {
 			}
 
 			// Player 2 bullet collision handling
-			TwoPlayerMode.handleBulletCollisionsForPlayer2(this.bullets);
+			TwoPlayerMode.handleBulletCollisionsForPlayer2(this.bullets, player2);
 
 			// 장애물과 아이템 상호작용 추가
-			TwoPlayerMode.handleObstacleCollisionsForPlayer2(this.obstacles);
-			TwoPlayerMode.handleItemCollisionsForPlayer2();
+			TwoPlayerMode.handleObstacleCollisionsForPlayer2(this.obstacles, player2);
+			TwoPlayerMode.handleItemCollisionsForPlayer2(player2);
 		}
 		draw();
 

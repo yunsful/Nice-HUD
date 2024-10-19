@@ -74,7 +74,7 @@ public class TwoPlayerMode extends GameScreen {
 //    }
 
     // Player 2의 총알과 충돌 처리
-    public static void handleBulletCollisionsForPlayer2( Set<PiercingBullet> bullets) {
+    public static void handleBulletCollisionsForPlayer2( Set<PiercingBullet> bullets, Ship player2) {
         if(player2==null) return;
         Set<Bullet> recyclable = new HashSet<>();
         for (Bullet bullet : bullets) {
@@ -96,7 +96,7 @@ public class TwoPlayerMode extends GameScreen {
     }
 
     // Player 2의 장애물과 충돌 처리
-    public static void handleObstacleCollisionsForPlayer2(Set<Obstacle> obstacles) {
+    public static void handleObstacleCollisionsForPlayer2(Set<Obstacle> obstacles, Ship player2) {
         if(player2==null) return;
         for (Obstacle obstacle : obstacles) {
             if (!obstacle.isDestroyed() && checkCollision(player2, obstacle)) {
@@ -116,7 +116,7 @@ public class TwoPlayerMode extends GameScreen {
     }
 
     // Player 2의 아이템과 충돌 처리
-    public static void handleItemCollisionsForPlayer2() {
+    public static void handleItemCollisionsForPlayer2(Ship player2) {
         if(player2==null) return;
         for (Item item : itemManager.items) {
             if (checkCollision(item, player2)) {

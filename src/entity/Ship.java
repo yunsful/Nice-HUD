@@ -51,7 +51,7 @@ public class Ship extends Entity {
 	 */
 	//Edit by Enemy
 	public Ship(final int positionX, final int positionY, final Color color) {
-		super(positionX, positionY - 50, 13 * 2, 8 * 2, color);
+		super(positionX, positionY - 50, 13 * 2, 8 * 2, color); // add by team HUD
 
 		this.spriteType = SpriteType.Ship;
 

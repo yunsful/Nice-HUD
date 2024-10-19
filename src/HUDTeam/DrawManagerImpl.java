@@ -27,7 +27,7 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawString(bulletSpeedText, 10, screen.getHeight() - 15);
     }
 
-    public static void drawSpeed(final Screen screen, final int speed) {
+    public static void drawSpeed(final Screen screen, final double speed) {
         String speedString = "MS : " + speed;
         backBufferGraphics.setColor(Color.WHITE);
         backBufferGraphics.setFont(fontRegular);
@@ -38,7 +38,9 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
 
-        Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.RED);
+        Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.RED) {
+
+        };
         heart.setSpriteType(SpriteType.Heart);
 
         for (int i = 0; i < lives; i++) {
@@ -141,6 +143,8 @@ public class DrawManagerImpl extends DrawManager {
 
         backBufferGraphics.drawString(remainingEnemiesString, x, y);
     } // by SeungYun
+
+
 
     /**
      * Draws current score on screen.

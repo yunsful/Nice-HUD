@@ -14,6 +14,7 @@ import CtrlS.RoundState;
 import CtrlS.ReceiptScreen;
 import CtrlS.UpgradeManager;
 import Sound_Operator.SoundManager;
+import clove.Statistics;
 import level_design.Background;
 import CtrlS.RoundState;
 import CtrlS.ReceiptScreen;
@@ -114,6 +115,11 @@ public final class Core {
 			// CtrlS: Make instance of Upgrade Manager
 			Core.getUpgradeManager();
 
+			//Clove. Reset Player Statistics After the Game Starts
+			Statistics statistics = new Statistics();
+			statistics.resetStatistics();
+			LOGGER.info("Reset Player Statistics");
+
 		} catch (Exception e) {
 			// TODO handle exception
 			e.printStackTrace();
@@ -181,6 +187,8 @@ public final class Core {
 
 					achievementManager.updateAchievements(currentScreen); // TEAM CLOVER : Achievement
 
+					Statistics statistics = new Statistics(); //Clove
+
 					gameState = ((GameScreen) currentScreen).getGameState();
 
 					roundState = new RoundState(prevState, gameState);
@@ -200,6 +208,13 @@ public final class Core {
           			LOGGER.info("Round Coin: " + roundState.getRoundCoin());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
 					LOGGER.info("Round Time: " + roundState.getRoundTime());
+
+					try { //Clove
+						statistics.addTotalPlayTime(roundState.getRoundTime());
+						LOGGER.info("RoundTime Saving");
+					} catch (IOException e){
+						LOGGER.info("Failed to Save RoundTime");
+					}
 
 					// Show receiptScreen
 					// If it is not the last round and the game is not over
@@ -272,7 +287,7 @@ public final class Core {
 					// TwoPlayerMode의 생성자를 호출할 때 필요한 매개변수를 모두 전달
 					currentScreen = new TwoPlayerMode(gameState, currentGameSettings, bonusLife, width, height, fps);
 
-
+					Statistics statistics = new Statistics(); //Clove
 
 
 					LOGGER.info("Starting " + WIDTH + "x" + HEIGHT
@@ -302,6 +317,13 @@ public final class Core {
 					LOGGER.info("Round Coin: " + roundState.getRoundCoin());
 					LOGGER.info("Round Hit Rate: " + roundState.getRoundHitRate());
 					LOGGER.info("Round Time: " + roundState.getRoundTime());
+
+					try { //Clove
+						statistics.addTotalPlayTime(roundState.getRoundTime());
+						LOGGER.info("RoundTime Saving");
+					} catch (IOException e){
+						LOGGER.info("Failed to Save RoundTime");
+					}
 
 					// Show receiptScreen
 					// If it is not the last round and the game is not over

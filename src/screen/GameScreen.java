@@ -7,6 +7,8 @@ import java.util.Random;
 import java.util.Set;
 
 import java.io.IOException;
+
+import CtrlS.RoundState;
 import clove.AchievementConditions;
 import clove.Statistics;
 import Enemy.*;
@@ -384,8 +386,6 @@ public class GameScreen extends Screen {
 		}
 
 		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
-			this.endTime = System.currentTimeMillis();    //clove
-			long playTime = (this.endTime - this.startTime) / 1000;    //clove
 			//this.logger.info("Final Playtime: " + playTime + " seconds");    //clove
 			achievementConditions.checkNoDeathAchievements(lives);
 			achievementConditions.score(score);
@@ -393,7 +393,6 @@ public class GameScreen extends Screen {
 				statistics.comHighestLevel(level);
 				statistics.addBulletShot(bulletsShot);
 				statistics.addShipsDestroyed(shipsDestroyed);
-                statistics.addTotalPlayTime(playTime);
 
 				achievementConditions.onKill();
 				achievementConditions.onStage();

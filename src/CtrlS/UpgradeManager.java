@@ -129,9 +129,9 @@ public final class UpgradeManager {
      * @return The current movement speed.
      * @throws IOException In case of loading problems.
      */
-    public int getMovementSpeed() throws IOException {
+    public double getMovementSpeed() throws IOException {
         Properties properties = fileManager.loadUpgradeStatus();
-        return Integer.parseInt(properties.getProperty(MOVEMENT_SPEED, "1"));
+        return Double.parseDouble(properties.getProperty(MOVEMENT_SPEED, "1"));
     }
 
     /**
@@ -141,10 +141,10 @@ public final class UpgradeManager {
      * @throws IOException In case of saving problems.
      */
     public void addMovementSpeed() throws IOException {
-        int currentValue = getMovementSpeed();
+        double currentValue = getMovementSpeed();
         currentValue += shipStatus.getSpeedIn();
         Properties properties = fileManager.loadUpgradeStatus();
-        properties.setProperty(MOVEMENT_SPEED, Integer.toString(currentValue));
+        properties.setProperty(MOVEMENT_SPEED, Double.toString(currentValue));
         fileManager.saveUpgradeStatus(properties);
     }
 
@@ -266,12 +266,12 @@ public final class UpgradeManager {
     }
 
     public int PriceCalculation(int basic_price, int count){
-        basic_price += basic_price * LevelCalculation(count);
+        basic_price += (basic_price / 2) * LevelCalculation(count);
         return basic_price;
     }
 
     public int LevelCalculation(int level){
-        int Level = (level - (level / 4) - 1) ;
+        int Level = (level - ((level - 1) / 4) - 1) ;
         if (Level < 1){
             return 0;
         }
@@ -281,7 +281,7 @@ public final class UpgradeManager {
     }
 
     public String whatMoney(int count, int i){
-        if (i == 0) {
+        if (i == 1) {
             if (count % 2 == 0){
                 return "GEM";
             }

@@ -50,8 +50,8 @@ public class ShipStatus {
             SHOOTING_INTERVAL_increase = Integer.parseInt(properties.getProperty("SHOOTING_INTERVAL.increase"));
             BULLET_SPEED_increase = Integer.parseInt(properties.getProperty("BULLET_SPEED.increase"));
             coin_increase = Double.parseDouble(properties.getProperty("CoinBonus.increase"));
-            speedUp_probability = Double.parseDouble(properties.getProperty("SpeedUp.probability")); // SpeedUp 확률 로드
-            speedSlow_probability = Double.parseDouble(properties.getProperty("SpeedSlow.probability")); // SpeedSlow 확률 로드
+            speedUp_probability = Double.parseDouble(properties.getProperty("SpeedUp.probability"));
+            speedSlow_probability = Double.parseDouble(properties.getProperty("SpeedSlow.probability"));
 
         } catch (IOException e) {
             e.printStackTrace();

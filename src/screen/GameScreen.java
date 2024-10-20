@@ -616,10 +616,7 @@ public class GameScreen extends Screen {
 						if(enemyShip.getHp() <= 0) {
 							//inventory_f fever time is activated, the score is doubled.
 							if(feverTimeItem.isActive()) {
-								this.score += enemyShip.getPointValue()*2;
-							}
-							else{
-								this.score += enemyShip.getPointValue();
+								feverScore = feverScore * 10;
 							}
 							this.shipsDestroyed++;
 						}
@@ -663,7 +660,7 @@ public class GameScreen extends Screen {
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
 					int feverSpecialScore = enemyShipSpecial.getPointValue();
           			// inventory - Score bonus when acquiring fever items
-					if (feverTimeItem.isActive()) { feverSpecialScore *= 2; } //TEAM CLOVE //Team inventory
+					if (feverTimeItem.isActive()) { feverSpecialScore *= 10; } //TEAM CLOVE //Team inventory
 
 					// CtrlS - If collision occur then check the bullet can process
 					if (!processedFireBullet.contains(bullet.getFire_id())) {
@@ -675,7 +672,7 @@ public class GameScreen extends Screen {
 						}
 
 					}
-					this.scoreManager.addScore(this.enemyShipSpecial.getPointValue()); //clove
+					this.scoreManager.addScore(feverSpecialScore); //clove
 					this.shipsDestroyed++;
 					this.enemyShipSpecial.destroy();
 					this.enemyShipSpecialExplosionCooldown.reset();

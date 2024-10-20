@@ -27,6 +27,7 @@ import inventory_develop.*;
 // Sound Operator
 import Sound_Operator.SoundManager;
 import clove.ScoreManager;    // CLOVE
+import twoplayermode.TwoPlayerMode;
 
 
 /**
@@ -72,7 +73,7 @@ public class GameScreen extends Screen {
 	/** Set of all bullets fired by on screen ships. */
 	public Set<PiercingBullet> bullets; //by Enemy team
 	/** Add an itemManager Instance */
-	public ItemManager itemManager; //by Enemy team
+	public static ItemManager itemManager; //by Enemy team
 	/** Shield item */
 	private ItemBarrierAndHeart item;	// team Inventory
 	private FeverTimeItem feverTimeItem;
@@ -356,6 +357,29 @@ public class GameScreen extends Screen {
 		cleanBullets();
 		cleanObstacles();
 		this.itemManager.cleanItems(); //by Enemy team
+
+		if (player2 != null) {
+			// Player 2 movement and shooting
+			boolean moveRight2 = inputManager.isKeyDown(KeyEvent.VK_C);
+			boolean moveLeft2 = inputManager.isKeyDown(KeyEvent.VK_Z);
+
+			if (moveRight2 && player2.getPositionX() + player2.getWidth() < width) {
+				player2.moveRight();
+			}
+			if (moveLeft2 && player2.getPositionX() > 0) {
+				player2.moveLeft();
+			}
+			if (inputManager.isKeyDown(KeyEvent.VK_X)) {
+				player2.shoot(bullets);
+			}
+
+			// Player 2 bullet collision handling
+			TwoPlayerMode.handleBulletCollisionsForPlayer2(this.bullets, player2);
+
+			// 장애물과 아이템 상호작용 추가
+			TwoPlayerMode.handleObstacleCollisionsForPlayer2(this.obstacles, player2);
+			TwoPlayerMode.handleItemCollisionsForPlayer2(player2);
+		}
 		draw();
 
 		/**
@@ -462,10 +486,16 @@ public class GameScreen extends Screen {
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
 		DrawManagerImpl.drawBulletSpeed(this, ship.getBulletSpeed());
-		//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
+		// Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
 		drawManager.drawItem(this); // HUD team - Jo Minseo
+
+		if(player2 != null){
+			DrawManagerImpl.drawBulletSpeed2P(this, player2.getBulletSpeed());
+			DrawManagerImpl.drawSpeed2P(this, player2.getSpeed());
+			DrawManagerImpl.drawLives2P(this, ((TwoPlayerMode) this).getLivestwo());
+		} // by HUD team HyunWoo
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {
@@ -750,7 +780,7 @@ public class GameScreen extends Screen {
 	 *            Second entity, the ship.
 	 * @return Result of the collision test.
 	 */
-	public boolean checkCollision(final Entity a, final Entity b) {
+	public static boolean checkCollision(final Entity a, final Entity b) {
 		// Calculate center point of the entities in both axis.
 		int centerAX = a.getPositionX() + a.getWidth() / 2;
 		int centerAY = a.getPositionY() + a.getHeight() / 2;
@@ -786,12 +816,7 @@ public class GameScreen extends Screen {
 	public void setLives(int lives) {
 		this.lives = lives;
 	}
-	public int getLivestwo() {
-		return livestwo;
-	}
-	public void setLivestwo(int livestwo) {
-		this.livestwo = livestwo;
-	}
+
 	public Ship getShip() {
 		return ship;
 	}	// Team Inventory(Item)

@@ -247,7 +247,7 @@ public class DrawManager {
 	 * @param positionY
 	 *            Coordinates for the upper side of the image.
 	 */
-	public void drawEntity(final Entity entity, final int positionX,
+	public static void drawEntity(final Entity entity, final int positionX,
 						   final int positionY) {
 
 		try {

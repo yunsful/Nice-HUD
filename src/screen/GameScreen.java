@@ -481,8 +481,7 @@ public class GameScreen extends Screen {
 //		drawManager.drawScore(this, this.scoreManager.getAccumulatedScore());    //clove -> edit by jesung ko - TeamHUD(to udjust score)
 //		drawManager.drawScore(this, this.score); // by jesung ko - TeamHUD
 		DrawManagerImpl.drawScore2(this,this.scoreManager.getAccumulatedScore()); // by jesung ko - TeamHUD
-//		drawManager.drawLives(this, this.lives);
-		DrawManagerImpl.drawLives2P(this, this.lives);
+		drawManager.drawLives(this, this.lives);
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
@@ -495,8 +494,7 @@ public class GameScreen extends Screen {
 		if(player2 != null){
 			DrawManagerImpl.drawBulletSpeed2P(this, player2.getBulletSpeed());
 			DrawManagerImpl.drawSpeed2P(this, player2.getSpeed());
-//			DrawManagerImpl.drawLives2P(this, ((TwoPlayerMode) this).getLivestwo());
-			drawManager.drawLives(this, ((TwoPlayerMode) this).getLivestwo());
+			DrawManagerImpl.drawLives2P(this, ((TwoPlayerMode) this).getLivestwo());
 		} // by HUD team HyunWoo
 
 		// Countdown to game start.

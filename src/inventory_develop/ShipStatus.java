@@ -19,6 +19,8 @@ public class ShipStatus {
     private Double bomb_probability;
     private Double shield_probability;
     private Double feverTime_probability;
+    private Double speedUp_probability;
+    private Double speedSlow_probability;
 
     private int Speed_price;
     private int num_Bullet_price;
@@ -27,10 +29,6 @@ public class ShipStatus {
 
     private NumberOfBullet numberOfBullet;
     private PlayerGrowth playerGrowth;
-
-    private Double speedUp_probability;
-    private Double speedSlow_probability;
-
 
     Properties properties = new Properties();
 

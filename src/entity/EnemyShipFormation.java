@@ -14,6 +14,7 @@ import Enemy.*;
 import Sound_Operator.SoundManager;
 import clove.ScoreManager;
 import inventory_develop.Bomb;
+import inventory_develop.SpeedItem;
 import screen.Screen;
 import engine.Cooldown;
 import engine.Core;
@@ -33,8 +34,8 @@ import Sound_Operator.SoundManager;
  */
 public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private boolean isCircle = false;
-  // Sound Operator
-  private static SoundManager sm;
+	// Sound Operator
+	private static SoundManager sm;
 	/** Number of iteration of movement */
 	private int iteration = 0;
 
@@ -80,6 +81,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** List of enemy ships forming the formation. */
 	private List<List<EnemyShip>> enemyShips;
 	/** Minimum time between shots. */
+	private List<SpeedItem> activeSpeedItems;
 	private Cooldown shootingCooldown;
 	/** Number of ships in the formation - horizontally. */
 	private int nShipsWide;
@@ -148,6 +150,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.drawManager = Core.getDrawManager();
 		this.logger = Core.getLogger();
 		this.enemyShips = new ArrayList<List<EnemyShip>>();
+		this.activeSpeedItems = new ArrayList<>();
 		this.currentDirection = Direction.RIGHT;
 		this.movementInterval = 0;
 		this.nShipsWide = gameSettings.getFormationWidth();
@@ -160,8 +163,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.positionX = INIT_POS_X;
 		this.positionY = INIT_POS_Y;
 		this.shooters = new ArrayList<EnemyShip>();
+		this.shipCount = 0;
 		SpriteType spriteType = null;
-    int hp=1;// Edited by Enemy
+		int hp=1;// Edited by Enemy
 		Random rand= new Random();
 		int n = rand.nextInt(2);
 		if(n%2==1){ isCircle=true;
@@ -187,17 +191,17 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				double angle = 2* PI * i / this.nShipsHigh;
 
 				if (i / (float) this.nShipsHigh < PROPORTION_C)
-        if (shipCount == (nShipsHigh*1)+1 ||shipCount == (nShipsHigh*3)+1) //Edited by Enemy
-					spriteType = SpriteType.ExplosiveEnemyShip1;
-				else if (i / (float) this.nShipsHigh < PROPORTION_C)
-					spriteType = SpriteType.EnemyShipC1;
-				else if (i / (float) this.nShipsHigh < PROPORTION_B + PROPORTION_C)
-					spriteType = SpriteType.EnemyShipB1;
-				else
-					spriteType = SpriteType.EnemyShipA1;
+					if (shipCount == (nShipsHigh*1)+1 ||shipCount == (nShipsHigh*3)+1) //Edited by Enemy
+						spriteType = SpriteType.ExplosiveEnemyShip1;
+					else if (i / (float) this.nShipsHigh < PROPORTION_C)
+						spriteType = SpriteType.EnemyShipC1;
+					else if (i / (float) this.nShipsHigh < PROPORTION_B + PROPORTION_C)
+						spriteType = SpriteType.EnemyShipB1;
+					else
+						spriteType = SpriteType.EnemyShipA1;
 				if(isCircle){
-				x = (int) round(RADIUS * cos(angle) + positionX + ( SEPARATION_DISTANCE_CIRCLE* this.enemyShips.indexOf(column)));
-				y = (int) (RADIUS * sin(angle)) + positionY;}
+					x = (int) round(RADIUS * cos(angle) + positionX + ( SEPARATION_DISTANCE_CIRCLE* this.enemyShips.indexOf(column)));
+					y = (int) (RADIUS * sin(angle)) + positionY;}
 				else{
 					x = positionX + (SEPARATION_DISTANCE * this.enemyShips.indexOf(column));
 					y = positionY+ i*SEPARATION_DISTANCE;
@@ -504,12 +508,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 */
 	@Override
 	public final Iterator<EnemyShip> iterator() {
-		Set<EnemyShip> enemyShipsList = new HashSet<EnemyShip>();
-
-		for (List<EnemyShip> column : this.enemyShips)
-			for (EnemyShip enemyShip : column)
+		Set<EnemyShip> enemyShipsList = new HashSet<>();
+		for (List<EnemyShip> column : this.enemyShips) {
+			for (EnemyShip enemyShip : column) {
 				enemyShipsList.add(enemyShip);
-
+			}
+		}
 		return enemyShipsList.iterator();
 	}
 
@@ -543,13 +547,11 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 			destroyedShip.chainExplode();
 		}
 
-
-		System.out.println(isCircle);
-		if (bullet.getSpriteType() == SpriteType.ItemBomb && isCircle) {
+		if (bullet.getSpriteType() == SpriteType.ItemBomb && isCircle) {	// Bomb Item type1
 			int[] score = Bomb.destroyByBomb_isCircle(enemyShips, destroyedShip, this.itemManager, this.logger);
 			count = score[0];
 			point = score[1];
-		} else if (bullet.getSpriteType() == SpriteType.ItemBomb) { // team Inventory
+		} else if (bullet.getSpriteType() == SpriteType.ItemBomb) {		// Bomb Item type2
 			int[] score = Bomb.destroyByBomb(enemyShips, destroyedShip, this.itemManager, this.logger);
 			count = score[0];
 			point = score[1];

@@ -33,6 +33,7 @@ public class ItemManager {
     private GameScreen gameScreen;
     protected Logger logger = Core.getLogger();
     private Set<Item> recyclableItems = new HashSet<>();
+    private Set<EnemyShip> enemyShips;
     private ItemBarrierAndHeart Item2;
     private NumberOfBullet numberOfBullet;
     private SpeedItem speedItem;
@@ -42,7 +43,6 @@ public class ItemManager {
     private CurrencyManager currencyManager;
     // Sound Operator
     private static SoundManager sm;
-    private List<EnemyShip> enemyShips;
 
     public ItemManager(int screenHeight, DrawManager drawManager, GameScreen gameScreen) {
         this.items = new HashSet<>();
@@ -55,7 +55,7 @@ public class ItemManager {
         this.feverTimeItem = gameScreen.getFeverTimeItem();
         this.numberOfBullet = new NumberOfBullet();
         this.speedItem = gameScreen.getSpeedItem();
-        this.enemyShips = new ArrayList<>();
+        this.enemyShips = new HashSet<>();
     }
 
     public void cleanItems() {
@@ -87,6 +87,10 @@ public class ItemManager {
         }
     }
 
+    public void setEnemyShips(Set<EnemyShip> enemyShips) {
+        this.enemyShips = enemyShips;
+    }
+
     // team Inventory
     public void OperateItem(Item item) {
         if(item!= null) {
@@ -108,12 +112,12 @@ public class ItemManager {
                     sm.playES("get_item");
                     break;
                 case ItemHeart:
-                    Item2.activeheart(gameScreen, ship, growth);
+                    Item2.activeheart(gameScreen);
                     //Sound_Operator
                     sm = SoundManager.getInstance();
                     sm.playES("get_item");
                     break;
-                case ItemFeverTime: // 피버타임 아이템일 경우
+                case ItemFeverTime:
                     feverTimeItem.activate();
                     break;
                 case ItemPierce:
@@ -125,24 +129,17 @@ public class ItemManager {
                     break;
                 case ItemCoin:
                     this.logger.info("You get coin!");
+                    break;
                 case ItemSpeedUp:
-                    applySpeedToAllEnemies(true); // 속도 증가
+                    speedItem.activate(true, enemyShips);
                     break;
                 case ItemSpeedSlow:
-                    applySpeedToAllEnemies(false); // 속도 감소
+                    speedItem.activate(false, enemyShips);
                     break;
             }
 
             addItemRecycle(item);
         }
-    }
-
-    private void applySpeedToAllEnemies(boolean isSpeedUp) {
-        for (EnemyShip enemyShip : enemyShips) {
-            SpeedItem speedItem = new SpeedItem(enemyShip.getPositionX(), enemyShip.getPositionY(), isSpeedUp);
-            speedItem.applySpeedEffect(enemyShip);
-        }
-        logger.info(isSpeedUp ? "Applied speed up to all enemies." : "Applied speed slow to all enemies.");
     }
 
     public void addItemRecycle(Item item) {

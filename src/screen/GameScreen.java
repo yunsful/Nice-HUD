@@ -2,9 +2,7 @@ package screen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import java.io.IOException;
 
@@ -184,9 +182,9 @@ public class GameScreen extends Screen {
 			this.livestwo++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.item = new ItemBarrierAndHeart();	// team Inventory
+		this.item = new ItemBarrierAndHeart();   // team Inventory
 		this.feverTimeItem = new FeverTimeItem(); // team Inventory
-
+		this.speedItem = new SpeedItem();   // team Inventory
 		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 		this.hitCount = gameState.getHitCount(); //CtrlS
@@ -226,6 +224,12 @@ public class GameScreen extends Screen {
 		this.itemManager.initialize(); //by Enemy team
 		enemyShipFormation.setItemManager(this.itemManager);//add by team Enemy
 		this.player2=null;
+
+		Set<EnemyShip> enemyShipSet = new HashSet<>();
+		for (EnemyShip enemyShip : this.enemyShipFormation) {
+			enemyShipSet.add(enemyShip);
+		}
+		this.itemManager.setEnemyShips(enemyShipSet);
 
 		// Appears each 10-30 seconds.
 		this.enemyShipSpecialCooldown = Core.getVariableCooldown(
@@ -275,15 +279,15 @@ public class GameScreen extends Screen {
 
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
 			// --- OBSTACLES
-        if (this.obstacleSpawnCooldown.checkFinished()) {
-            // Adjust spawn amount based on the level
-            int spawnAmount = Math.min(level, 3); // Spawn up to 3 obstacles at higher levels
-            for (int i = 0; i < spawnAmount; i++) {
-                int randomX = new Random().nextInt(this.width - 30);
-                obstacles.add(new Obstacle(randomX, 50)); // Start each at the top of the screen
-            }
-            this.obstacleSpawnCooldown.reset();
-        }
+			if (this.obstacleSpawnCooldown.checkFinished()) {
+				// Adjust spawn amount based on the level
+				int spawnAmount = Math.min(level, 3); // Spawn up to 3 obstacles at higher levels
+				for (int i = 0; i < spawnAmount; i++) {
+					int randomX = new Random().nextInt(this.width - 30);
+					obstacles.add(new Obstacle(randomX, 50)); // Start each at the top of the screen
+				}
+				this.obstacleSpawnCooldown.reset();
+			}
 
 			// --- OBSTACLES
 			Set<Obstacle> obstaclesToRemove = new HashSet<>();
@@ -345,8 +349,8 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
-			this.item.updateBarrierAndShip(this.ship);	// team Inventory
-//			this.ship.update();					// team Inventory
+			this.item.updateBarrierAndShip(this.ship);   // team Inventory
+			this.speedItem.update();         // team Inventory
 			this.feverTimeItem.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);

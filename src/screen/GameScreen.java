@@ -406,11 +406,13 @@ public class GameScreen extends Screen {
 		*
 		* Checks if the intended number of waves for this level was destroyed
 		* **/
-		if ((getRemainingEnemies() == 0 || this.lives == 0)
+		if ((getRemainingEnemies() == 0
 		&& !this.levelFinished
-		&& waveCounter == this.gameSettings.getWavesNumber()) {
+		&& waveCounter == this.gameSettings.getWavesNumber())
+		|| (this.lives == 0)
+		) {
 			this.levelFinished = true;
-			this.screenFinishedCooldown.reset();
+			//this.screenFinishedCooldown.reset(); It works now -- With love, Level Design Team
 		}
 
 		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {

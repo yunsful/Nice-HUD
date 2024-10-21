@@ -499,6 +499,9 @@ public class GameScreen extends Screen {
 			DrawManagerImpl.drawBulletSpeed2P(this, player2.getBulletSpeed());
 			DrawManagerImpl.drawSpeed2P(this, player2.getSpeed());
 			DrawManagerImpl.drawLives2P(this, ((TwoPlayerMode) this).getLivestwo());
+			if (((TwoPlayerMode) this).getLivestwo() == 0) {
+				player2 = null;
+			}
 		} // by HUD team HyunWoo
 
 		// Countdown to game start.

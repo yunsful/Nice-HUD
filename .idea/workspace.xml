@@ -5,15 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c2d1df9e-7633-4932-824c-2c1f0ea58909" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/backgrounds/background_level_1.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/res/backgrounds/background_level_1.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/backgrounds/background_level_2.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/res/backgrounds/background_level_2.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/backgrounds/background_level_3.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/res/backgrounds/background_level_3.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/backgrounds/background_level_4.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/res/backgrounds/background_level_4.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/backgrounds/background_level_5.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/res/backgrounds/background_level_5.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/backgrounds/background_level_7.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/res/backgrounds/background_level_7.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/engine/Core.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/engine/Core.java" afterDir="false" />
-
+      <change beforePath="$PROJECT_DIR$/src/screen/GameScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/screen/GameScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/ScoreScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/screen/ScoreScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/screen/Screen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/screen/Screen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/twoplayermode/TwoPlayerMode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/twoplayermode/TwoPlayerMode.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +37,9 @@
   <component name="KubernetesApiProvider">{
     &quot;isMigrated&quot;: true
     }</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo">{
     &quot;customColor&quot;: &quot;&quot;,
     &quot;associatedIndex&quot;: 6
@@ -53,7 +54,8 @@
   "keyToString": {
     "Application.Core.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/background",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/OSYSTUDY/241018/Invaders-SDP_TEAMstarter",
     "node.js.detected.package.eslint": "true",
@@ -120,6 +122,7 @@
       <workItem from="1728884400421" duration="1555000" />
       <workItem from="1728890242900" duration="37000" />
       <workItem from="1728890316138" duration="346000" />
+      <workItem from="1729472358413" duration="3146000" />
     </task>
     <servers />
   </component>

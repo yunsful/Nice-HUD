@@ -2,11 +2,11 @@ package screen;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import java.io.IOException;
+
+import CtrlS.RoundState;
 import clove.AchievementConditions;
 import clove.Statistics;
 import Enemy.*;
@@ -25,12 +25,7 @@ import inventory_develop.*;
 // Sound Operator
 import Sound_Operator.SoundManager;
 import clove.ScoreManager;    // CLOVE
-
-import java.beans.PropertyChangeListener; // CLOVE
-import java.beans.PropertyChangeSupport; // CLOVE
-import java.util.Timer; // CLOVE
-import java.util.TimerTask; // CLOVE
-import java.util.List;
+import twoplayermode.TwoPlayerMode;
 
 
 /**
@@ -64,6 +59,7 @@ public class GameScreen extends Screen {
 	private EnemyShipFormation enemyShipFormation;
 	/** Player's ship. */
 	private Ship ship;
+	public Ship player2;
 	/** Bonus enemy ship that appears sometimes. */
 	private EnemyShip enemyShipSpecial;
 	/** Minimum time between bonus ship appearances. */
@@ -75,10 +71,12 @@ public class GameScreen extends Screen {
 	/** Set of all bullets fired by on screen ships. */
 	public Set<PiercingBullet> bullets; //by Enemy team
 	/** Add an itemManager Instance */
-	private ItemManager itemManager; //by Enemy team
+	public static ItemManager itemManager; //by Enemy team
 	/** Shield item */
 	private ItemBarrierAndHeart item;	// team Inventory
 	private FeverTimeItem feverTimeItem;
+	/** Speed item */
+	private SpeedItem speedItem;
 	/** Current score. */
 	private int score;
 	/** Player lives left. */
@@ -110,7 +108,7 @@ public class GameScreen extends Screen {
 
 
 	// --- OBSTACLES
-	private Set<Obstacle> obstacles; // Store obstacles
+	public Set<Obstacle> obstacles; // Store obstacles
 	private Cooldown obstacleSpawnCooldown; //control obstacle spawn speed
 	/** Shield item */
 
@@ -145,11 +143,9 @@ public class GameScreen extends Screen {
 	/** Check end-time*/
 	private long endTime;    //clove
 
-	// TEAM CLOVER
 	private Statistics statistics; //Team Clove
-	private static AchievementConditions achievementConditions;
-	/** Check kill-streak */
-	private int killCount;
+	private AchievementConditions achievementConditions;
+	private int fastKill;
 
 	/** CtrlS: Count the number of coin collected in game */
 	private int coinItemsCollected;
@@ -187,8 +183,9 @@ public class GameScreen extends Screen {
 			this.livestwo++;
 		this.bulletsShot = gameState.getBulletsShot();
 		this.shipsDestroyed = gameState.getShipsDestroyed();
-		this.item = new ItemBarrierAndHeart();	// team Inventory
+		this.item = new ItemBarrierAndHeart();   // team Inventory
 		this.feverTimeItem = new FeverTimeItem(); // team Inventory
+		this.speedItem = new SpeedItem();   // team Inventory
 		this.coin = gameState.getCoin(); // Team-Ctrl-S(Currency)
 		this.gem = gameState.getGem(); // Team-Ctrl-S(Currency)
 		this.hitCount = gameState.getHitCount(); //CtrlS
@@ -208,27 +205,32 @@ public class GameScreen extends Screen {
 		this.statistics = new Statistics(); //Team Clove
 		this.achievementConditions = new AchievementConditions();
 		this.coinItemsCollected = gameState.getCoinItemsCollected(); // CtrlS
-
-		// Dongjun Suh / TEAM CLOVER
-		this.killCount = 0;
-		bullets = new HashSet<>();
 	}
 
 	/**
 	 * Initializes basic screen properties, and adds necessary elements.
 	 */
-	public final void initialize() {
+	public void initialize() {
 		super.initialize();
 		/** initialize background **/
 		drawManager.loadBackground(this.level);
 
 		enemyShipFormation = new EnemyShipFormation(this.gameSettings);
+		enemyShipFormation.setScoreManager(this.scoreManager);//add by team Enemy
 		enemyShipFormation.attach(this);
-		this.ship = new Ship(this.width / 2, this.height - 30);
+		this.ship = new Ship(this.width / 2, this.height - 30, Color.RED); // add by team HUD
 
 		/** initialize itemManager */
 		this.itemManager = new ItemManager(this.height, drawManager, this); //by Enemy team
 		this.itemManager.initialize(); //by Enemy team
+		enemyShipFormation.setItemManager(this.itemManager);//add by team Enemy
+		this.player2=null;
+
+		Set<EnemyShip> enemyShipSet = new HashSet<>();
+		for (EnemyShip enemyShip : this.enemyShipFormation) {
+			enemyShipSet.add(enemyShip);
+		}
+		this.itemManager.setEnemyShips(enemyShipSet);
 
 		// Appears each 10-30 seconds.
 		this.enemyShipSpecialCooldown = Core.getVariableCooldown(
@@ -278,15 +280,15 @@ public class GameScreen extends Screen {
 
 		if (this.inputDelay.checkFinished() && !this.levelFinished) {
 			// --- OBSTACLES
-        if (this.obstacleSpawnCooldown.checkFinished()) {
-            // Adjust spawn amount based on the level
-            int spawnAmount = Math.min(level, 3); // Spawn up to 3 obstacles at higher levels
-            for (int i = 0; i < spawnAmount; i++) {
-                int randomX = new Random().nextInt(this.width - 30);
-                obstacles.add(new Obstacle(randomX, 50)); // Start each at the top of the screen
-            }
-            this.obstacleSpawnCooldown.reset();
-        }
+			if (this.obstacleSpawnCooldown.checkFinished()) {
+				// Adjust spawn amount based on the level
+				int spawnAmount = Math.min(level, 3); // Spawn up to 3 obstacles at higher levels
+				for (int i = 0; i < spawnAmount; i++) {
+					int randomX = new Random().nextInt(this.width - 30);
+					obstacles.add(new Obstacle(randomX, 50)); // Start each at the top of the screen
+				}
+				this.obstacleSpawnCooldown.reset();
+			}
 
 			// --- OBSTACLES
 			Set<Obstacle> obstaclesToRemove = new HashSet<>();
@@ -318,7 +320,7 @@ public class GameScreen extends Screen {
 					this.ship.moveLeft();
 					this.backgroundMoveLeft = true;
 				}
-				if (inputManager.isKeyDown(KeyEvent.VK_SPACE))
+				if (inputManager.isKeyDown(KeyEvent.VK_ENTER))
 					if (this.ship.shoot(this.bullets)) {
 						this.bulletsShot++;
 						this.fire_id++;
@@ -348,8 +350,8 @@ public class GameScreen extends Screen {
 				this.logger.info("The special ship has escaped");
 			}
 
-			this.item.updateBarrierAndShip(this.ship);	// team Inventory
-//			this.ship.update();					// team Inventory
+			this.item.updateBarrierAndShip(this.ship);   // team Inventory
+			this.speedItem.update();         // team Inventory
 			this.feverTimeItem.update();
 			this.enemyShipFormation.update();
 			this.enemyShipFormation.shoot(this.bullets);
@@ -359,6 +361,29 @@ public class GameScreen extends Screen {
 		cleanBullets();
 		cleanObstacles();
 		this.itemManager.cleanItems(); //by Enemy team
+
+		if (player2 != null) {
+			// Player 2 movement and shooting
+			boolean moveRight2 = inputManager.isKeyDown(KeyEvent.VK_C);
+			boolean moveLeft2 = inputManager.isKeyDown(KeyEvent.VK_Z);
+
+			if (moveRight2 && player2.getPositionX() + player2.getWidth() < width) {
+				player2.moveRight();
+			}
+			if (moveLeft2 && player2.getPositionX() > 0) {
+				player2.moveLeft();
+			}
+			if (inputManager.isKeyDown(KeyEvent.VK_X)) {
+				player2.shoot(bullets);
+			}
+
+			// Player 2 bullet collision handling
+			TwoPlayerMode.handleBulletCollisionsForPlayer2(this.bullets, player2);
+
+			// 장애물과 아이템 상호작용 추가
+			TwoPlayerMode.handleObstacleCollisionsForPlayer2(this.obstacles, player2);
+			TwoPlayerMode.handleItemCollisionsForPlayer2(player2);
+		}
 		draw();
 
 		/**
@@ -389,8 +414,6 @@ public class GameScreen extends Screen {
 		}
 
 		if (this.levelFinished && this.screenFinishedCooldown.checkFinished()) {
-			this.endTime = System.currentTimeMillis();    //clove
-			long playTime = (this.endTime - this.startTime) / 1000;    //clove
 			//this.logger.info("Final Playtime: " + playTime + " seconds");    //clove
 			achievementConditions.checkNoDeathAchievements(lives);
 			achievementConditions.score(score);
@@ -398,13 +421,12 @@ public class GameScreen extends Screen {
 				statistics.comHighestLevel(level);
 				statistics.addBulletShot(bulletsShot);
 				statistics.addShipsDestroyed(shipsDestroyed);
-                statistics.addTotalPlayTime(playTime);
 
 				achievementConditions.onKill();
 				achievementConditions.onStage();
 				achievementConditions.trials();
-				achievementConditions.killStreak(killCount);
-				achievementConditions.accuracy(bulletsShot, hitCount);
+				achievementConditions.killStreak();
+				achievementConditions.fastKill(fastKill);
 				achievementConditions.score(score);
 
             } catch (IOException e) {
@@ -426,8 +448,14 @@ public class GameScreen extends Screen {
 		this.backgroundMoveRight = false;
 		this.backgroundMoveLeft = false;
 
+		DrawManagerImpl.drawRect(0, 0, this.width, SEPARATION_LINE_HEIGHT, Color.BLACK);
+		DrawManagerImpl.drawRect(0, this.height - 70, this.width, 70, Color.BLACK); // by Saeum Jung - TeamHUD
+
 		drawManager.drawEntity(this.ship, this.ship.getPositionX(),
 				this.ship.getPositionY());
+		if (player2 != null) {
+			drawManager.drawEntity(player2, player2.getPositionX(), player2.getPositionY());
+		}
 		if (this.enemyShipSpecial != null)
 			drawManager.drawEntity(this.enemyShipSpecial,
 					this.enemyShipSpecial.getPositionX(),
@@ -461,11 +489,20 @@ public class GameScreen extends Screen {
 		drawManager.drawHorizontalLine(this, SEPARATION_LINE_HEIGHT - 1);
 		DrawManagerImpl.drawRemainingEnemies(this, getRemainingEnemies()); // by HUD team SeungYun
 		DrawManagerImpl.drawLevel(this, this.level);
-		DrawManagerImpl.drawBulletSpeed(this, (int)this.ship.getAttackSpeed());
-		//		Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
+		DrawManagerImpl.drawBulletSpeed(this, ship.getBulletSpeed());
+		// Call the method in DrawManagerImpl - Lee Hyun Woo TeamHud
 		DrawManagerImpl.drawTime(this, this.playTime);
 		// Call the method in DrawManagerImpl - Soomin Lee / TeamHUD
 		drawManager.drawItem(this); // HUD team - Jo Minseo
+
+		if(player2 != null){
+			DrawManagerImpl.drawBulletSpeed2P(this, player2.getBulletSpeed());
+			DrawManagerImpl.drawSpeed2P(this, player2.getSpeed());
+			DrawManagerImpl.drawLives2P(this, ((TwoPlayerMode) this).getLivestwo());
+			if (((TwoPlayerMode) this).getLivestwo() == 0) {
+				player2 = null;
+			}
+		} // by HUD team HyunWoo
 
 		// Countdown to game start.
 		if (!this.inputDelay.checkFinished()) {
@@ -513,8 +550,6 @@ public class GameScreen extends Screen {
 				//Ctrl-S : set true of CheckCount if the bullet is planned to recycle.
 				bullet.setCheckCount(true);
 				recyclable.add(bullet);
-
-				AchievementConditions.resetKillCount(); // TEAM CLOVER
 			}
 		}
 		this.bullets.removeAll(recyclable);
@@ -585,7 +620,7 @@ public class GameScreen extends Screen {
 	 * Manages collisions between bullets and ships. -Edited code for Piercing Bullet
 	 */
 	//by Enemy team
-	private void manageCollisions_add_item() {
+	public void manageCollisions_add_item() {
 		Set<PiercingBullet> recyclable = new HashSet<PiercingBullet>();
 		for (PiercingBullet bullet : this.bullets)
 			if (bullet.getSpeed() > 0) {
@@ -607,24 +642,23 @@ public class GameScreen extends Screen {
 			} else {
 				// CtrlS - set fire_id of bullet.
 				bullet.setFire_id(fire_id);
-
 				for (EnemyShip enemyShip : this.enemyShipFormation) {
 					if (!enemyShip.isDestroyed()
 							&& checkCollision(bullet, enemyShip)) {
-						int feverScore = enemyShip.getPointValue(); //TEAM CLOVE
-						if(enemyShip.getHp() <= 0) {
-							//inventory_f fever time is activated, the score is doubled.
-							if(feverTimeItem.isActive()) { feverScore *= 2; } //TEAM CLOVE
-							this.shipsDestroyed++;
-						}
-						//Drop item when MAGENTA color enemy destroyed
-						if (enemyShip.getColor() == Color.MAGENTA) {
-							this.itemManager.dropItem(enemyShip, 1, 1);
-						}
 						int CntAndPnt[] = this.enemyShipFormation._destroy(bullet, enemyShip, false);    // team Inventory
 						this.shipsDestroyed += CntAndPnt[0];
-                        this.scoreManager.addScore(feverScore); //clove
-                        this.score += CntAndPnt[1];
+						int feverScore = CntAndPnt[0]; //TEAM CLOVE //Edited by team Enemy
+
+						if(enemyShip.getHp() <= 0) {
+							//inventory_f fever time is activated, the score is doubled.
+							if(feverTimeItem.isActive()) {
+								feverScore = feverScore * 10;
+							}
+							this.shipsDestroyed++;
+						}
+
+            this.scoreManager.addScore(feverScore); //clove
+            this.score += CntAndPnt[1];
 
 						// CtrlS - If collision occur then check the bullet can process
 						if (!processedFireBullet.contains(bullet.getFire_id())) {
@@ -633,9 +667,6 @@ public class GameScreen extends Screen {
 								hitCount++;
 								bullet.setCheckCount(false);
 								this.logger.info("Hit count!");
-
-								AchievementConditions.incrementKillCount(); // TEAM CLOVER
-
 								processedFireBullet.add(bullet.getFire_id()); // mark this bullet_id is processed.
 							}
 						}
@@ -649,14 +680,13 @@ public class GameScreen extends Screen {
 							recyclable.add(bullet);
 						}
 					}
-
 					// Added by team Enemy.
 					// Enemy killed by Explosive enemy gives points too
 					if (enemyShip.isChainExploded()) {
 						if (enemyShip.getColor() == Color.MAGENTA) {
 							this.itemManager.dropItem(enemyShip, 1, 1);
 						}
-						this.scoreManager.addScore(enemyShip.getPointValue()); //TEAM CLOVE
+						this.score += enemyShip.getPointValue();
 						this.shipsDestroyed++;
 						enemyShip.setChainExploded(false); // resets enemy's chain explosion state.
 					}
@@ -665,8 +695,8 @@ public class GameScreen extends Screen {
 						&& !this.enemyShipSpecial.isDestroyed()
 						&& checkCollision(bullet, this.enemyShipSpecial)) {
 					int feverSpecialScore = enemyShipSpecial.getPointValue();
-          // inventory - Score bonus when acquiring fever items
-					if (feverTimeItem.isActive()) { feverSpecialScore *= 2; } //TEAM CLOVE //Team inventory
+          			// inventory - Score bonus when acquiring fever items
+					if (feverTimeItem.isActive()) { feverSpecialScore *= 10; } //TEAM CLOVE //Team inventory
 
 					// CtrlS - If collision occur then check the bullet can process
 					if (!processedFireBullet.contains(bullet.getFire_id())) {
@@ -754,7 +784,7 @@ public class GameScreen extends Screen {
 	 *            Second entity, the ship.
 	 * @return Result of the collision test.
 	 */
-	public boolean checkCollision(final Entity a, final Entity b) {
+	public static boolean checkCollision(final Entity a, final Entity b) {
 		// Calculate center point of the entities in both axis.
 		int centerAX = a.getPositionX() + a.getWidth() / 2;
 		int centerAY = a.getPositionY() + a.getHeight() / 2;
@@ -790,12 +820,7 @@ public class GameScreen extends Screen {
 	public void setLives(int lives) {
 		this.lives = lives;
 	}
-	public int getLivestwo() {
-		return livestwo;
-	}
-	public void setLivestwo(int livestwo) {
-		this.livestwo = livestwo;
-	}
+
 	public Ship getShip() {
 		return ship;
 	}	// Team Inventory(Item)
@@ -822,4 +847,9 @@ public class GameScreen extends Screen {
 		}
 		return remainingEnemies;
 	} // by HUD team SeungYun
+
+
+	public SpeedItem getSpeedItem() {
+		return this.speedItem;
+	}
 }

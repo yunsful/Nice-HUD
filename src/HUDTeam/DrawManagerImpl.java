@@ -1,6 +1,7 @@
 package HUDTeam;
 
 import engine.DrawManager;
+import screen.GameScreen;
 import screen.Screen;
 import entity.Entity;
 import java.awt.Color;
@@ -27,7 +28,7 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawString(bulletSpeedText, 10, screen.getHeight() - 15);
     }
 
-    public static void drawSpeed(final Screen screen, final int speed) {
+    public static void drawSpeed(final Screen screen, final double speed) {
         String speedString = "MS : " + speed;
         backBufferGraphics.setColor(Color.WHITE);
         backBufferGraphics.setFont(fontRegular);
@@ -38,7 +39,9 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.setFont(fontRegular);
         backBufferGraphics.setColor(Color.WHITE);
 
-        Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.RED);
+        Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.RED) {
+
+        };
         heart.setSpriteType(SpriteType.Heart);
 
         for (int i = 0; i < lives; i++) {
@@ -142,6 +145,8 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawString(remainingEnemiesString, x, y);
     } // by SeungYun
 
+
+
     /**
      * Draws current score on screen.
      *
@@ -157,5 +162,83 @@ public class DrawManagerImpl extends DrawManager {
         backBufferGraphics.drawLine(0, positionY, screen.getWidth(), positionY);
         backBufferGraphics.drawLine(0, positionY + 1, screen.getWidth(),
                 positionY + 1);
+    }
+
+    /**
+     * Draws a filled rectangle with specified color at given coordinates.
+     *
+     * @param x
+     *            The x-coordinate of the rectangle's top-left corner.
+     * @param y
+     *            The y-coordinate of the rectangle's top-left corner.
+     * @param width
+     *            The width of the rectangle.
+     * @param height
+     *            The height of the rectangle.
+     * @param color
+     *            The color to fill the rectangle.
+     */
+    public static void drawRect(final int x, final int y, final int width, final int height, final Color color) {
+        backBufferGraphics.setColor(color);
+        backBufferGraphics.fillRect(x, y, width, height);
+    } // by Saeum Jung - TeamHUD
+
+    /**
+     * Draws 2P's lives on screen.
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param livestwo two
+     *            2P's lives
+     *
+     * by Lee HyunWoo - TeamHUD
+     */
+    public static void drawLives2P(final Screen screen, final int livestwo) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        Entity heart = new Entity(0, 0, 13 * 2, 8 * 2, Color.BLUE) {
+
+        };
+        heart.setSpriteType(SpriteType.Heart);
+
+        int heartWidth = 13 * 2;
+        int startingXPosition = screen.getWidth() - (heartWidth * livestwo) - 20;
+
+        for (int i = 0; i < livestwo; i++)
+            drawEntity(heart, startingXPosition + 30 * i, 10);
+    }
+
+    /**
+     * Draws 2P's bulletSpeed on screen.
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param bulletSpeed two
+     *            2P's bulletSpeed
+     *
+     * by Lee HyunWoo - TeamHUD
+     */
+    public static void drawBulletSpeed2P(final Screen screen, final int bulletSpeed) {
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.setColor(Color.WHITE);
+        String bulletSpeedText = String.format("BS : %d px/f ", bulletSpeed);
+        backBufferGraphics.drawString(bulletSpeedText, 500, screen.getHeight() - 15);
+    }
+
+    /**
+     * Draws 2P's speed on screen.
+     *
+     * @param screen
+     *            Screen to draw on.
+     * @param speed two
+     *            2P's speed
+     *
+     * by Lee HyunWoo - TeamHUD
+     */
+    public static void drawSpeed2P(final Screen screen, final double speed) {
+        String speedString = "MS : " + speed;
+        backBufferGraphics.setColor(Color.WHITE);
+        backBufferGraphics.setFont(fontRegular);
+        backBufferGraphics.drawString(speedString, 500, screen.getHeight() - 35);
     }
 }

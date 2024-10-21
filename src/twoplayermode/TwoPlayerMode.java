@@ -40,7 +40,7 @@ public class TwoPlayerMode extends GameScreen {
     @Override
     public void initialize() {
         super.initialize(); // GameScreen의 초기화 로직 호출
-
+        this.setTwoPlayerMode(true);
         // player2 초기화
         this.player2 = new Ship(this.width / 4, this.height - 30, Color.BLUE); // add by team HUD
     }
@@ -84,7 +84,6 @@ public class TwoPlayerMode extends GameScreen {
                     player2.destroy();
                     livestwo--;
                     System.out.println("Player 2 hit, lives remaining: " + livestwo);
-
                     if (livestwo <= 0) {
                         player2 = null; // Player 2가 파괴된 경우
                     }

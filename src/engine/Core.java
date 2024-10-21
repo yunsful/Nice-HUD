@@ -286,7 +286,7 @@ public final class Core {
 
 					// TwoPlayerMode의 생성자를 호출할 때 필요한 매개변수를 모두 전달
 					currentScreen = new TwoPlayerMode(gameState, currentGameSettings, bonusLife, width, height, fps);
-
+					currentScreen.setTwoPlayerMode(true);
 					Statistics statistics = new Statistics(); //Clove
 
 

@@ -44,6 +44,10 @@ public class EnemyShip extends Entity {
 	// Sound Operator
 	private static SoundManager sm;
 
+	/** Speed reduction or increase multiplier (1.0 means normal speed). */
+	private double speedMultiplier;
+	private double defaultSpeedMultiplier;
+
 	/**
 	 * Constructor, establishes the ship's properties.
 	 *
@@ -66,28 +70,30 @@ public class EnemyShip extends Entity {
 		this.isDestroyed = false;
 		this.x = x; // Add by team enemy
 		this.y = y; // Add by team enemy
+		this.speedMultiplier=1.0; // default 1.0
+		this.defaultSpeedMultiplier = 1.0;
 
 		switch (this.spriteType) {
-		case EnemyShipA1:
-		case EnemyShipA2:
-			this.pointValue = A_TYPE_POINTS;
-			break;
-		case EnemyShipB1:
-		case EnemyShipB2:
-			this.pointValue = B_TYPE_POINTS;
-			break;
-		case EnemyShipC1:
-		case EnemyShipC2:
-			this.pointValue = C_TYPE_POINTS;
-			break;
-		case ExplosiveEnemyShip1: //Edited by Enemy
-		case ExplosiveEnemyShip2:
-			super.setColor(new Color(237, 28, 36)); //set ExplosiveEnemyShip Color
-			this.pointValue = EXPLOSIVE_TYPE_POINTS;
-			break;
-		default:
-			this.pointValue = 0;
-			break;
+			case EnemyShipA1:
+			case EnemyShipA2:
+				this.pointValue = A_TYPE_POINTS;
+				break;
+			case EnemyShipB1:
+			case EnemyShipB2:
+				this.pointValue = B_TYPE_POINTS;
+				break;
+			case EnemyShipC1:
+			case EnemyShipC2:
+				this.pointValue = C_TYPE_POINTS;
+				break;
+			case ExplosiveEnemyShip1: //Edited by Enemy
+			case ExplosiveEnemyShip2:
+				super.setColor(new Color(237, 28, 36)); //set ExplosiveEnemyShip Color
+				this.pointValue = EXPLOSIVE_TYPE_POINTS;
+				break;
+			default:
+				this.pointValue = 0;
+				break;
 		}
 	}
 
@@ -125,7 +131,7 @@ public class EnemyShip extends Entity {
 	 *            Distance to move in the Y axis.
 	 */
 	public final void move(final int distanceX, final int distanceY) {
-		this.positionX += distanceX;
+		this.positionX += distanceX * this.getSpeedMultiplier(); // team Inventory
 		this.positionY += distanceY;
 	}
 
@@ -137,32 +143,32 @@ public class EnemyShip extends Entity {
 			this.animationCooldown.reset();
 
 			switch (this.spriteType) {
-			case EnemyShipA1:
-				this.spriteType = SpriteType.EnemyShipA2;
-				break;
-			case EnemyShipA2:
-				this.spriteType = SpriteType.EnemyShipA1;
-				break;
-			case EnemyShipB1:
-				this.spriteType = SpriteType.EnemyShipB2;
-				break;
-			case EnemyShipB2:
-				this.spriteType = SpriteType.EnemyShipB1;
-				break;
-			case EnemyShipC1:
-				this.spriteType = SpriteType.EnemyShipC2;
-				break;
-			case EnemyShipC2:
-				this.spriteType = SpriteType.EnemyShipC1;
-				break;
-			case ExplosiveEnemyShip1: //Edited by Enemy
-				this.spriteType = SpriteType.ExplosiveEnemyShip2;
-				break;
-			case ExplosiveEnemyShip2: //Edited by Enemy
-				this.spriteType = SpriteType.ExplosiveEnemyShip1;
-				break;
-			default:
-				break;
+				case EnemyShipA1:
+					this.spriteType = SpriteType.EnemyShipA2;
+					break;
+				case EnemyShipA2:
+					this.spriteType = SpriteType.EnemyShipA1;
+					break;
+				case EnemyShipB1:
+					this.spriteType = SpriteType.EnemyShipB2;
+					break;
+				case EnemyShipB2:
+					this.spriteType = SpriteType.EnemyShipB1;
+					break;
+				case EnemyShipC1:
+					this.spriteType = SpriteType.EnemyShipC2;
+					break;
+				case EnemyShipC2:
+					this.spriteType = SpriteType.EnemyShipC1;
+					break;
+				case ExplosiveEnemyShip1: //Edited by Enemy
+					this.spriteType = SpriteType.ExplosiveEnemyShip2;
+					break;
+				case ExplosiveEnemyShip2: //Edited by Enemy
+					this.spriteType = SpriteType.ExplosiveEnemyShip1;
+					break;
+				default:
+					break;
 			}
 		}
 	}
@@ -257,4 +263,19 @@ public class EnemyShip extends Entity {
 	public final void setChainExploded(boolean isChainExploded) {
 		this.isChainExploded = isChainExploded;
 	} // Added by team Enemy
+
+	/**
+	 * Getter for the current speed multiplier.
+	 *
+	 * @return The current speed multiplier.
+	 */
+	public void setSpeedMultiplier(double speedMultiplier) {
+		this.speedMultiplier = speedMultiplier;
+	}
+	public void resetSpeedMultiplier() {
+		this.speedMultiplier = this.defaultSpeedMultiplier;
+	}
+	public double getSpeedMultiplier() {
+		return this.speedMultiplier;
+	}
 }

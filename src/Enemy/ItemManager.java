@@ -8,13 +8,16 @@ import inventory_develop.FeverTimeItem;
 import screen.GameScreen;
 import engine.DrawManager;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
 //import inventory_develop.Bomb;
 import inventory_develop.ItemBarrierAndHeart;
 import inventory_develop.NumberOfBullet;
+import inventory_develop.SpeedItem;
 
 import CtrlS.CurrencyManager;
 
@@ -30,8 +33,10 @@ public class ItemManager {
     private GameScreen gameScreen;
     protected Logger logger = Core.getLogger();
     private Set<Item> recyclableItems = new HashSet<>();
+    private Set<EnemyShip> enemyShips;
     private ItemBarrierAndHeart Item2;
     private NumberOfBullet numberOfBullet;
+    private SpeedItem speedItem;
     private Ship ship;
     private PlayerGrowth growth;
     private FeverTimeItem feverTimeItem;
@@ -49,6 +54,8 @@ public class ItemManager {
         this.Item2 = gameScreen.getItem();
         this.feverTimeItem = gameScreen.getFeverTimeItem();
         this.numberOfBullet = new NumberOfBullet();
+        this.speedItem = gameScreen.getSpeedItem();
+        this.enemyShips = new HashSet<>();
     }
 
     public void cleanItems() {
@@ -80,6 +87,10 @@ public class ItemManager {
         }
     }
 
+    public void setEnemyShips(Set<EnemyShip> enemyShips) {
+        this.enemyShips = enemyShips;
+    }
+
     // team Inventory
     public void OperateItem(Item item) {
         if(item!= null) {
@@ -101,12 +112,12 @@ public class ItemManager {
                     sm.playES("get_item");
                     break;
                 case ItemHeart:
-                    Item2.activeheart(gameScreen, ship, growth);
+                    Item2.activeheart(gameScreen);
                     //Sound_Operator
                     sm = SoundManager.getInstance();
                     sm.playES("get_item");
                     break;
-                case ItemFeverTime: // 피버타임 아이템일 경우
+                case ItemFeverTime:
                     feverTimeItem.activate();
                     break;
                 case ItemPierce:
@@ -118,6 +129,13 @@ public class ItemManager {
                     break;
                 case ItemCoin:
                     this.logger.info("You get coin!");
+                    break;
+                case ItemSpeedUp:
+                    speedItem.activate(true, enemyShips);
+                    break;
+                case ItemSpeedSlow:
+                    speedItem.activate(false, enemyShips);
+                    break;
             }
 
             addItemRecycle(item);

@@ -50,8 +50,8 @@ public class Ship extends Entity {
 	 *            Initial position of the ship in the Y axis.
 	 */
 	//Edit by Enemy
-	public Ship(final int positionX, final int positionY) {
-		super(positionX, positionY - 50, 13 * 2, 8 * 2, Color.GREEN);
+	public Ship(final int positionX, final int positionY, final Color color) {
+		super(positionX, positionY - 50, 13 * 2, 8 * 2, color); // add by team HUD
 
 		this.spriteType = SpriteType.Ship;
 
@@ -193,7 +193,7 @@ public class Ship extends Entity {
 	 *
 	 * @return Speed of the ship.
 	 */
-	public final int getSpeed() {
+	public final double getSpeed() {
 		return growth.getMoveSpeed();
 	}
 	
@@ -210,4 +210,6 @@ public class Ship extends Entity {
 	public PlayerGrowth getPlayerGrowth() {
 		return growth;
 	}	// Team Inventory(Item)
+
+
 }

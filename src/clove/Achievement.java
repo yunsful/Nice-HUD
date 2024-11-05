@@ -8,8 +8,8 @@ public class Achievement {
         LIVES,
         STAGE,
         TRIALS,
-        SCORE,
-        ACCURACY
+        FASTKILL,
+        SCORE
     }
 
     private String achievementName;
@@ -19,10 +19,11 @@ public class Achievement {
     private int requiredScore;
     private int requiredStages;
     private int requiredLives;
-    private int requiredAccuracy;
+    private static int requiredFastKills;
     private int requiredTrials;
     private boolean isCompleted;
     private AchievementType achievementType;
+    private int gem = 0;
 
     public Achievement(String achievementName, String achievementDescription, int requiredValue, AchievementType type) {
         this.achievementName = achievementName;
@@ -46,8 +47,8 @@ public class Achievement {
             case TRIALS:
                 this.requiredTrials = requiredValue;
                 break;
-            case ACCURACY:
-                this.requiredAccuracy = requiredValue;
+            case FASTKILL:
+                this.requiredFastKills = requiredValue;
                 break;
             case LIVES:
                 this.requiredLives = requiredValue;
@@ -55,6 +56,10 @@ public class Achievement {
             default:
                 throw new IllegalArgumentException("Unsupported AchievementType: " + type);
         }
+    }
+    public Achievement(String achievementName, String achievementDescription, int requiredValue, AchievementType type, int gem) {
+        this(achievementName, achievementDescription, requiredValue, type);
+        this.gem = gem;
     }
 
     public void logCompleteAchievement() {
@@ -74,10 +79,6 @@ public class Achievement {
         return requiredKills;
     }
 
-    public int getRequiredAccuracy() {
-        return requiredAccuracy;
-    }
-
     public int getRequiredKillStreaks() {
         return requiredKillStreaks;
     }
@@ -88,6 +89,10 @@ public class Achievement {
 
     public int getRequiredStages() {
         return requiredStages;
+    }
+
+    public static int getRequiredFastKills() {
+        return requiredFastKills;
     }
 
     public String getAchievementDescription() {
@@ -115,7 +120,7 @@ public class Achievement {
         System.out.println("Checking killstreak conditions for achievement: " + achievement.getAchievementName());
         if (achievement.getType() == AchievementType.KILLSTREAKS) {
             System.out.println("Current killstreaks: " + currentKillStreak + ", Required killstreaks: " + achievement.getRequiredKillStreaks());
-            return currentKillStreak >= achievement.getRequiredKillStreaks();
+            return currentKillStreak >= achievement.getRequiredKills();
         }
         return false;
     }
@@ -154,12 +159,20 @@ public class Achievement {
         return false;
     }
 
+    public boolean checkFastKillConditions(int currentFastKills) {
+        if (this.achievementType == AchievementType.FASTKILL) {
+            return currentFastKills >= requiredFastKills;
+        }
+        return false;
+    }
+
     public void completeAchievement() {
         if (!isCompleted) {
             isCompleted = true;
         }
     }
 
+    public int getGem() { return gem; }
 
     @Override
     public boolean equals(Object o) {

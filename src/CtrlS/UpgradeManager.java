@@ -129,9 +129,9 @@ public final class UpgradeManager {
      * @return The current movement speed.
      * @throws IOException In case of loading problems.
      */
-    public int getMovementSpeed() throws IOException {
+    public double getMovementSpeed() throws IOException {
         Properties properties = fileManager.loadUpgradeStatus();
-        return Integer.parseInt(properties.getProperty(MOVEMENT_SPEED, "1"));
+        return Double.parseDouble(properties.getProperty(MOVEMENT_SPEED, "1"));
     }
 
     /**
@@ -141,10 +141,10 @@ public final class UpgradeManager {
      * @throws IOException In case of saving problems.
      */
     public void addMovementSpeed() throws IOException {
-        int currentValue = getMovementSpeed();
+        double currentValue = getMovementSpeed();
         currentValue += shipStatus.getSpeedIn();
         Properties properties = fileManager.loadUpgradeStatus();
-        properties.setProperty(MOVEMENT_SPEED, Integer.toString(currentValue));
+        properties.setProperty(MOVEMENT_SPEED, Double.toString(currentValue));
         fileManager.saveUpgradeStatus(properties);
     }
 
@@ -231,7 +231,7 @@ public final class UpgradeManager {
                         return shipStatus.getBullet_price() * getBulletCount();
                     }
                     else {
-                        return getBulletCount() + 1;
+                        return (getBulletCount() + 1) * 10;
                     }
 
                 case 2:  // speed price
@@ -239,7 +239,7 @@ public final class UpgradeManager {
                         return PriceCalculation(shipStatus.getSpeed_price(), getSpeedCount());
                     }
                     else {
-                        return getSpeedCount() / 4 ;
+                        return getSpeedCount() / 4 * 5;
                     }
 
                 case 3:  // attack price
@@ -247,7 +247,7 @@ public final class UpgradeManager {
                         return PriceCalculation(shipStatus.getAttack_price(), getAttackCount());
                     }
                     else {
-                        return getAttackCount() / 4 ;
+                        return getAttackCount() / 4 * 5;
                     }
 
                 case 4:  // CoinBonus price
@@ -255,7 +255,7 @@ public final class UpgradeManager {
                         return PriceCalculation(shipStatus.getCoinBonus_price(), getCoinCount());
                     }
                     else {
-                        return getCoinCount() / 4 ;
+                        return getCoinCount() / 4 * 5;
                     }
             }
         } catch (IOException e){
@@ -281,7 +281,7 @@ public final class UpgradeManager {
     }
 
     public String whatMoney(int count, int i){
-        if (i == 0) {
+        if (i == 1) {
             if (count % 2 == 0){
                 return "GEM";
             }

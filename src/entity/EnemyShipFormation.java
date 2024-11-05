@@ -1,6 +1,7 @@
 package entity;
 
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -9,10 +10,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 import javax.swing.Timer;
 
-import Enemy.PiercingBullet;
-import Enemy.HpEnemyShip;
+import Enemy.*;
 import Sound_Operator.SoundManager;
+import clove.ScoreManager;
 import inventory_develop.Bomb;
+import inventory_develop.SpeedItem;
 import screen.Screen;
 import engine.Cooldown;
 import engine.Core;
@@ -23,16 +25,17 @@ import static java.lang.Math.*;
 import Enemy.PiercingBulletPool;
 //Sound_Operator
 import Sound_Operator.SoundManager;
+
 /**
  * Groups enemy ships into a formation that moves together.
- * 
+ *
  * @author <a href="mailto:RobertoIA1987@gmail.com">Roberto Izquierdo Amo</a>
- * 
+ *
  */
 public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private boolean isCircle = false;
-  // Sound Operator
-  private static SoundManager sm;
+	// Sound Operator
+	private static SoundManager sm;
 	/** Number of iteration of movement */
 	private int iteration = 0;
 
@@ -42,7 +45,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	private static final int INIT_POS_Y = 100;
 	/** Distance between ships. */
 	private static final int SEPARATION_DISTANCE = 60;
-	private static final int SEPARATION_DISTANCE_CIRCLE = 90;
+	private static final int SEPARATION_DISTANCE_CIRCLE = 70;
 	/** Radius of circle */
 	private int RADIUS=0;
 	private int MINIRADIUS= 0;
@@ -78,6 +81,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** List of enemy ships forming the formation. */
 	private List<List<EnemyShip>> enemyShips;
 	/** Minimum time between shots. */
+	private List<SpeedItem> activeSpeedItems;
 	private Cooldown shootingCooldown;
 	/** Number of ships in the formation - horizontally. */
 	private int nShipsWide;
@@ -114,6 +118,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	/** Number of not destroyed ships. */
 	private int shipCount;
 
+	private ScoreManager scoreManager; //add by team Enemy
+	private ItemManager itemManager; //add by team Enemy
+
 	/** Directions the formation can move. */
 	private enum Direction {
 		/** Movement to the right side of the screen. */
@@ -124,9 +131,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		DOWN
 	};
 
+	//add by team Enemy
+	//Setting Up Score Manager and ItemManager
+	public void setScoreManager (ScoreManager scoreManager){
+		this.scoreManager = scoreManager;
+	}
+	public void setItemManager (ItemManager itemManager){//add by team Enemy
+		this.itemManager = itemManager;
+	}
+
 	/**
 	 * Constructor, sets the initial conditions.
-	 * 
+	 *
 	 * @param gameSettings
 	 *            Current game settings.
 	 */
@@ -134,6 +150,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.drawManager = Core.getDrawManager();
 		this.logger = Core.getLogger();
 		this.enemyShips = new ArrayList<List<EnemyShip>>();
+		this.activeSpeedItems = new ArrayList<>();
 		this.currentDirection = Direction.RIGHT;
 		this.movementInterval = 0;
 		this.nShipsWide = gameSettings.getFormationWidth();
@@ -146,8 +163,9 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		this.positionX = INIT_POS_X;
 		this.positionY = INIT_POS_Y;
 		this.shooters = new ArrayList<EnemyShip>();
+		this.shipCount = 0;
 		SpriteType spriteType = null;
-    int hp=1;// Edited by Enemy
+		int hp=1;// Edited by Enemy
 		Random rand= new Random();
 		int n = rand.nextInt(2);
 		if(n%2==1){ isCircle=true;
@@ -173,17 +191,17 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 				double angle = 2* PI * i / this.nShipsHigh;
 
 				if (i / (float) this.nShipsHigh < PROPORTION_C)
-        if (shipCount == (nShipsHigh*1)+1 ||shipCount == (nShipsHigh*3)+1) //Edited by Enemy
-					spriteType = SpriteType.ExplosiveEnemyShip1;
-				else if (i / (float) this.nShipsHigh < PROPORTION_C)
-					spriteType = SpriteType.EnemyShipC1;
-				else if (i / (float) this.nShipsHigh < PROPORTION_B + PROPORTION_C)
-					spriteType = SpriteType.EnemyShipB1;
-				else
-					spriteType = SpriteType.EnemyShipA1;
+					if (shipCount == (nShipsHigh*1)+1 ||shipCount == (nShipsHigh*3)+1) //Edited by Enemy
+						spriteType = SpriteType.ExplosiveEnemyShip1;
+					else if (i / (float) this.nShipsHigh < PROPORTION_C)
+						spriteType = SpriteType.EnemyShipC1;
+					else if (i / (float) this.nShipsHigh < PROPORTION_B + PROPORTION_C)
+						spriteType = SpriteType.EnemyShipB1;
+					else
+						spriteType = SpriteType.EnemyShipA1;
 				if(isCircle){
-				x = (int) round(RADIUS * cos(angle) + positionX + ( SEPARATION_DISTANCE_CIRCLE* this.enemyShips.indexOf(column)));
-				y = (int) (RADIUS * sin(angle)) + positionY;}
+					x = (int) round(RADIUS * cos(angle) + positionX + ( SEPARATION_DISTANCE_CIRCLE* this.enemyShips.indexOf(column)));
+					y = (int) (RADIUS * sin(angle)) + positionY;}
 				else{
 					x = positionX + (SEPARATION_DISTANCE * this.enemyShips.indexOf(column));
 					y = positionY+ i*SEPARATION_DISTANCE;
@@ -404,17 +422,19 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 */
 	public final void shoot(final Set<PiercingBullet> bullets) { // Edited by Enemy
 		// For now, only ships in the bottom row are able to shoot.
-		int index = (int) (random() * this.shooters.size());
-		EnemyShip shooter = this.shooters.get(index);
-		if (this.shootingCooldown.checkFinished()) {
-			this.shootingCooldown.reset();
-			sm = SoundManager.getInstance();
-			sm.playES("Enemy_Gun_Shot_1_ES");
-			bullets.add(PiercingBulletPool.getPiercingBullet( // Edited by Enemy
-					shooter.getPositionX() + shooter.width / 2,
-					shooter.getPositionY(),
-					BULLET_SPEED,
-					0)); // Edited by Enemy
+		if (!shooters.isEmpty()) { // Added by team Enemy
+			int index = (int) (random() * this.shooters.size());
+			EnemyShip shooter = this.shooters.get(index);
+			if (this.shootingCooldown.checkFinished()) {
+				this.shootingCooldown.reset();
+				sm = SoundManager.getInstance();
+				sm.playES("Enemy_Gun_Shot_1_ES");
+				bullets.add(PiercingBulletPool.getPiercingBullet( // Edited by Enemy
+						shooter.getPositionX() + shooter.width / 2,
+						shooter.getPositionY(),
+						BULLET_SPEED,
+						0)); // Edited by Enemy
+			}
 		}
 	}
 
@@ -426,7 +446,7 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 */
 	public final void destroy(final EnemyShip destroyedShip) {
 			if (Bomb.getIsBomb()) {		// team Inventory
-				Bomb.destroyByBomb(enemyShips, destroyedShip, this.logger);
+				Bomb.destroyByBomb(enemyShips, destroyedShip, this.itemManager , this.logger);
 			} else {
 				for (List<EnemyShip> column : this.enemyShips)
 					for (int i = 0; i < column.size(); i++)
@@ -488,12 +508,12 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 */
 	@Override
 	public final Iterator<EnemyShip> iterator() {
-		Set<EnemyShip> enemyShipsList = new HashSet<EnemyShip>();
-
-		for (List<EnemyShip> column : this.enemyShips)
-			for (EnemyShip enemyShip : column)
+		Set<EnemyShip> enemyShipsList = new HashSet<>();
+		for (List<EnemyShip> column : this.enemyShips) {
+			for (EnemyShip enemyShip : column) {
 				enemyShipsList.add(enemyShip);
-
+			}
+		}
 		return enemyShipsList.iterator();
 	}
 
@@ -523,13 +543,18 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 		// Checks if this ship is 'chainExploded' due to recursive call
 		if (isChainExploded
 				&& !destroyedShip.spriteType.equals(SpriteType.ExplosiveEnemyShip1)
-				&& !destroyedShip.spriteType.equals(SpriteType.ExplosiveEnemyShip2))
+				&& !destroyedShip.spriteType.equals(SpriteType.ExplosiveEnemyShip2)){
 			destroyedShip.chainExplode();
+		}
 
-		if (bullet.getSpriteType() == SpriteType.ItemBomb) { // team Inventory
-			int[] temp = Bomb.destroyByBomb(enemyShips, destroyedShip, this.logger);
-			count = temp[0];
-			point = temp[1];
+		if (bullet.getSpriteType() == SpriteType.ItemBomb && isCircle) {	// Bomb Item type1
+			int[] score = Bomb.destroyByBomb_isCircle(enemyShips, destroyedShip, this.itemManager, this.logger);
+			count = score[0];
+			point = score[1];
+		} else if (bullet.getSpriteType() == SpriteType.ItemBomb) {		// Bomb Item type2
+			int[] score = Bomb.destroyByBomb(enemyShips, destroyedShip, this.itemManager, this.logger);
+			count = score[0];
+			point = score[1];
 		} else {
 			for (List<EnemyShip> column : this.enemyShips) // Add by team Enemy
 				for (int i = 0; i < column.size(); i++) {
@@ -538,41 +563,45 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 							case ExplosiveEnemyShip1:
 							case ExplosiveEnemyShip2:
 								HpEnemyShip.hit(destroyedShip);
+
 								//Sound_Operator
 								if (destroyedShip.isDestroyed()) {
 
 									sm = SoundManager.getInstance();
 									sm.playES("enemy_explosion");
 								}
-								destroyedShip.chainExplode(); // Edited by team Enemy
-								explosive(destroyedShip.getX(), destroyedShip.getY(),this.enemyShips.indexOf(column),i); //Add by team Enemy
-								// HpEnemyShip.hit(destroyedShip);
-//								for (List<EnemyShip> enemyShip : this.enemyShips)
-//									if (enemyShip.size() > i
-//											&& !enemyShip.get(i).isDestroyed())
-//										this._destroy(bullet, enemyShip.get(i));
-//								for (int j = 0; j < column.size(); j++)
-//									if (!column.get(j).isDestroyed())
-//										this._destroy(bullet, column.get(j));
+								point += destroyedShip.getPointValue();
+								int point_mob[]  =  explosive(destroyedShip.getX(), destroyedShip.getY(),
+										this.enemyShips.indexOf(column),i,this.enemyShips); // Edited by team Enemy
+								point += point_mob[0];
+								count += point_mob[1]+1;
+								if(isChainExploded){
+									this.scoreManager.addScore(point-destroyedShip.getPointValue());
+								}
+								this.logger.info("Destroyed ExplosiveEnemyship in ("
+										+ this.enemyShips.indexOf(column) + "," + i + ")");
+
 								break;
 							default:
-								if (!destroyedShip.isDestroyed()){
-									HpEnemyShip.hit(destroyedShip);
+								HpEnemyShip.hit(destroyedShip);
+
+								if(destroyedShip.getHp() > 0 ){
+									this.logger.info("Enemy ship lost 1 HP in ("
+											+ this.enemyShips.indexOf(column) + "," + i + ")");
+								}else{
+									this.logger.info("Destroyed ship in ("
+											+ this.enemyShips.indexOf(column) + "," + i + ")");
+									point = column.get(i).getPointValue();
+									count += 1;
 								}
 								break;
 						}
-
-						if (column.get(i).getHp() > 0) {
-							this.logger.info("Enemy ship lost 1 HP in ("
-									+ this.enemyShips.indexOf(column) + "," + i + ")");
+						if (column.get(i).getColor().equals(Color.MAGENTA)) { //add by team enemy
+							this.itemManager.dropItem(destroyedShip, 1, 1);
 						}
-						else{
-							this.logger.info("Destroyed ship in ("
-									+ this.enemyShips.indexOf(column) + "," + i + ")");
 
-							point = column.get(i).getPointValue();
-							count += 1;
-						}
+
+
 					}
 				}
 		}
@@ -622,54 +651,107 @@ public class EnemyShipFormation implements Iterable<EnemyShip> {
 	 * 			  explosive EnemyShip's x-coordinates in EnemyShips
 	 * @param index_y
 	 * 			  explosive EnemyShip's y-coordinates in EnemyShips
+	 * @param enemyShips
+	 * 			  the current arrangement of the enemy
 	 */
+	public int[] explosive(final int x, final int y, final int index_x, final int index_y, List<List<EnemyShip>> enemyShips){
 
-	public void explosive(final int x, final int y,final int index_x, final int index_y) {
-		Timer timer = new Timer(200, null);
-		final int[] i = {1};
 
+		Queue<EnemyShip> targetShipQ = new LinkedList<>();
+		Timer timer = new Timer(500, null);
+		int range = 2;
+		int i = 1;
+		int point = 0;
+		int mob = 0;
 
 		Bullet bullet = new Bullet(0,0,-1);
+
+		do{
+
+			if(index_x+i >= 0 && enemyShips.size() > index_x+i && enemyShips.get(index_x+i).size() > y){ // right
+				EnemyShip targetShip = enemyShips.get(index_x+i).get(y);
+				if (!targetShip.isDestroyed()) {
+					if (targetShip.getX() == x + i && targetShip.getY() == y) {
+						targetShipQ.add(targetShip);
+						point += targetShip.getPointValue();
+						mob += 1;
+
+					}
+				}
+			}
+
+			if( index_x-i >= 0 && enemyShips.size() > index_x-i && enemyShips.get(index_x-i).size() > y) { // left
+				EnemyShip targetShip = enemyShips.get(index_x - i).get(y);
+				if(!targetShip.isDestroyed()) {
+					if (targetShip.getX() == x - i && targetShip.getY() == y) {
+						targetShipQ.add(targetShip);
+						point += targetShip.getPointValue();
+						mob += 1;
+
+					}
+				}
+			}
+
+			if(index_y-i >= 0){//up
+				EnemyShip targetShip = enemyShips.get(index_x).get(index_y-i);
+				if (!targetShip.isDestroyed()) {
+					if (targetShip.getX() == x && targetShip.getY() == y - i) {
+						targetShipQ.add(targetShip);
+						point += targetShip.getPointValue();
+						mob += 1;
+					}
+				}
+			}
+
+			if(enemyShips.get(index_x).size() > index_y+i){//down
+				EnemyShip targetShip = enemyShips.get(index_x).get(index_y+i);
+				if(!targetShip.isDestroyed()) {
+					if (targetShip.getX() == x && targetShip.getY() == y + i) {
+						targetShipQ.add(targetShip);
+						point += targetShip.getPointValue();
+						mob += 1;
+
+
+					}
+				}
+			}
+
+			targetShipQ.add(new EnemyShip());
+
+			i++;
+		}
+		while(i <= range);
+
 		ActionListener listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
 
-				if(enemyShips.size() > index_x+i[0] && enemyShips.get(index_x+i[0]).size() > y){ // right
-					EnemyShip targetShip = enemyShips.get(index_x+i[0]).get(y);
-					if (targetShip.getX() == x+i[0] && targetShip.getY() ==y){
-						_destroy(bullet,targetShip,true);
+
+				while(true){
+					if(!targetShipQ.isEmpty()) {
+						EnemyShip targetShip = targetShipQ.poll();
+						if(targetShip.getX() != -2){
+							_destroy(bullet,targetShip,true);
+						}else{
+							break;
+						}
+
+					}else{
+						break;
 					}
 				}
 
-				if( index_x-i[0] >= 0 && enemyShips.size() > index_x-i[0] && enemyShips.get(index_x-i[0]).size() > y){ // left
-					EnemyShip targetShip = enemyShips.get(index_x-i[0]).get(y);
-					if (targetShip.getX() == x-i[0] && targetShip.getY() ==y){
-						_destroy(bullet,targetShip,true);
-					}
-				}
-
-				if(index_y-1 >= 0){//up
-					EnemyShip targetShip = enemyShips.get(index_x).get(index_y-1);
-					if (targetShip.getX() == x && targetShip.getY() == y-i[0]){
-						_destroy(bullet,targetShip,true);
-					}
-				}
-
-				if(enemyShips.get(index_x).size() > index_y+1){//down
-					EnemyShip targetShip = enemyShips.get(index_x).get(index_y+1);
-					if (targetShip.getX() == x && targetShip.getY() == y+i[0]){
-						_destroy(bullet,targetShip,true);
-					}
-				}
-
-				((Timer) e.getSource()).stop();
+				if (targetShipQ.isEmpty())
+					((Timer) e.getSource()).stop();
 
 			}
 		};
 
 		timer.addActionListener(listener);
 		timer.start();
+
+		return new int[]{point, mob};
 	}
 	public final void BecomeCircle(boolean iscircle){
 		this.isCircle=iscircle;
